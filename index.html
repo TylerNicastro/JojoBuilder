@@ -311,18 +311,6 @@ header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:
   document.body.appendChild(errDiv);
   return false;
 };
-// ═══════════════════════════════════════════
-// GRADE HELPERS
-// ═══════════════════════════════════════════
-function gc(g){return'g'+(g||'E');}
-function gcolor(g){
-  const m={S:'var(--gS)',A:'var(--gA)',B:'var(--gB)',C:'var(--gC)',D:'var(--gD)',E:'var(--gE)'};
-  return m[g]||m.E;
-}
-function gradeEl(g){
-  if(!g||g==='-')return'<span class="g gE">—</span>';
-  return`<span class="g ${gc(g)}">${g}</span>`;
-}
 
 // ═══════════════════════════════════════════
 // CHARACTER DATA
