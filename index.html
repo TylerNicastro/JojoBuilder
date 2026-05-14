@@ -124,8 +124,6 @@ header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:
 .gC{color:var(--gC);}
 .gD{color:var(--gD);}
 .gE{color:var(--gE);}
-.gSS{color:var(--pink);text-shadow:0 0 10px var(--pink);}
-.gF{color:var(--red);text-shadow:0 0 6px var(--red);}
 /* SIDEBAR */
 .sbar{background:var(--panel);border:1px solid var(--border);border-radius:4px;overflow:hidden;position:sticky;top:14px;}
 .sbhead{font-family:'Bebas Neue',sans-serif;letter-spacing:.18em;font-size:.88rem;
@@ -333,59 +331,59 @@ const CHARS=[
 // ── Part 1 ──
 {name:"Jonathan Joestar",part:1,pname:"Phantom Blood",stand:null,role:"Protagonist",
  desc:"Gentleman warrior trained in Ripple. Immense natural strength and iron will.",
- stats:{strength:"SS",durability:"A",speed:"C",battleIQ:"C"},
- standStats:F,abilityDesc:F,abilityGrade:F,item:F,companionGrade:"B"},
+ stats:{strength:"B",durability:"B",speed:"C",battleIQ:"C"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"B"},
 
 {name:"Dio Brando (P1)",part:1,pname:"Phantom Blood",stand:null,role:"Villain",
  desc:"Stone Mask vampire. Superhuman regeneration, vaporisation eye-beams, zombie creation.",
  stats:{strength:"A",durability:"A",speed:"A",battleIQ:"B"},
- standStats:F,abilityDesc:F,abilityGrade:F,item:F,companionGrade:"A"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
 
 {name:"Will A. Zeppeli",part:1,pname:"Phantom Blood",stand:null,role:"Mentor",
  desc:"Elite Ripple master. Zoom Punch, Sendo Wave Kick. Taught Jonathan everything.",
  stats:{strength:"B",durability:"C",speed:"B",battleIQ:"A"},
- standStats:F,abilityDesc:F,abilityGrade:F,item:F,companionGrade:"A"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
 
 {name:"Speedwagon",part:1,pname:"Phantom Blood",stand:null,role:"Ally",
  desc:"Street fighter turned eternal ally. Later founds the globe-spanning Speedwagon Foundation.",
  stats:{strength:"C",durability:"C",speed:"C",battleIQ:"B"},
- standStats:F,abilityDesc:F,abilityGrade:F,item:F,companionGrade:"B"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"B"},
 
 {name:"Bruford",part:1,pname:"Phantom Blood",stand:null,role:"Undead Knight",
  desc:"Elite undead knight under Dio. Regained his honour in his final fight against Jonathan.",
  stats:{strength:"A",durability:"B",speed:"A",battleIQ:"B"},
- standStats:F,abilityDesc:F,abilityGrade:F,item:F,companionGrade:"A"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
 
 // ── Part 2 ──
-{name:"Joseph Joestar",part:2,pname:"Battle Tendency",stand:F,role:"Protagonist",
+{name:"Joseph Joestar",part:2,pname:"Battle Tendency",stand:null,role:"Protagonist",
  desc:"Cunning Ripple user who fights through improvisation, Clackers, and psychological traps.",
  stats:{strength:"B",durability:"B",speed:"B",battleIQ:"S"},
- standStats:F,abilityDesc:F,abilityGrade:F,item:F,companionGrade:"A"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
 
 {name:"Kars",part:2,pname:"Battle Tendency",stand:null,role:"Villain",
  desc:"Ultimate Life Form. Every natural ability, bladed forearms, sunlight immunity, perfect intellect.",
  stats:{strength:"S",durability:"S",speed:"S",battleIQ:"A"},
- standStats:F,abilityDesc:F,abilityGrade:F,item:F,companionGrade:"S"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"S"},
 
 {name:"Caesar A. Zeppeli",part:2,pname:"Battle Tendency",stand:null,role:"Ally",
  desc:"Refined Ripple warrior specialising in razor bubble techniques and aerial combat.",
  stats:{strength:"B",durability:"B",speed:"A",battleIQ:"A"},
- standStats:F,abilityDesc:F,abilityGrade:F,item:F,companionGrade:"A"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
 
 {name:"Wamuu",part:2,pname:"Battle Tendency",stand:null,role:"Villain",
  desc:"Pillar Man warrior of honour. Wind Mode: Divine Sandstorm and Holy Sandstorm.",
  stats:{strength:"A",durability:"A",speed:"S",battleIQ:"A"},
- standStats:F,abilityDesc:F,abilityGrade:F,item:F,companionGrade:"A"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
 
 {name:"Esidisi",part:2,pname:"Battle Tendency",stand:null,role:"Villain",
  desc:"Pillar Man who weaponises superheated blood-vessel whips and emotional manipulation.",
  stats:{strength:"A",durability:"A",speed:"B",battleIQ:"A"},
- standStats:F,abilityDesc:F,abilityGrade:F,item:F,companionGrade:"A"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
 
 {name:"Lisa Lisa",part:2,pname:"Battle Tendency",stand:null,role:"Mentor",
  desc:"Elite Ripple master. Her Red Scarf channels Ripple at extraordinary efficiency.",
  stats:{strength:"B",durability:"B",speed:"A",battleIQ:"S"},
- standStats:F,abilityDesc:F,abilityGrade:F,item:F,companionGrade:"A"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
 
 // ── Part 3 ──
 {name:"Jotaro Kujo",part:3,pname:"Stardust Crusaders",stand:"Star Platinum",role:"Protagonist",
@@ -408,7 +406,7 @@ const CHARS=[
 
 {name:"Muhammad Avdol",part:3,pname:"Stardust Crusaders",stand:"Magician's Red",role:"Ally",
  desc:"Egyptian fire diviner with deep global Stand knowledge. Cross Fire Hurricane and Red Bind.",
- stats:{strength:"A",durability:"C",speed:"C",battleIQ:"A"},
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"A"},
  standStats:{str:"B",spd:"B",range:"C",dur:"B",prec:"C",pot:"D"},
  abilityDesc:"Magician's Red — Cross Fire Hurricane (fiery cross blast); Red Bind (30 m molten manacles)",
  abilityGrade:"B",
@@ -472,7 +470,7 @@ const CHARS=[
 {name:"J. Giel",part:3,pname:"Stardust Crusaders",stand:"Hanged Man",role:"Villain",
  desc:"Serial killer who murdered Polnareff's sister. Later worked for Dio.",
  stats:{strength:"C",durability:"C",speed:"C",battleIQ:"C"},
- standStats:{str:"C",spd:"SS",range:"A",dur:"B",prec:"D",pot:"D"},
+ standStats:{str:"C",spd:"A",range:"A",dur:"B",prec:"D",pot:"D"},
  abilityDesc:"Hanged Man - made of light, travels through reflective surfaces, attacks a target's reflection",
  abilityGrade:"C",
  item:{desc:"None",grade:"E"},
@@ -517,8 +515,8 @@ const CHARS=[
 
 {name:"Okuyasu Nijimura",part:4,pname:"Diamond Is Unbreakable",stand:"The Hand",role:"Ally",
  desc:"Blunt fighter. The Hand's right palm erases physical space, teleporting anything swept away.",
- stats:{strength:"B",durability:"B",speed:"B",battleIQ:"F"},
- standStats:{str:"SS",spd:"C",range:"D",dur:"C",prec:"C",pot:"C"},
+ stats:{strength:"B",durability:"B",speed:"B",battleIQ:"D"},
+ standStats:{str:"B",spd:"B",range:"D",dur:"C",prec:"C",pot:"C"},
  abilityDesc:"The Hand — right palm erases physical space; sweeps targets out or closes distance instantly",
  abilityGrade:"A",
  item:{desc:"None",grade:"E"},
@@ -557,7 +555,7 @@ const CHARS=[
  stats:{strength:"B",durability:"B",speed:"A",battleIQ:"A"},
  standStats:{str:"A",spd:"A",range:"C",dur:"A",prec:"B",pot:"A"},
  abilityDesc:"King Crimson — erases 10 s of time; Epitaph predicts 10 s ahead; acts unseen in the gap",
- abilityGrade:"SS",
+ abilityGrade:"S",
  item:{desc:"Epitaph — precognitive sub-Stand in his forehead; predicts exact events seconds ahead",grade:"S"},
  companionGrade:null},
 
@@ -606,15 +604,6 @@ const CHARS=[
  item:{desc:"Her name — being Diavolo's daughter makes her both the mission's target and its resolution",grade:"C"},
  companionGrade:null},
 
-// {name:"Carne",part:5,pname:"Golden Wind",stand:"Notorious B.I.G.",role:"Antagonist",
-  //desc:"Passione assassin. His Stand activates after death, growing endlessly by consuming matter and attacking the fastest object.",
-  //stats:{strength:"D",durability:"E",speed:"E",battleIQ:"D"},
-  //standStats:{str:"A",spd:"SS",range:"SS",dur:"SS",prec:"E",pot:"A"},
-  //abilityDesc:"Notorious B.I.G. — post-mortem activation; absolute tracking speed; absolute matter consumption and cellular regeneration",
-  //abilityGrade:"A",
-  //item:{desc:"None",grade:"E"},
-  //companionGrade:null},
-
 // ── Part 6 ──
 {name:"Jolyne Cujoh",part:6,pname:"Stone Ocean",stand:"Stone Free",role:"Protagonist",
  desc:"Resilient brawler who unravels her body into string for binding, combat, and flight.",
@@ -630,7 +619,7 @@ const CHARS=[
  stats:{strength:"C",durability:"C",speed:"C",battleIQ:"S"},
  standStats:{str:"C",spd:"S",range:"S",dur:"B",prec:"A",pot:"S"},
  abilityDesc:"Made in Heaven — accelerates universal time rotation to light speed; resets reality to a new world",
- abilityGrade:"SS",
+ abilityGrade:"S",
  item:{desc:"Green Baby — divine infant born from DIO's bone + Joestar birthmarks; the gate to Heaven",grade:"S"},
  companionGrade:null},
 
@@ -816,7 +805,7 @@ const CHARS=[
 // ═══════════════════════════════════════════
 // STATE & CONFIG
 // ═══════════════════════════════════════════
-const GS_SCORE = { 'SS': 20, 'S': 10, 'A': 8, 'B': 6, 'C': 4, 'D': 2, 'E': 0, 'F': -5 };
+const GS_SCORE = { 'S': 10, 'A': 8, 'B': 6, 'C': 4, 'D': 2, 'E': 0 };
 let allBuilds=[];
 let curBuild=null;  
 let usedChars=[];
@@ -837,8 +826,6 @@ function gc(g) {
 
 function gcolor(g) {
   switch(g ? g.toUpperCase() : '') {
-    case 'SS': return 'var(--pink)'; // Uses existing hot pink theme variable
-    case 'F': return 'var(--red)';   // Uses existing tactical red theme variable
     case 'S': return 'var(--gS)';
     case 'A': return 'var(--gA)';
     case 'B': return 'var(--gB)';
@@ -853,7 +840,6 @@ function gradeEl(g){
 }
 
 // Build the list of pickable rows for a character
-// Build the list of pickable rows for a character
 function getRows(ch){
   const rows=[];
   const physMap=[
@@ -865,7 +851,6 @@ function getRows(ch){
   for(const p of physMap){
     rows.push({key:p.key,label:p.label,grade:ch.stats[p.key]||'D',value:null,group:'physical'});
   }
-  
   if(ch.standStats){
     const standMap=[
       {key:'standStr',label:'Stand Strength',sk:'str'},
@@ -875,40 +860,33 @@ function getRows(ch){
       {key:'standPrec',label:'Stand Precision',sk:'prec'},
       {key:'standPot',label:'Stand Potential',sk:'pot'},
     ];
-    for(const s of standMap){
-      rows.push({key:s.key,label:s.label,grade:ch.standStats[s.sk]||'D',value:null,group:'stand'});
-    }
+for(const s of standMap){
+  rows.push({key:s.key,label:s.label,grade:ch.standStats[s.sk]||'D',value:null,group:'stand'});
+}
     rows.push({key:'ability',label:'Stand Ability',grade:ch.abilityGrade||'C',value:ch.abilityDesc||'',group:'ability'});
-    
-    // SAFE EXTRACTION CORE: Safeguards profiles like Carne that have an item sub-object
     rows.push({
       key:'item',
       label:'Battle Item',
-      grade: (ch.item && ch.item.grade) ? ch.item.grade : 'E',
+      grade: (ch.item && ch.item.grade) ? ch.item.grade : 'C',
       value: (ch.item && ch.item.desc) ? ch.item.desc : 'No item equipped',
       group:'item'
     });
+
   } else {
     for(const k of ['standStr','standSpd','standRange','standDur','standPrec','standPot']){
       rows.push({key:k,label:k,grade:null,value:null,group:'na'});
     }
     rows.push({key:'ability',label:'Stand Ability',grade:null,value:null,group:'na'});
-    
-    // SAFE FALLBACK CORE: Handles Part 1 & 2 characters lacking a Stand
-    const customGrade = ch.companionGrade || 'F';
-    const isSoftlockFallback = customGrade === 'F';
-    
     rows.push({
       key:'item',
-      label: isSoftlockFallback ? 'PASS CHARACTER (Softlock Fallback)' : 'Companion: '+ch.name,
-      grade: customGrade,
-      value: isSoftlockFallback ? 'Take a -5 point penalty to pass this character (No compatible attributes remain).' : ch.name+' ('+ch.pname+', '+ch.role+') — '+ch.desc,
-      group: isSoftlockFallback ? 'item' : 'companion'
+      label:'Companion: '+ch.name,
+      grade:ch.companionGrade||'C',
+      value:ch.name+' ('+ch.pname+', '+ch.role+') — '+ch.desc,
+      group:'companion'
     });
   }
   return rows;
 }
-
 
 // ═══════════════════════════════════════════
 // SCREENS
