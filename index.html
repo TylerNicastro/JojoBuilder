@@ -124,6 +124,8 @@ header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:
 .gC{color:var(--gC);}
 .gD{color:var(--gD);}
 .gE{color:var(--gE);}
+.gSS{color:var(--pink);text-shadow:0 0 10px var(--pink);}
+.gF{color:var(--red);text-shadow:0 0 6px var(--red);}
 /* SIDEBAR */
 .sbar{background:var(--panel);border:1px solid var(--border);border-radius:4px;overflow:hidden;position:sticky;top:14px;}
 .sbhead{font-family:'Bebas Neue',sans-serif;letter-spacing:.18em;font-size:.88rem;
@@ -331,7 +333,7 @@ const CHARS=[
 // ── Part 1 ──
 {name:"Jonathan Joestar",part:1,pname:"Phantom Blood",stand:null,role:"Protagonist",
  desc:"Gentleman warrior trained in Ripple. Immense natural strength and iron will.",
- stats:{strength:"B",durability:"B",speed:"C",battleIQ:"C"},
+ stats:{strength:"SS",durability:"A",speed:"C",battleIQ:"C"},
  standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"B"},
 
 {name:"Dio Brando (P1)",part:1,pname:"Phantom Blood",stand:null,role:"Villain",
@@ -406,7 +408,7 @@ const CHARS=[
 
 {name:"Muhammad Avdol",part:3,pname:"Stardust Crusaders",stand:"Magician's Red",role:"Ally",
  desc:"Egyptian fire diviner with deep global Stand knowledge. Cross Fire Hurricane and Red Bind.",
- stats:{strength:"C",durability:"C",speed:"C",battleIQ:"A"},
+ stats:{strength:"A",durability:"C",speed:"C",battleIQ:"A"},
  standStats:{str:"B",spd:"B",range:"C",dur:"B",prec:"C",pot:"D"},
  abilityDesc:"Magician's Red — Cross Fire Hurricane (fiery cross blast); Red Bind (30 m molten manacles)",
  abilityGrade:"B",
@@ -470,7 +472,7 @@ const CHARS=[
 {name:"J. Giel",part:3,pname:"Stardust Crusaders",stand:"Hanged Man",role:"Villain",
  desc:"Serial killer who murdered Polnareff's sister. Later worked for Dio.",
  stats:{strength:"C",durability:"C",speed:"C",battleIQ:"C"},
- standStats:{str:"C",spd:"A",range:"A",dur:"B",prec:"D",pot:"D"},
+ standStats:{str:"C",spd:"SS",range:"A",dur:"B",prec:"D",pot:"D"},
  abilityDesc:"Hanged Man - made of light, travels through reflective surfaces, attacks a target's reflection",
  abilityGrade:"C",
  item:{desc:"None",grade:"E"},
@@ -515,8 +517,8 @@ const CHARS=[
 
 {name:"Okuyasu Nijimura",part:4,pname:"Diamond Is Unbreakable",stand:"The Hand",role:"Ally",
  desc:"Blunt fighter. The Hand's right palm erases physical space, teleporting anything swept away.",
- stats:{strength:"B",durability:"B",speed:"B",battleIQ:"D"},
- standStats:{str:"B",spd:"B",range:"D",dur:"C",prec:"C",pot:"C"},
+ stats:{strength:"B",durability:"B",speed:"B",battleIQ:"F"},
+ standStats:{str:"SS",spd:"C",range:"D",dur:"C",prec:"C",pot:"C"},
  abilityDesc:"The Hand — right palm erases physical space; sweeps targets out or closes distance instantly",
  abilityGrade:"A",
  item:{desc:"None",grade:"E"},
@@ -555,7 +557,7 @@ const CHARS=[
  stats:{strength:"B",durability:"B",speed:"A",battleIQ:"A"},
  standStats:{str:"A",spd:"A",range:"C",dur:"A",prec:"B",pot:"A"},
  abilityDesc:"King Crimson — erases 10 s of time; Epitaph predicts 10 s ahead; acts unseen in the gap",
- abilityGrade:"S",
+ abilityGrade:"SS",
  item:{desc:"Epitaph — precognitive sub-Stand in his forehead; predicts exact events seconds ahead",grade:"S"},
  companionGrade:null},
 
@@ -619,7 +621,7 @@ const CHARS=[
  stats:{strength:"C",durability:"C",speed:"C",battleIQ:"S"},
  standStats:{str:"C",spd:"S",range:"S",dur:"B",prec:"A",pot:"S"},
  abilityDesc:"Made in Heaven — accelerates universal time rotation to light speed; resets reality to a new world",
- abilityGrade:"S",
+ abilityGrade:"SS",
  item:{desc:"Green Baby — divine infant born from DIO's bone + Joestar birthmarks; the gate to Heaven",grade:"S"},
  companionGrade:null},
 
@@ -696,7 +698,7 @@ const CHARS=[
  item:{desc:"The World (Alt Diego) — time stop via Corpse eye alone; ~5-second duration, no Stand needed",grade:"S"},
  companionGrade:null},
 
-{name:"Sandman",part:7,pname:"Steel Ball Run",stand:null,role:"Rival",
+{name:"Soundman",part:7,pname:"Steel Ball Run",stand:null,role:"Rival",
  desc:"Runs barefoot at superhuman speed. Slices with amplified sound waves through the ground.",
  stats:{strength:"A",durability:"B",speed:"S",battleIQ:"B"},
  standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
@@ -766,46 +768,46 @@ const CHARS=[
  companionGrade:null},
 
 // ── Part 9 ──
-{name:"Jodio Joestar",part:9,pname:"The JoJoLands",stand:"November Rain",role:"Protagonist",
- desc:"Hawai'i hustler. November Rain drops become perfectly immovable on contact with any surface.",
- stats:{strength:"B",durability:"B",speed:"B",battleIQ:"B"},
- standStats:{str:"B",spd:"B",range:"B",dur:"B",prec:"B",pot:"A"},
- abilityDesc:"November Rain — raindrops become perfectly immovable on contact; paralyses, crushes, and anchors",
- abilityGrade:"A",
- item:{desc:"The JoJoLands diamond — the MacGuffin at the heart of the heist that starts the adventure",grade:"B"},
- companionGrade:null},
+//{name:"Jodio Joestar",part:9,pname:"The JoJoLands",stand:"November Rain",role:"Protagonist",
+ //desc:"Hawai'i hustler. November Rain drops become perfectly immovable on contact with any surface.",
+ //stats:{strength:"B",durability:"B",speed:"B",battleIQ:"B"},
+ //standStats:{str:"B",spd:"B",range:"B",dur:"B",prec:"B",pot:"A"},
+ //abilityDesc:"November Rain — raindrops become perfectly immovable on contact; paralyses, crushes, and anchors",
+ //abilityGrade:"A",
+ //item:{desc:"The JoJoLands diamond — the MacGuffin at the heart of the heist that starts the adventure",grade:"B"},
+ //companionGrade:null},
 
-{name:"Dragona Joestar",part:9,pname:"The JoJoLands",stand:"Smooth Operators",role:"Sibling",
- desc:"Jodio's sibling. Smooth Operators relocates surface objects seamlessly without detection.",
- stats:{strength:"C",durability:"C",speed:"B",battleIQ:"A"},
- standStats:{str:"C",spd:"B",range:"B",dur:"C",prec:"A",pot:"B"},
- abilityDesc:"Smooth Operators — relocates objects on any surface (including on people) undetected and seamlessly",
- abilityGrade:"B",
- item:{desc:"Composure — their calm tactical reading of chaos is the crew's most reliable asset",grade:"B"},
- companionGrade:null},
+//{name:"Dragona Joestar",part:9,pname:"The JoJoLands",stand:"Smooth Operators",role:"Sibling",
+ //desc:"Jodio's sibling. Smooth Operators relocates surface objects seamlessly without detection.",
+ //stats:{strength:"C",durability:"C",speed:"B",battleIQ:"A"},
+ //standStats:{str:"C",spd:"B",range:"B",dur:"C",prec:"A",pot:"B"},
+ //abilityDesc:"Smooth Operators — relocates objects on any surface (including on people) undetected and seamlessly",
+ //abilityGrade:"B",
+ //item:{desc:"Composure — their calm tactical reading of chaos is the crew's most reliable asset",grade:"B"},
+ //companionGrade:null},
 
-{name:"Paco Laburantes",part:9,pname:"The JoJoLands",stand:"LMFAO",role:"Ally",
- desc:"The muscle. LMFAO Crossfire Hurricane launches massive concussive blasts per strike.",
- stats:{strength:"A",durability:"B",speed:"B",battleIQ:"C"},
- standStats:{str:"A",spd:"B",range:"C",dur:"A",prec:"C",pot:"B"},
- abilityDesc:"LMFAO Crossfire Hurricane — massive concussive blast per kick; overwhelming close-range destruction",
- abilityGrade:"A",
- item:{desc:"Physical mass — legitimate intimidation factor and grappling advantage in close quarters",grade:"C"},
- companionGrade:null},
+//{name:"Paco Laburantes",part:9,pname:"The JoJoLands",stand:"LMFAO",role:"Ally",
+ //desc:"The muscle. LMFAO Crossfire Hurricane launches massive concussive blasts per strike.",
+ //stats:{strength:"A",durability:"B",speed:"B",battleIQ:"C"},
+ //standStats:{str:"A",spd:"B",range:"C",dur:"A",prec:"C",pot:"B"},
+ //abilityDesc:"LMFAO Crossfire Hurricane — massive concussive blast per kick; overwhelming close-range destruction",
+ //abilityGrade:"A",
+ //item:{desc:"Physical mass — legitimate intimidation factor and grappling advantage in close quarters",grade:"C"},
+ //companionGrade:null},
 
-{name:"Usagi Alohaoe",part:9,pname:"The JoJoLands",stand:"The Hustle",role:"Ally",
- desc:"Enigmatic fighter. The Hustle redirects the trajectory of anything it makes contact with.",
- stats:{strength:"C",durability:"C",speed:"B",battleIQ:"A"},
- standStats:{str:"C",spd:"A",range:"B",dur:"B",prec:"A",pot:"B"},
- abilityDesc:"The Hustle — redirects the trajectory of any force or object that makes contact with it",
- abilityGrade:"B",
- item:{desc:"Rabbit mask — psychological pressure tool used in negotiations and infiltration",grade:"C"},
- companionGrade:null},
-];
+//{name:"Usagi Alohaoe",part:9,pname:"The JoJoLands",stand:"The Hustle",role:"Ally",
+ //desc:"Enigmatic fighter. The Hustle redirects the trajectory of anything it makes contact with.",
+ //stats:{strength:"C",durability:"C",speed:"B",battleIQ:"A"},
+ //standStats:{str:"C",spd:"A",range:"B",dur:"B",prec:"A",pot:"B"},
+ //abilityDesc:"The Hustle — redirects the trajectory of any force or object that makes contact with it",
+ //abilityGrade:"B",
+ //item:{desc:"Rabbit mask — psychological pressure tool used in negotiations and infiltration",grade:"C"},
+ //companionGrade:null},
+//];
 // ═══════════════════════════════════════════
 // STATE & CONFIG
 // ═══════════════════════════════════════════
-const GS_SCORE = { 'S': 10, 'A': 8, 'B': 6, 'C': 4, 'D': 2, 'E': 0 };
+const GS_SCORE = { 'SS': 20, 'S': 10, 'A': 8, 'B': 6, 'C': 4, 'D': 2, 'E': 0, 'F': -5 };
 let allBuilds=[];
 let curBuild=null;  
 let usedChars=[];
@@ -826,6 +828,8 @@ function gc(g) {
 
 function gcolor(g) {
   switch(g ? g.toUpperCase() : '') {
+    case 'SS': return 'var(--pink)'; // Uses existing hot pink theme variable
+    case 'F': return 'var(--red)';   // Uses existing tactical red theme variable
     case 'S': return 'var(--gS)';
     case 'A': return 'var(--gA)';
     case 'B': return 'var(--gB)';
@@ -877,12 +881,17 @@ for(const s of standMap){
       rows.push({key:k,label:k,grade:null,value:null,group:'na'});
     }
     rows.push({key:'ability',label:'Stand Ability',grade:null,value:null,group:'na'});
+
+    // Use standard companion asset tier if valid, otherwise drop to softlock fallback F variant
+    const customGrade = ch.companionGrade || 'F';
+    const isSoftlockFallback = customGrade === 'F';
+
     rows.push({
       key:'item',
-      label:'Companion: '+ch.name,
-      grade:ch.companionGrade||'C',
-      value:ch.name+' ('+ch.pname+', '+ch.role+') — '+ch.desc,
-      group:'companion'
+      label: isSoftlockFallback ? 'PASS CHARACTER (Softlock Fallback)' : 'Companion: '+ch.name,
+      grade: customGrade,
+      value: isSoftlockFallback ? 'Take a -5 point penalty to pass this character (No compatible attributes remain).' : ch.name+' ('+ch.pname+', '+ch.role+') — '+ch.desc,
+      group: isSoftlockFallback ? 'item' : 'companion'
     });
   }
   return rows;
@@ -914,7 +923,8 @@ function startNewBuild(){
 // ROLL
 // ═══════════════════════════════════════════
 function doRoll(){
-  if(!curBuild||curBuild.slots.length>=8)return;
+  if(!curBuild||curBuild.slots.length>=12)return; // 12-slot capacity ceiling check
+  isRolling = true; // Strict lock engagement
   document.getElementById('rollBtn').disabled=true;
   const pool=CHARS.filter(c=>!usedChars.includes(c.name));
   if(!pool.length){saveBuild();return;}
@@ -932,8 +942,8 @@ function doRoll(){
       doFlash();
       curChar=ch;
       usedChars.push(ch.name);
+      isRolling = false; // Safely release interaction lock now that rendering is ready
       renderCard(ch);
-      // document.getElementById('rollBtn').disabled=false; // Uncomment here if rolling shouldn't lock during picking
     }
   },75);
 }
@@ -1083,9 +1093,9 @@ function renderCard(ch){
 // ═══════════════════════════════════════════
 function updateSidebar(){
   if(!curBuild)return;
-  document.getElementById('sbcnt').textContent=curBuild.slots.length+'/8';
+  document.getElementById('sbcnt').textContent=curBuild.slots.length+'/12';
   let h='';
-  for(let i=0;i<8;i++){
+  for(let i=0;i<12;i++){ // Render 12 sidebar items
     const s=curBuild.slots[i];
     if(s){
       h+=`<div class="sbslot filled">
@@ -1103,7 +1113,7 @@ function updateSidebar(){
 function updateDots(){
   if(!curBuild)return;
   let h='';
-  for(let i=0;i<8;i++){
+  for(let i=0;i<12;i++){
     const cls=i<curBuild.slots.length?'done':i===curBuild.slots.length?'now':'';
     h+=`<div class="dot ${cls}"></div>`;
   }
