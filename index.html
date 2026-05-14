@@ -766,42 +766,42 @@ const CHARS=[
  companionGrade:null},
 
 // ── Part 9 ──
-//{name:"Jodio Joestar",part:9,pname:"The JoJoLands",stand:"November Rain",role:"Protagonist",
- //desc:"Hawai'i hustler. November Rain drops become perfectly immovable on contact with any surface.",
- //stats:{strength:"B",durability:"B",speed:"B",battleIQ:"B"},
- //standStats:{str:"B",spd:"B",range:"B",dur:"B",prec:"B",pot:"A"},
- //abilityDesc:"November Rain — raindrops become perfectly immovable on contact; paralyses, crushes, and anchors",
- //abilityGrade:"A",
- //item:{desc:"The JoJoLands diamond — the MacGuffin at the heart of the heist that starts the adventure",grade:"B"},
- //companionGrade:null},
+{name:"Jodio Joestar",part:9,pname:"The JoJoLands",stand:"November Rain",role:"Protagonist",
+ desc:"Hawai'i hustler. November Rain drops become perfectly immovable on contact with any surface.",
+ stats:{strength:"B",durability:"B",speed:"B",battleIQ:"B"},
+ standStats:{str:"B",spd:"B",range:"B",dur:"B",prec:"B",pot:"A"},
+ abilityDesc:"November Rain — raindrops become perfectly immovable on contact; paralyses, crushes, and anchors",
+ abilityGrade:"A",
+ item:{desc:"The JoJoLands diamond — the MacGuffin at the heart of the heist that starts the adventure",grade:"B"},
+ companionGrade:null},
 
-//{name:"Dragona Joestar",part:9,pname:"The JoJoLands",stand:"Smooth Operators",role:"Sibling",
- //desc:"Jodio's sibling. Smooth Operators relocates surface objects seamlessly without detection.",
- //stats:{strength:"C",durability:"C",speed:"B",battleIQ:"A"},
- //standStats:{str:"C",spd:"B",range:"B",dur:"C",prec:"A",pot:"B"},
- //abilityDesc:"Smooth Operators — relocates objects on any surface (including on people) undetected and seamlessly",
- //abilityGrade:"B",
- //item:{desc:"Composure — their calm tactical reading of chaos is the crew's most reliable asset",grade:"B"},
- //companionGrade:null},
+{name:"Dragona Joestar",part:9,pname:"The JoJoLands",stand:"Smooth Operators",role:"Sibling",
+ desc:"Jodio's sibling. Smooth Operators relocates surface objects seamlessly without detection.",
+ stats:{strength:"C",durability:"C",speed:"B",battleIQ:"A"},
+ standStats:{str:"C",spd:"B",range:"B",dur:"C",prec:"A",pot:"B"},
+ abilityDesc:"Smooth Operators — relocates objects on any surface (including on people) undetected and seamlessly",
+ abilityGrade:"B",
+ item:{desc:"Composure — their calm tactical reading of chaos is the crew's most reliable asset",grade:"B"},
+ companionGrade:null},
 
-//{name:"Paco Laburantes",part:9,pname:"The JoJoLands",stand:"LMFAO",role:"Ally",
- //desc:"The muscle. LMFAO Crossfire Hurricane launches massive concussive blasts per strike.",
- //stats:{strength:"A",durability:"B",speed:"B",battleIQ:"C"},
- //standStats:{str:"A",spd:"B",range:"C",dur:"A",prec:"C",pot:"B"},
- //abilityDesc:"LMFAO Crossfire Hurricane — massive concussive blast per kick; overwhelming close-range destruction",
- //abilityGrade:"A",
- //item:{desc:"Physical mass — legitimate intimidation factor and grappling advantage in close quarters",grade:"C"},
- //companionGrade:null},
+{name:"Paco Laburantes",part:9,pname:"The JoJoLands",stand:"LMFAO",role:"Ally",
+ desc:"The muscle. LMFAO Crossfire Hurricane launches massive concussive blasts per strike.",
+ stats:{strength:"A",durability:"B",speed:"B",battleIQ:"C"},
+ standStats:{str:"A",spd:"B",range:"C",dur:"A",prec:"C",pot:"B"},
+ abilityDesc:"LMFAO Crossfire Hurricane — massive concussive blast per kick; overwhelming close-range destruction",
+ abilityGrade:"A",
+ item:{desc:"Physical mass — legitimate intimidation factor and grappling advantage in close quarters",grade:"C"},
+ companionGrade:null},
 
-//{name:"Usagi Alohaoe",part:9,pname:"The JoJoLands",stand:"The Hustle",role:"Ally",
- //desc:"Enigmatic fighter. The Hustle redirects the trajectory of anything it makes contact with.",
- //stats:{strength:"C",durability:"C",speed:"B",battleIQ:"A"},
- //standStats:{str:"C",spd:"A",range:"B",dur:"B",prec:"A",pot:"B"},
- //abilityDesc:"The Hustle — redirects the trajectory of any force or object that makes contact with it",
- //abilityGrade:"B",
- //item:{desc:"Rabbit mask — psychological pressure tool used in negotiations and infiltration",grade:"C"},
- //companionGrade:null},
-//];
+{name:"Usagi Alohaoe",part:9,pname:"The JoJoLands",stand:"The Hustle",role:"Ally",
+ desc:"Enigmatic fighter. The Hustle redirects the trajectory of anything it makes contact with.",
+ stats:{strength:"C",durability:"C",speed:"B",battleIQ:"A"},
+ standStats:{str:"C",spd:"A",range:"B",dur:"B",prec:"A",pot:"B"},
+ abilityDesc:"The Hustle — redirects the trajectory of any force or object that makes contact with it",
+ abilityGrade:"B",
+ item:{desc:"Rabbit mask — psychological pressure tool used in negotiations and infiltration",grade:"C"},
+ companionGrade:null},
+];
 // ═══════════════════════════════════════════
 // STATE & CONFIG
 // ═══════════════════════════════════════════
@@ -914,8 +914,7 @@ function startNewBuild(){
 // ROLL
 // ═══════════════════════════════════════════
 function doRoll(){
-  if(!curBuild||curBuild.slots.length>=12)return; // 12-slot capacity ceiling check
-  isRolling = true; // Strict lock engagement
+  if(!curBuild||curBuild.slots.length>=8)return;
   document.getElementById('rollBtn').disabled=true;
   const pool=CHARS.filter(c=>!usedChars.includes(c.name));
   if(!pool.length){saveBuild();return;}
@@ -933,8 +932,8 @@ function doRoll(){
       doFlash();
       curChar=ch;
       usedChars.push(ch.name);
-      isRolling = false; // Safely release interaction lock now that rendering is ready
       renderCard(ch);
+      // document.getElementById('rollBtn').disabled=false; // Uncomment here if rolling shouldn't lock during picking
     }
   },75);
 }
@@ -1084,9 +1083,9 @@ function renderCard(ch){
 // ═══════════════════════════════════════════
 function updateSidebar(){
   if(!curBuild)return;
-  document.getElementById('sbcnt').textContent=curBuild.slots.length+'/12';
+  document.getElementById('sbcnt').textContent=curBuild.slots.length+'/8';
   let h='';
-  for(let i=0;i<12;i++){ // Render 12 sidebar items
+  for(let i=0;i<8;i++){
     const s=curBuild.slots[i];
     if(s){
       h+=`<div class="sbslot filled">
@@ -1104,7 +1103,7 @@ function updateSidebar(){
 function updateDots(){
   if(!curBuild)return;
   let h='';
-  for(let i=0;i<12;i++){
+  for(let i=0;i<8;i++){
     const cls=i<curBuild.slots.length?'done':i===curBuild.slots.length?'now':'';
     h+=`<div class="dot ${cls}"></div>`;
   }
