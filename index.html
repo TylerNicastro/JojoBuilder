@@ -832,7 +832,6 @@ function gradeEl(g){
 }
 
 // Build the list of pickable rows for a character
-// Build the list of pickable rows for a character
 function getRows(ch){
   const rows=[];
   const physMap=[
@@ -909,11 +908,15 @@ function startNewBuild(){
   curBuild={name:'',slots:[]};
   usedChars=[];curChar=null;pendingPick=null;
   document.getElementById('bname').value='';
-  document.getElementById('slotTxt').textContent='— PRESS ROLL TO START —';
+    document.getElementById('slotTxt').textContent='— PRESS ROLL TO START —';
   document.getElementById('cardArea').innerHTML='<div class="empty">Press <b style="color:var(--gold)">ROLL CHARACTER</b> to begin.</div>';
   document.getElementById('rollBtn').disabled=false;
+  // Dynamic accurate counter indicator mapping
   document.getElementById('tbBN').textContent=allBuilds.length+1;
+  // Explicit counter ceiling sync safely updates topbar text nodes
+  document.getElementById('tbRN').textContent='1'; 
   updateDots();updateSidebar();
+
   show('build');
 }
 
@@ -951,7 +954,7 @@ function doRoll(){
 // ═══════════════════════════════════════════
 function tryPick(key){ 
   if(!curChar||!curBuild||isRolling)return; // Block picking if actively rolling or locking a character
-  if(curBuild.slots.length>=12)return; // 12-slot upgrade cap
+  if(curBuild.slots.length>=12)return; // Block picking if build is full
   
   // Strict global key comparison blocks duplicate selections across different characters
   if(curBuild.slots.some(s=>s.key===key))return; 
@@ -965,7 +968,7 @@ function tryPick(key){
   // Target display nodes securely via structural IDs
   document.getElementById('mChar').textContent=curChar.name+(curChar.stand?' — '+curChar.stand:''); 
   document.getElementById('mAsp').textContent=row.label; 
-  document.getElementById('mGrd').innerHTML=`<span class="g ${gc(row.grade)}" style="color:${gcolor(row.grade)}">${row.grade}</span>`;
+  document.getElementById('mGrd').innerHTML=`<span class="g ${gc(row.grade)}">${row.grade}</span>`;
   
   const showVal=(row.group==='ability'||row.group==='item'||row.group==='companion')&&row.value; 
   document.getElementById('mVal').textContent=showVal?row.value:'Grade: '+row.grade; 
@@ -1003,6 +1006,7 @@ function confirmPick(){
   renderCard(curChar);
 
   if(curBuild.slots.length>=12){ // 12-slot capacity check
+    isRolling = false;
     setTimeout(saveBuild,500);
     return;
   } 
@@ -1034,9 +1038,10 @@ function renderCard(ch){
       <div><div class="cname">${ch.name}</div><div class="csub">${ch.pname} · ${ch.role}</div></div>
     </div>
     <div class="physdesc">${ch.desc}</div>
-    ${hasStand?`<div class="standbar">◈ STAND: ${ch.stand}</div>`:`<div class="standbar" style="color:var(--muted);font-size:.78rem;letter-spacing:.1em">◈ NO STAND — last slot offers this character as your companion</div>`}
+    ${hasStand?`<div class="standbar">◈ STAND: ${ch.stand || ch.standName || 'Active'}</div>`:`<div class="standbar" style="color:var(--muted);font-size:.78rem;letter-spacing:.1em">◈ NO STAND — last slot offers this character as your companion</div>`}
     <div class="hintbar">▼ TAP ONE ROW TO CLAIM THAT ASPECT</div>
     <div class="sg">`;
+
 
   // Physical Attributes
   for(const r of physRows){
@@ -1048,11 +1053,14 @@ function renderCard(ch){
   // Stand stats or N/A templates
   const standLabels={standStr:'Stand Str',standSpd:'Stand Spd',standRange:'Stand Range',
     standDur:'Stand Dur',standPrec:'Stand Prec',standPot:'Stand Pot'};
-  if(hasStand){
+    if(hasStand){
+    // Text labels are cleanly compressed to prevent running off the UI grid borders
+    const shortLabels={standStr:'Stand Str',standSpd:'Stand Spd',standRange:'Stand Range',
+      standDur:'Stand Dur',standPrec:'Stand Prec',standPot:'Stand Pot'};
     for(const r of standRows){
       const t=isTaken(r.key);
       html+=`<div class="sr ${t?'taken':'pick'}" ${t?'':`onclick="tryPick('${r.key}')"`}>
-        <span class="sl">${r.label}</span>${gradeEl(r.grade)}</div>`;
+        <span class="sl">${shortLabels[r.key] || r.label}</span>${gradeEl(r.grade)}</div>`;
     }
   } else {
     for(const k of Object.keys(standLabels)){
@@ -1092,6 +1100,10 @@ function renderCard(ch){
 function updateSidebar(){
   if(!curBuild)return;
   document.getElementById('sbcnt').textContent=curBuild.slots.length+'/12';
+  
+  // Cleanly updates progress topbar node alongside slots (capped to max 12)
+  const tbRN = document.getElementById('tbRN');
+  if (tbRN) tbRN.textContent = Math.min(curBuild.slots.length + 1, 12);
   let h='';
   for(let i=0;i<12;i++){ // Render 12 sidebar items
     const s=curBuild.slots[i];
@@ -1124,10 +1136,13 @@ function updateDots(){
 function saveBuild(){
   if(!curBuild||curBuild.slots.length===0){goStart();return;}
   curBuild.name=document.getElementById('bname').value.trim()||('Build '+(allBuilds.length+1));
+  
+  // Dynamic Calculation Guard: Run build calculations if engine is declared down below
+  if(typeof calculateBuildScore === 'function') {
+    calculateBuildScore(curBuild);
+  }
+  
   allBuilds.push(JSON.parse(JSON.stringify(curBuild)));
-  curBuild=null;curChar=null;pendingPick=null;
-  goCompare();
-}
 
 // ═══════════════════════════════════════════
 // SCORING
