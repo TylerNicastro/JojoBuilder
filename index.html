@@ -1278,7 +1278,18 @@ function deleteBuild(btnEl){
   renderCompare();
 }
 
-// INITIALIZATION
+// INITIALIZATION — expose all functions inline handlers need to window scope
+window.startNewBuild = startNewBuild;
+window.goCompare     = goCompare;
+window.goStart       = goStart;
+window.doRoll        = doRoll;
+window.tryPick       = tryPick;
+window.doReveal      = doReveal;
+window.confirmPick   = confirmPick;
+window.closeModal    = closeModal;
+window.saveBuild     = saveBuild;
+window.deleteBuild   = deleteBuild;
+
 window.addEventListener('DOMContentLoaded',()=>{
   goStart();
 });
