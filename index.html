@@ -3,1570 +3,1146 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JOJO ASPECT ROLLER</title>
+<title>JoJo Aspect Roller</title>
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-:root {
-  --gold: #f5c842;
-  --gold2: #e8a020;
-  --pink: #ff3fa4;
-  --cyan: #00e5ff;
-  --dark: #0a0a12;
-  --darker: #060609;
-  --panel: #12121e;
-  --panel2: #1a1a2e;
-  --text: #f0eadc;
-  --muted: #888;
-  --red: #ff4444;
-  --green: #44ff88;
-  --purple: #b44fff;
+:root{
+  --gold:#f5c518;--gold2:#c98a10;--pink:#ff3fa4;--cyan:#00e5ff;
+  --dark:#07070f;--panel:#0f0f1e;--panel2:#161628;--border:rgba(245,197,24,.16);
+  --text:#f0eadc;--muted:#686878;--red:#ff4455;--green:#39ff88;--purple:#c060ff;
+  --gS:#f5c518;--gA:#ff8c42;--gB:#39ff88;--gC:#00e5ff;--gD:#888;--gE:#3a3a3a;
 }
-
-* { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-  background: var(--darker);
-  color: var(--text);
-  font-family: 'Crimson Pro', serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* ===== BACKGROUND ===== */
-.bg {
-  position: fixed; inset: 0; z-index: 0;
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--dark);color:var(--text);font-family:'Crimson Pro',serif;min-height:100vh;overflow-x:hidden;}
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;
   background:
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 60px,
-      rgba(245,200,66,0.025) 60px,
-      rgba(245,200,66,0.025) 61px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 60px,
-      rgba(245,200,66,0.025) 60px,
-      rgba(245,200,66,0.025) 61px
-    ),
-    radial-gradient(ellipse at 20% 50%, rgba(180,79,255,0.08) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 50%, rgba(0,229,255,0.06) 0%, transparent 60%),
-    var(--darker);
-  pointer-events: none;
-}
-
-#app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
-
-/* ===== HEADER ===== */
-header {
-  text-align: center;
-  padding: 40px 0 24px;
-  position: relative;
-}
-header::after {
-  content: '';
-  display: block;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, var(--gold), var(--pink), var(--cyan), transparent);
-  margin-top: 20px;
-  border-radius: 2px;
-}
-.title-main {
-  font-family: 'Black Ops One', sans-serif;
-  font-size: clamp(2.8rem, 8vw, 5.5rem);
-  letter-spacing: 0.08em;
-  line-height: 1;
-  background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 40%, var(--pink) 80%, var(--cyan) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 0 20px rgba(245,200,66,0.4));
-  text-transform: uppercase;
-}
-.title-sub {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(0.9rem, 2.5vw, 1.3rem);
-  letter-spacing: 0.35em;
-  color: var(--muted);
-  margin-top: 6px;
-}
-
-/* ===== SCREENS ===== */
-.screen { display: none; animation: fadeIn 0.4s ease; }
-.screen.active { display: block; }
-@keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-
-/* ===== SLOT MACHINE ROLL ===== */
-.roll-area {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 28px;
-  padding: 32px 0;
-}
-
-.character-card {
-  background: var(--panel);
-  border: 2px solid var(--gold2);
-  border-radius: 4px;
-  width: 100%;
-  max-width: 520px;
-  overflow: hidden;
-  box-shadow: 0 0 40px rgba(245,200,66,0.15), inset 0 0 60px rgba(0,0,0,0.5);
-  position: relative;
-}
-.character-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--gold), var(--pink), var(--cyan), var(--gold));
-  background-size: 200%;
-  animation: shimmer 3s linear infinite;
-}
-@keyframes shimmer { 0%{background-position:0%} 100%{background-position:200%} }
-
-.card-header {
-  background: linear-gradient(135deg, rgba(245,200,66,0.15), rgba(180,79,255,0.1));
-  padding: 16px 24px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  border-bottom: 1px solid rgba(245,200,66,0.2);
-}
-.part-badge {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.85rem;
-  letter-spacing: 0.2em;
-  color: var(--dark);
-  background: var(--gold);
-  padding: 4px 10px;
-  border-radius: 2px;
-  white-space: nowrap;
-}
-.char-name {
-  font-family: 'Black Ops One', sans-serif;
-  font-size: clamp(1.1rem, 3vw, 1.6rem);
-  color: var(--text);
-  flex: 1;
-  line-height: 1.2;
-}
-.char-subtitle {
-  font-size: 0.85rem;
-  color: var(--muted);
-  font-style: italic;
-  margin-top: 2px;
-}
-
-.stand-name {
-  padding: 10px 24px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  font-family: 'Bebas Neue', sans-serif;
-  letter-spacing: 0.2em;
-  font-size: 1.1rem;
-  color: var(--cyan);
-  background: rgba(0,229,255,0.05);
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-}
-.stat-row {
-  padding: 9px 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-  border-right: 1px solid rgba(255,255,255,0.04);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  transition: background 0.15s;
-  position: relative;
-}
-.stat-row:nth-child(even) { border-right: none; }
-.stat-row:hover { background: rgba(245,200,66,0.07); }
-.stat-row.chosen { background: rgba(245,200,66,0.12); }
-.stat-row.chosen::after {
-  content: '✦ TAKEN';
-  position: absolute;
-  right: 10px;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  color: var(--gold);
-  opacity: 0.8;
-}
-
-.stat-label {
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-  text-transform: uppercase;
-  min-width: 100px;
-  font-family: 'Bebas Neue', sans-serif;
-}
-.stat-value {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text);
-}
-.stat-grade {
-  margin-left: auto;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.2rem;
-  font-weight: 700;
-  min-width: 28px;
-  text-align: right;
-}
-.grade-S { color: var(--gold); text-shadow: 0 0 8px var(--gold); }
-.grade-A { color: #ff8c42; text-shadow: 0 0 8px #ff8c42; }
-.grade-B { color: var(--green); text-shadow: 0 0 6px var(--green); }
-.grade-C { color: var(--cyan); }
-.grade-D { color: var(--muted); }
-.grade-E { color: #555; }
-
-.ability-row {
-  grid-column: span 2;
-  padding: 12px 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-  cursor: pointer;
-  transition: background 0.15s;
-  position: relative;
-}
-.ability-row:hover { background: rgba(245,200,66,0.07); }
-.ability-row.chosen { background: rgba(245,200,66,0.12); }
-.ability-row.chosen::after {
-  content: '✦ TAKEN';
-  position: absolute;
-  top: 12px; right: 14px;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  color: var(--gold);
-}
-.ability-label {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.78rem;
-  letter-spacing: 0.1em;
-  color: var(--pink);
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-.ability-desc {
-  font-size: 0.9rem;
-  color: var(--text);
-  line-height: 1.5;
-}
-.ability-grade {
-  display: inline-block;
-  margin-left: 8px;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.1rem;
-}
-
-.item-row {
-  grid-column: span 2;
-  padding: 10px 20px;
-  cursor: pointer;
-  transition: background 0.15s;
-  position: relative;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-.item-row:hover { background: rgba(245,200,66,0.07); }
-.item-row.chosen { background: rgba(245,200,66,0.12); }
-.item-row.chosen::after {
-  content: '✦ TAKEN';
-  position: absolute;
-  right: 14px;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  color: var(--gold);
-}
-
-.choose-hint {
-  text-align: center;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1rem;
-  letter-spacing: 0.2em;
-  color: var(--gold);
-  opacity: 0.8;
-  padding: 10px;
-  animation: pulse 2s ease-in-out infinite;
-}
-@keyframes pulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
-
-/* ===== BUTTONS ===== */
-.btn {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.1rem;
-  letter-spacing: 0.2em;
-  padding: 14px 36px;
-  border: none;
-  cursor: pointer;
-  border-radius: 3px;
-  transition: all 0.2s;
-  text-transform: uppercase;
-  position: relative;
-  overflow: hidden;
-}
-.btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-.btn:hover::after { opacity: 1; }
-.btn:active { transform: scale(0.97); }
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--gold), var(--gold2));
-  color: var(--dark);
-  box-shadow: 0 4px 20px rgba(245,200,66,0.3);
-}
-.btn-primary:hover { box-shadow: 0 4px 30px rgba(245,200,66,0.5); transform: translateY(-1px); }
-
-.btn-secondary {
-  background: transparent;
-  color: var(--gold);
-  border: 1px solid var(--gold2);
-}
-.btn-secondary:hover { background: rgba(245,200,66,0.08); }
-
-.btn-danger {
-  background: transparent;
-  color: var(--red);
-  border: 1px solid rgba(255,68,68,0.4);
-  font-size: 0.85rem;
-}
-.btn-danger:hover { background: rgba(255,68,68,0.08); }
-
-.btn-compare {
-  background: linear-gradient(135deg, var(--pink), var(--purple));
-  color: white;
-  box-shadow: 0 4px 20px rgba(255,63,164,0.3);
-  font-size: 1.3rem;
-  padding: 18px 48px;
-}
-.btn-compare:hover { box-shadow: 0 4px 40px rgba(255,63,164,0.5); transform: translateY(-2px); }
-
-/* ===== SLOT ANIMATION ===== */
-.slot-container {
-  width: 100%;
-  max-width: 520px;
-  background: var(--panel);
-  border: 2px solid rgba(245,200,66,0.3);
-  border-radius: 4px;
-  height: 80px;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.slot-inner {
-  font-family: 'Black Ops One', sans-serif;
-  font-size: 1.4rem;
-  text-align: center;
-  padding: 0 20px;
-  transition: all 0.1s;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-.rolling { animation: roll 0.08s linear infinite; color: var(--gold); }
-@keyframes roll {
-  0% { transform: translateY(-100%); opacity:0; }
-  50% { transform: translateY(0); opacity:1; }
-  100% { transform: translateY(100%); opacity:0; }
-}
-
-/* ===== BUILD DISPLAY (sidebar) ===== */
-.build-area {
-  display: grid;
-  grid-template-columns: 1fr 260px;
-  gap: 20px;
-  align-items: start;
-}
-@media (max-width: 640px) {
-  .build-area { grid-template-columns: 1fr; }
-}
-
-.build-sidebar {
-  background: var(--panel);
-  border: 1px solid rgba(245,200,66,0.2);
-  border-radius: 4px;
-  overflow: hidden;
-  position: sticky;
-  top: 20px;
-}
-.sidebar-title {
-  font-family: 'Bebas Neue', sans-serif;
-  letter-spacing: 0.2em;
-  font-size: 1rem;
-  padding: 12px 16px;
-  background: rgba(245,200,66,0.1);
-  border-bottom: 1px solid rgba(245,200,66,0.2);
-  color: var(--gold);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.slot-count {
-  font-size: 1.3rem;
-  color: var(--text);
-}
-.build-slot {
-  padding: 10px 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  min-height: 48px;
-}
-.build-slot-num {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  color: var(--muted);
-}
-.build-slot-content {
-  font-size: 0.85rem;
-  color: var(--text);
-  margin-top: 2px;
-}
-.build-slot-aspect {
-  color: var(--gold);
-  font-size: 0.75rem;
-  font-family: 'Bebas Neue', sans-serif;
-  letter-spacing: 0.1em;
-}
-.build-slot.empty .build-slot-content { color: var(--muted); font-style: italic; }
-.build-slot.filled { background: rgba(245,200,66,0.04); }
-
-.sidebar-actions {
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* ===== STEP INDICATOR ===== */
-.step-indicator {
-  display: flex;
-  gap: 6px;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-.step-dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: rgba(245,200,66,0.2);
-  border: 1px solid rgba(245,200,66,0.3);
-  transition: all 0.3s;
-}
-.step-dot.done { background: var(--gold); border-color: var(--gold); }
-.step-dot.current { background: var(--pink); border-color: var(--pink); box-shadow: 0 0 8px var(--pink); }
-
-/* ===== MODAL for confirmation ===== */
-.modal-overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.85);
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(4px);
-  animation: fadeIn 0.2s;
-}
-.modal-overlay.hidden { display: none; }
-.modal-box {
-  background: var(--panel2);
-  border: 2px solid var(--gold2);
-  border-radius: 4px;
-  padding: 32px;
-  max-width: 400px;
-  width: 90%;
-  text-align: center;
-  box-shadow: 0 0 60px rgba(245,200,66,0.2);
-}
-.modal-title {
-  font-family: 'Black Ops One', sans-serif;
-  font-size: 1.3rem;
-  color: var(--gold);
-  margin-bottom: 8px;
-}
-.modal-char { font-size: 1.1rem; color: var(--cyan); margin-bottom: 6px; font-style: italic; }
-.modal-aspect {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.5rem;
-  letter-spacing: 0.15em;
-  color: var(--pink);
-  margin-bottom: 16px;
-}
-.modal-value { font-size: 0.95rem; color: var(--text); margin-bottom: 24px; }
-.modal-grade {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-}
-.modal-btns { display: flex; gap: 12px; justify-content: center; }
-
-/* ===== COMPARE SCREEN ===== */
-.compare-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-  margin-bottom: 40px;
-}
-
-.fighter-card {
-  background: var(--panel);
-  border-radius: 4px;
-  overflow: hidden;
-  position: relative;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-.fighter-card.rank-1 { border: 2px solid var(--gold); box-shadow: 0 0 30px rgba(245,200,66,0.3); }
-.fighter-card.rank-2 { border: 2px solid #c0c0c0; box-shadow: 0 0 20px rgba(192,192,192,0.2); }
-.fighter-card.rank-3 { border: 2px solid #cd7f32; box-shadow: 0 0 20px rgba(205,127,50,0.2); }
-.fighter-card:not(.rank-1):not(.rank-2):not(.rank-3) { border: 1px solid rgba(255,255,255,0.1); }
-
-.rank-banner {
-  position: absolute;
-  top: 0; right: 0;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.85rem;
-  letter-spacing: 0.15em;
-  padding: 4px 12px 4px 16px;
-  clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%);
-}
-.rank-1 .rank-banner { background: var(--gold); color: var(--dark); }
-.rank-2 .rank-banner { background: #c0c0c0; color: var(--dark); }
-.rank-3 .rank-banner { background: #cd7f32; color: var(--dark); }
-
-.fighter-header {
-  padding: 20px 16px 14px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.fighter-name {
-  font-family: 'Black Ops One', sans-serif;
-  font-size: 1rem;
-  color: var(--text);
-  line-height: 1.3;
-}
-.fighter-source {
-  font-size: 0.78rem;
-  color: var(--muted);
-  margin-top: 4px;
-  font-style: italic;
-}
-.fighter-score {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2.5rem;
-  text-align: center;
-  padding: 12px;
-  line-height: 1;
-}
-.score-label {
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  color: var(--muted);
-  text-align: center;
-  margin-top: -8px;
-  margin-bottom: 12px;
-}
-.fighter-aspects {
-  padding: 0 14px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-.aspect-chip {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.78rem;
-  padding: 4px 8px;
-  background: rgba(255,255,255,0.04);
-  border-radius: 2px;
-}
-.aspect-name { color: var(--muted); font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.08em; font-size: 0.8rem; }
-.aspect-val { color: var(--text); font-size: 0.82rem; }
-.aspect-g { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; min-width: 18px; text-align: right; }
-
-.synergy-section {
-  margin-top: 8px;
-  padding: 10px 14px;
-  border-top: 1px solid rgba(255,255,255,0.06);
-}
-.synergy-label {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.78rem;
-  letter-spacing: 0.15em;
-  color: var(--purple);
-  margin-bottom: 4px;
-}
-.synergy-text { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
-.synergy-bonus {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.9rem;
-  color: var(--purple);
-}
-
-/* ===== WINNER ===== */
-.winner-banner {
-  text-align: center;
-  padding: 40px 20px;
-  background: linear-gradient(135deg, rgba(245,200,66,0.1), rgba(255,63,164,0.1), rgba(0,229,255,0.05));
-  border: 2px solid var(--gold);
-  border-radius: 4px;
-  margin-bottom: 30px;
-  position: relative;
-  overflow: hidden;
-}
-.winner-banner::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(
-    90deg,
-    transparent,
-    transparent 20px,
-    rgba(245,200,66,0.03) 20px,
-    rgba(245,200,66,0.03) 21px
-  );
-}
-.winner-label {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1rem;
-  letter-spacing: 0.4em;
-  color: var(--gold);
-  margin-bottom: 8px;
-}
-.winner-name {
-  font-family: 'Black Ops One', sans-serif;
-  font-size: clamp(1.8rem, 5vw, 3rem);
-  background: linear-gradient(135deg, var(--gold), var(--pink));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.winner-score {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2rem;
-  color: var(--text);
-  margin-top: 4px;
-}
-.winner-aspects { font-size: 0.9rem; color: var(--muted); margin-top: 8px; font-style: italic; }
-
-/* ===== FLASH EFFECT ===== */
-@keyframes cardReveal {
-  0% { opacity:0; transform: scale(0.9) rotateY(-10deg); }
-  100% { opacity:1; transform: scale(1) rotateY(0deg); }
-}
-.card-reveal { animation: cardReveal 0.5s cubic-bezier(0.175,0.885,0.32,1.275); }
-
-/* ===== ROLLING OVERLAY ===== */
-.roll-flash {
-  position: fixed; inset: 0; z-index: 50;
-  background: rgba(245,200,66,0.15);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.1s;
-}
-.roll-flash.show { opacity: 1; }
-
-/* ===== MISC ===== */
-.section-divider {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 24px 0;
-}
-.section-divider span {
-  font-family: 'Bebas Neue', sans-serif;
-  letter-spacing: 0.25em;
-  font-size: 0.85rem;
-  color: var(--muted);
-  white-space: nowrap;
-}
-.section-divider::before, .section-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: rgba(255,255,255,0.1);
-}
-
-.empty-state {
-  text-align: center;
-  color: var(--muted);
-  font-style: italic;
-  padding: 40px;
-}
-
-/* ===== START SCREEN ===== */
-.start-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  padding: 40px 0;
-  text-align: center;
-}
-.start-description {
-  max-width: 480px;
-  line-height: 1.7;
-  color: #ccc;
-  font-size: 1.05rem;
-}
-.parts-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  max-width: 500px;
-}
-.part-tag {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.8rem;
-  letter-spacing: 0.15em;
-  padding: 5px 12px;
-  border: 1px solid rgba(245,200,66,0.3);
-  color: var(--gold);
-  border-radius: 2px;
-  background: rgba(245,200,66,0.05);
-}
-
-.how-to {
-  background: var(--panel);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 4px;
-  padding: 20px 24px;
-  max-width: 480px;
-  text-align: left;
-}
-.how-to h3 {
-  font-family: 'Bebas Neue', sans-serif;
-  letter-spacing: 0.2em;
-  color: var(--cyan);
-  margin-bottom: 12px;
-}
-.how-to ol {
-  padding-left: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.how-to li { font-size: 0.9rem; color: #bbb; line-height: 1.5; }
-.how-to li strong { color: var(--gold); }
-
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 0;
-  margin-bottom: 8px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-.top-bar-info {
-  font-family: 'Bebas Neue', sans-serif;
-  letter-spacing: 0.15em;
-  font-size: 0.95rem;
-  color: var(--muted);
-}
-.top-bar-info span { color: var(--gold); font-size: 1.2rem; }
-
-.roll-controls {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-/* tooltip for stat rows */
-.stat-row[data-tip]:hover::before {
-  content: attr(data-tip);
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--panel2);
-  border: 1px solid var(--gold2);
-  color: var(--text);
-  font-size: 0.75rem;
-  padding: 4px 10px;
-  border-radius: 3px;
-  white-space: nowrap;
-  z-index: 10;
-  font-family: 'Crimson Pro', serif;
-  font-style: normal;
-  pointer-events: none;
-}
+    repeating-linear-gradient(45deg,transparent,transparent 68px,rgba(245,197,24,.016) 68px,rgba(245,197,24,.016) 69px),
+    repeating-linear-gradient(-45deg,transparent,transparent 68px,rgba(245,197,24,.016) 68px,rgba(245,197,24,.016) 69px),
+    radial-gradient(ellipse at 15% 40%,rgba(180,79,255,.06) 0%,transparent 55%),
+    radial-gradient(ellipse at 85% 60%,rgba(0,229,255,.045) 0%,transparent 55%),
+    var(--dark);}
+#app{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:0 14px 80px;}
+header{text-align:center;padding:34px 0 18px;}
+header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),var(--pink),var(--cyan),transparent);}
+.htitle{font-family:'Black Ops One',sans-serif;font-size:clamp(2.4rem,6.5vw,4.8rem);
+  letter-spacing:.07em;line-height:1;
+  background:linear-gradient(130deg,var(--gold) 0%,#e08010 35%,var(--pink) 70%,var(--cyan) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 16px rgba(245,197,24,.32));}
+.hsub{font-family:'Bebas Neue',sans-serif;font-size:clamp(.82rem,2vw,1.15rem);
+  letter-spacing:.35em;color:var(--muted);margin-top:4px;}
+.scr{display:none;animation:fIn .32s ease;}
+.scr.on{display:block;}
+@keyframes fIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.btn{font-family:'Bebas Neue',sans-serif;letter-spacing:.2em;border:none;cursor:pointer;
+  border-radius:3px;transition:all .17s;text-transform:uppercase;overflow:hidden;}
+.btn:active{transform:scale(.97);}
+.btn:disabled{opacity:.38;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#05050a;
+  padding:12px 30px;font-size:1rem;box-shadow:0 3px 16px rgba(245,197,24,.28);}
+.btn-gold:not(:disabled):hover{box-shadow:0 4px 26px rgba(245,197,24,.48);transform:translateY(-1px);}
+.btn-ghost{background:transparent;color:var(--gold);border:1px solid rgba(245,197,24,.32);
+  padding:9px 20px;font-size:.88rem;}
+.btn-ghost:not(:disabled):hover{background:rgba(245,197,24,.06);}
+.btn-pink{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;
+  padding:13px 36px;font-size:1.1rem;box-shadow:0 3px 16px rgba(255,63,164,.26);}
+.btn-pink:not(:disabled):hover{box-shadow:0 4px 32px rgba(255,63,164,.44);transform:translateY(-1px);}
+.btn-sm{padding:7px 16px;font-size:.82rem;}
+/* START */
+.sw{display:flex;flex-direction:column;align-items:center;gap:20px;padding:28px 0;text-align:center;}
+.sdesc{max-width:460px;line-height:1.75;color:#ccc;font-size:1.02rem;}
+.parts-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:480px;}
+.ptag{font-family:'Bebas Neue',sans-serif;font-size:.76rem;letter-spacing:.15em;padding:4px 10px;
+  border:1px solid rgba(245,197,24,.26);color:var(--gold);border-radius:2px;background:rgba(245,197,24,.04);}
+.howto{background:var(--panel);border:1px solid var(--border);border-radius:4px;
+  padding:16px 20px;max-width:460px;text-align:left;}
+.howto h3{font-family:'Bebas Neue',sans-serif;letter-spacing:.2em;color:var(--cyan);margin-bottom:9px;font-size:.95rem;}
+.howto ol{padding-left:16px;display:flex;flex-direction:column;gap:6px;}
+.howto li{font-size:.86rem;color:#bbb;line-height:1.5;}
+.howto li b{color:var(--gold);}
+/* BUILD */
+.topbar{display:flex;justify-content:space-between;align-items:center;
+  padding:9px 0 12px;border-bottom:1px solid rgba(255,255,255,.055);margin-bottom:12px;}
+.tbl{font-family:'Bebas Neue',sans-serif;letter-spacing:.15em;font-size:.92rem;color:var(--muted);}
+.tbl em{color:var(--gold);font-style:normal;font-size:1.1rem;}
+.dots{display:flex;gap:5px;justify-content:center;margin-bottom:14px;}
+.dot{width:9px;height:9px;border-radius:50%;background:rgba(245,197,24,.13);
+  border:1px solid rgba(245,197,24,.22);transition:all .28s;}
+.dot.done{background:var(--gold);border-color:var(--gold);}
+.dot.now{background:var(--pink);border-color:var(--pink);box-shadow:0 0 7px var(--pink);}
+.blayout{display:grid;grid-template-columns:1fr 265px;gap:16px;align-items:start;}
+@media(max-width:640px){.blayout{grid-template-columns:1fr;}}
+.slot-wrap{background:var(--panel);border:2px solid rgba(245,197,24,.22);border-radius:4px;
+  height:68px;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+.slot-txt{font-family:'Black Ops One',sans-serif;font-size:1.25rem;
+  color:var(--gold);padding:0 14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.slot-txt.rolling{animation:sroll .09s linear infinite;}
+@keyframes sroll{0%{transform:translateY(-100%);opacity:0}50%{transform:translateY(0);opacity:1}100%{transform:translateY(100%);opacity:0}}
+/* CARD */
+.ccard{background:var(--panel);border:2px solid var(--gold2);border-radius:4px;
+  overflow:hidden;box-shadow:0 0 30px rgba(245,197,24,.09),inset 0 0 40px rgba(0,0,0,.35);position:relative;}
+.ccard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--gold),var(--pink),var(--cyan),var(--gold));
+  background-size:200%;animation:shim 3s linear infinite;}
+@keyframes shim{0%{background-position:0%}100%{background-position:200%}}
+.ccard-top{background:linear-gradient(135deg,rgba(245,197,24,.1),rgba(180,79,255,.07));
+  padding:12px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(245,197,24,.13);}
+.pbadge{font-family:'Bebas Neue',sans-serif;font-size:.76rem;letter-spacing:.17em;
+  color:#05050a;background:var(--gold);padding:2px 8px;border-radius:2px;white-space:nowrap;}
+.cname{font-family:'Black Ops One',sans-serif;font-size:clamp(.95rem,2.3vw,1.38rem);line-height:1.2;}
+.csub{font-size:.78rem;color:var(--muted);font-style:italic;margin-top:2px;}
+.standbar{padding:7px 18px;font-family:'Bebas Neue',sans-serif;letter-spacing:.17em;font-size:.96rem;
+  color:var(--cyan);background:rgba(0,229,255,.045);border-bottom:1px solid rgba(255,255,255,.04);}
+.hintbar{text-align:center;padding:6px;font-family:'Bebas Neue',sans-serif;font-size:.84rem;
+  letter-spacing:.17em;color:var(--gold);animation:pulse 1.9s ease-in-out infinite;
+  border-bottom:1px solid rgba(255,255,255,.04);}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+.physdesc{padding:6px 18px 8px;font-size:.8rem;color:var(--muted);font-style:italic;
+  border-bottom:1px solid rgba(255,255,255,.04);line-height:1.45;}
+/* stat grid */
+.sg{display:grid;grid-template-columns:1fr 1fr;}
+.sr{padding:7px 15px;border-bottom:1px solid rgba(255,255,255,.036);
+  border-right:1px solid rgba(255,255,255,.036);display:flex;align-items:center;
+  gap:7px;position:relative;transition:background .13s;}
+.sr:nth-child(even){border-right:none;}
+.sr.pick{cursor:pointer;}
+.sr.pick:hover{background:rgba(245,197,24,.075);}
+.sr.taken{background:rgba(245,197,24,.09);cursor:default;}
+.sr.taken::after{content:'✦';position:absolute;right:7px;color:var(--gold);font-size:.85rem;opacity:.65;}
+.sr.na{opacity:.28;cursor:default;}
+.sl{font-family:'Bebas Neue',sans-serif;font-size:.73rem;letter-spacing:.07em;color:var(--muted);min-width:92px;}
+.sr-full{grid-column:span 2;border-right:none;}
+.sr-full.pick:hover{background:rgba(245,197,24,.075);}
+.abl{font-family:'Bebas Neue',sans-serif;font-size:.73rem;letter-spacing:.09em;color:var(--pink);margin-bottom:3px;}
+.abt{font-size:.84rem;line-height:1.48;}
+.g{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;font-weight:700;margin-left:auto;min-width:20px;text-align:right;}
+.gS{color:var(--gS);text-shadow:0 0 7px var(--gS);}
+.gA{color:var(--gA);text-shadow:0 0 5px var(--gA);}
+.gB{color:var(--gB);}
+.gC{color:var(--gC);}
+.gD{color:var(--gD);}
+.gE{color:var(--gE);}
+/* SIDEBAR */
+.sbar{background:var(--panel);border:1px solid var(--border);border-radius:4px;overflow:hidden;position:sticky;top:14px;}
+.sbhead{font-family:'Bebas Neue',sans-serif;letter-spacing:.18em;font-size:.88rem;
+  padding:9px 13px;background:rgba(245,197,24,.07);border-bottom:1px solid var(--border);
+  color:var(--gold);display:flex;justify-content:space-between;align-items:center;}
+.sbcnt{font-size:1.2rem;color:var(--text);}
+.sbslot{padding:8px 13px;border-bottom:1px solid rgba(255,255,255,.038);min-height:42px;}
+.sbnum{font-family:'Bebas Neue',sans-serif;font-size:.68rem;letter-spacing:.14em;color:var(--muted);}
+.sbaspect{font-family:'Bebas Neue',sans-serif;font-size:.76rem;letter-spacing:.09em;margin-top:1px;}
+.sbval{font-size:.75rem;color:#aaa;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sbslot.empty .sbval{color:var(--muted);font-style:italic;}
+.sbslot.filled{background:rgba(245,197,24,.03);}
+.sbact{padding:9px;}
+.binput{background:rgba(255,255,255,.055);border:1px solid var(--border);color:var(--text);
+  font-family:'Bebas Neue',sans-serif;font-size:.96rem;letter-spacing:.14em;
+  padding:6px 11px;border-radius:3px;width:100%;margin-bottom:10px;}
+.binput::placeholder{color:var(--muted);}
+.binput:focus{outline:none;border-color:var(--gold);}
+.rctrls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px;}
+/* MODAL */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:100;
+  display:flex;align-items:center;justify-content:center;backdrop-filter:blur(5px);animation:fIn .18s;}
+.ov.hide{display:none;}
+.modal{background:var(--panel2);border:2px solid var(--gold2);border-radius:4px;
+  padding:26px;max-width:370px;width:92%;text-align:center;box-shadow:0 0 45px rgba(245,197,24,.15);}
+.mttl{font-family:'Black Ops One',sans-serif;font-size:1.15rem;color:var(--gold);margin-bottom:5px;}
+.mchar{font-size:.96rem;color:var(--cyan);font-style:italic;margin-bottom:4px;}
+.masp{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:.14em;color:var(--pink);margin-bottom:3px;}
+.mgrd{font-family:'Bebas Neue',sans-serif;font-size:2.6rem;margin-bottom:5px;line-height:1;}
+.mval{font-size:.85rem;color:#bbb;margin-bottom:18px;line-height:1.5;}
+.mbtns{display:flex;gap:9px;justify-content:center;}
+/* COMPARE */
+.cw{padding:8px 0;}
+.winbox{text-align:center;padding:28px 18px;margin-bottom:24px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,rgba(245,197,24,.07),rgba(255,63,164,.07),rgba(0,229,255,.04));
+  border:2px solid var(--gold);border-radius:4px;}
+.winbox::before{content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,transparent,transparent 20px,rgba(245,197,24,.022) 20px,rgba(245,197,24,.022) 21px);}
+.wlbl{font-family:'Bebas Neue',sans-serif;font-size:.88rem;letter-spacing:.34em;color:var(--gold);margin-bottom:5px;}
+.wname{font-family:'Black Ops One',sans-serif;font-size:clamp(1.5rem,4vw,2.6rem);
+  background:linear-gradient(135deg,var(--gold),var(--pink));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.wscore{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;color:var(--text);margin-top:3px;}
+.wdesc{font-size:.85rem;color:var(--muted);margin-top:5px;font-style:italic;}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(252px,1fr));gap:13px;margin-bottom:26px;}
+.fc{background:var(--panel);border-radius:4px;overflow:hidden;position:relative;}
+.fc.r1{border:2px solid var(--gold);box-shadow:0 0 24px rgba(245,197,24,.22);}
+.fc.r2{border:2px solid #b0b0b0;box-shadow:0 0 14px rgba(180,180,180,.13);}
+.fc.r3{border:2px solid #b87333;box-shadow:0 0 14px rgba(184,115,51,.13);}
+.fc:not(.r1):not(.r2):not(.r3){border:1px solid rgba(255,255,255,.08);}
+.rtag{position:absolute;top:0;right:0;font-family:'Bebas Neue',sans-serif;font-size:.78rem;
+  letter-spacing:.14em;padding:3px 11px 3px 13px;clip-path:polygon(10px 0,100% 0,100% 100%,0 100%);}
+.r1 .rtag{background:var(--gold);color:#05050a;}
+.r2 .rtag{background:#c0c0c0;color:#05050a;}
+.r3 .rtag{background:#cd7f32;color:#05050a;}
+.fch{padding:14px 13px 10px;border-bottom:1px solid rgba(255,255,255,.065);position:relative;}
+.fcname{font-family:'Black Ops One',sans-serif;font-size:.92rem;line-height:1.25;padding-right:44px;}
+.fcsrc{font-size:.73rem;color:var(--muted);margin-top:2px;font-style:italic;}
+.fcscore{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;text-align:center;padding:9px 9px 0;line-height:1;}
+.fcslbl{font-size:.66rem;letter-spacing:.17em;color:var(--muted);text-align:center;margin-bottom:7px;}
+.fcasp{padding:0 11px 11px;display:flex;flex-direction:column;gap:3px;}
+.ac{display:flex;justify-content:space-between;align-items:center;font-size:.74rem;
+  padding:3px 6px;background:rgba(255,255,255,.032);border-radius:2px;gap:4px;}
+.acn{color:var(--muted);font-family:'Bebas Neue',sans-serif;letter-spacing:.06em;font-size:.76rem;white-space:nowrap;}
+.acv{color:#bbb;font-size:.76rem;flex:1;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.synbox{padding:7px 11px 11px;border-top:1px solid rgba(255,255,255,.05);}
+.synlbl{font-family:'Bebas Neue',sans-serif;font-size:.73rem;letter-spacing:.11em;color:var(--purple);}
+.syntxt{font-size:.73rem;color:var(--muted);line-height:1.45;margin-top:2px;}
+.synbonus{font-family:'Bebas Neue',sans-serif;font-size:.82rem;color:var(--purple);}
+.flash{position:fixed;inset:0;z-index:50;pointer-events:none;opacity:0;
+  background:rgba(245,197,24,.1);transition:opacity .1s;}
+.flash.on{opacity:1;}
+.empty{text-align:center;color:var(--muted);font-style:italic;padding:32px;font-size:.92rem;}
+.navrow{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:18px;}
+.delbtn{font-family:'Bebas Neue',sans-serif;font-size:.7rem;letter-spacing:.12em;
+  padding:2px 7px;border:1px solid rgba(255,68,68,.3);color:var(--red);background:transparent;
+  border-radius:2px;cursor:pointer;transition:all .15s;position:absolute;bottom:9px;right:9px;}
+.delbtn:hover{background:rgba(255,68,68,.08);}
 </style>
 </head>
 <body>
 <div class="bg"></div>
-<div class="roll-flash" id="rollFlash"></div>
-
+<div class="flash" id="flash"></div>
 <div id="app">
-  <header>
-    <div class="title-main">JoJo Aspect Roller</div>
-    <div class="title-sub">Bizarre Adventure · Build Creator</div>
-  </header>
 
-  <!-- START SCREEN -->
-  <div class="screen active" id="screen-start">
-    <div class="start-screen">
-      <p class="start-description">
-        Roll random JoJo characters from <strong style="color:var(--gold)">Parts 1–9</strong> and steal one aspect from each to build your ultimate fighter. Then compare up to 8 builds to see who reigns supreme.
-      </p>
-      <div class="parts-list">
-        <div class="part-tag">PART 1 · PHANTOM BLOOD</div>
-        <div class="part-tag">PART 2 · BATTLE TENDENCY</div>
-        <div class="part-tag">PART 3 · STARDUST CRUSADERS</div>
-        <div class="part-tag">PART 4 · DIAMOND IS UNBREAKABLE</div>
-        <div class="part-tag">PART 5 · GOLDEN WIND</div>
-        <div class="part-tag">PART 6 · STONE OCEAN</div>
-        <div class="part-tag">PART 7 · STEEL BALL RUN</div>
-        <div class="part-tag">PART 8 · JOJOLION</div>
-        <div class="part-tag">PART 9 · THE JOJOLANDS</div>
-      </div>
-      <div class="how-to">
-        <h3>How It Works</h3>
-        <ol>
-          <li><strong>Roll</strong> a random JoJo character with all their stats</li>
-          <li><strong>Choose one aspect</strong> to absorb into your build (no re-rolls!)</li>
-          <li><strong>Repeat</strong> up to 8 times to complete your fighter</li>
-          <li><strong>Compare</strong> multiple builds — synergy bonuses apply!</li>
-        </ol>
-      </div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
-        <button class="btn btn-primary" onclick="startBuild()">⚡ START BUILDING</button>
-        <button class="btn btn-secondary" onclick="showCompare()" id="compareStartBtn" style="display:none">⚔ COMPARE BUILDS</button>
-      </div>
+<header>
+  <div class="htitle">JoJo Aspect Roller</div>
+  <div class="hsub">Bizarre Adventure · Build Creator</div>
+</header>
+
+<!-- START -->
+<div class="scr on" id="scr-start">
+  <div class="sw">
+    <p class="sdesc">Roll random characters from <b style="color:var(--gold)">Parts 1–9</b>. Each roll shows a full character — pick <b style="color:var(--gold)">one aspect</b> to absorb. The next character then auto-rolls. Fill up to 8 slots, then save and compare builds.</p>
+    <div class="parts-row">
+      <span class="ptag">PART 1</span><span class="ptag">PART 2</span><span class="ptag">PART 3</span>
+      <span class="ptag">PART 4</span><span class="ptag">PART 5</span><span class="ptag">PART 6</span>
+      <span class="ptag">PART 7</span><span class="ptag">PART 8</span><span class="ptag">PART 9</span>
     </div>
-  </div>
-
-  <!-- BUILD SCREEN -->
-  <div class="screen" id="screen-build">
-    <div class="top-bar">
-      <div class="top-bar-info">BUILD <span id="buildNumDisplay">1</span> · SLOT <span id="slotDisplay">1</span>/8</div>
-      <div>
-        <button class="btn btn-secondary" style="font-size:0.85rem;padding:8px 18px" onclick="finishBuild()">FINISH BUILD</button>
-      </div>
+    <div class="howto">
+      <h3>How It Works</h3>
+      <ol>
+        <li><b>Roll</b> — a random JoJo character appears with all their stats</li>
+        <li><b>Pick ONE aspect</b> — absorbed into your build, no re-rolls</li>
+        <li>Next character <b>auto-rolls</b> after you pick — up to 8 characters total</li>
+        <li><b>Stand users</b> offer their stand stats, ability, and <b>battle item</b></li>
+        <li><b>Non-Stand users</b> offer physical stats and <b>themselves as a companion</b></li>
+        <li><b>Save</b> your build and <b>compare</b> multiple builds by score + synergy</li>
+      </ol>
     </div>
-
-    <div class="step-indicator" id="stepIndicator"></div>
-
-    <div class="build-area">
-      <div id="rollCenter">
-        <div class="roll-controls" style="margin-bottom:20px">
-          <button class="btn btn-primary" id="rollBtn" onclick="rollCharacter()">🎲 ROLL CHARACTER</button>
-        </div>
-        <div id="cardArea"></div>
-      </div>
-
-      <div class="build-sidebar">
-        <div class="sidebar-title">
-          YOUR BUILD
-          <span class="slot-count" id="slotsLeft">0/8</span>
-        </div>
-        <div id="buildSlots"></div>
-        <div class="sidebar-actions">
-          <button class="btn btn-danger" onclick="finishBuild()">✓ DONE BUILDING</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- COMPARE SCREEN -->
-  <div class="screen" id="screen-compare">
-    <div style="text-align:center;padding:20px 0 10px">
-      <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.3em;font-size:1rem;color:var(--muted);margin-bottom:6px">TOURNAMENT</div>
-      <div style="font-family:'Black Ops One',sans-serif;font-size:clamp(1.5rem,4vw,2.5rem);color:var(--text)">BUILD COMPARISON</div>
-    </div>
-
-    <div id="winnerArea"></div>
-    <div id="compareGrid" class="compare-grid"></div>
-
-    <div style="text-align:center;margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <button class="btn btn-primary" onclick="startBuild()">＋ ADD BUILD</button>
-      <button class="btn btn-secondary" onclick="showStart()">↺ START OVER</button>
+    <div style="display:flex;gap:11px;flex-wrap:wrap;justify-content:center;">
+      <button class="btn btn-gold" onclick="startNewBuild()">⚡ NEW BUILD</button>
+      <button class="btn btn-ghost" id="btnCmp" onclick="goCompare()" style="display:none">⚔ COMPARE BUILDS</button>
     </div>
   </div>
 </div>
 
-<!-- CONFIRM MODAL -->
-<div class="modal-overlay hidden" id="modal">
-  <div class="modal-box">
-    <div class="modal-title">ABSORB THIS ASPECT?</div>
-    <div class="modal-char" id="modalChar"></div>
-    <div class="modal-aspect" id="modalAspect"></div>
-    <div class="modal-grade" id="modalGrade"></div>
-    <div class="modal-value" id="modalValue"></div>
-    <div class="modal-btns">
-      <button class="btn btn-primary" onclick="confirmAspect()">✦ TAKE IT</button>
-      <button class="btn btn-secondary" onclick="closeModal()">CANCEL</button>
+<!-- BUILD -->
+<div class="scr" id="scr-build">
+  <div class="topbar">
+    <div class="tbl">BUILD <em id="tbBN">1</em> &nbsp;·&nbsp; CHARACTER <em id="tbRN">1</em> / 8</div>
+    <div style="display:flex;gap:7px;">
+      <button class="btn btn-ghost btn-sm" onclick="saveBuild()">SAVE BUILD</button>
+      <button class="btn btn-ghost btn-sm" onclick="goStart()">← MENU</button>
+    </div>
+  </div>
+  <div class="dots" id="dots"></div>
+  <div class="blayout">
+    <div>
+      <input class="binput" id="bname" placeholder="NAME YOUR BUILD…" maxlength="28">
+      <div class="slot-wrap"><div class="slot-txt" id="slotTxt">— PRESS ROLL TO START —</div></div>
+      <div id="cardArea"><div class="empty">Press <b style="color:var(--gold)">ROLL CHARACTER</b> to begin.</div></div>
+      <div class="rctrls">
+        <button class="btn btn-gold" id="rollBtn" onclick="doRoll()">🎲 ROLL CHARACTER</button>
+        <button class="btn btn-ghost btn-sm" onclick="saveBuild()">✓ SAVE &amp; FINISH</button>
+      </div>
+    </div>
+    <div class="sbar">
+      <div class="sbhead">YOUR BUILD <span class="sbcnt" id="sbcnt">0/8</span></div>
+      <div id="sbslots"></div>
+      <div class="sbact">
+        <button class="btn btn-pink" style="width:100%;font-size:.9rem;padding:10px" onclick="saveBuild()">SAVE &amp; COMPARE</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPARE -->
+<div class="scr" id="scr-compare">
+  <div class="cw">
+    <div id="winbox"></div>
+    <div class="cgrid" id="cgrid"></div>
+    <div class="navrow">
+      <button class="btn btn-gold" onclick="startNewBuild()">＋ NEW BUILD</button>
+      <button class="btn btn-ghost" onclick="goStart()">↺ MENU</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- MODAL -->
+<div class="ov hide" id="modal">
+  <div class="modal">
+    <div class="mttl">ABSORB THIS ASPECT?</div>
+    <div class="mchar" id="mChar"></div>
+    <div class="masp"  id="mAsp"></div>
+    <div class="mgrd"  id="mGrd"></div>
+    <div class="mval"  id="mVal"></div>
+    <div class="mbtns">
+      <button class="btn btn-gold" onclick="confirmPick()">✦ TAKE IT</button>
+      <button class="btn btn-ghost" onclick="closeModal()">CANCEL</button>
     </div>
   </div>
 </div>
 
 <script>
-// =====================================
-// DATA
-// =====================================
-
-const GRADES = ['E','D','C','B','A','S'];
-const GRADE_SCORE = {E:1, D:2, C:3, B:4, A:5, S:7};
-
-// Weighted grade distribution for stat type
-function rollGrade(type) {
-  // type: 'normal', 'stand', 'ability', 'item'
-  const tables = {
-    normal: [['E',5],['D',20],['C',35],['B',25],['A',12],['S',3]],
-    stand:  [['E',3],['D',12],['C',28],['B',30],['A',18],['S',9]],
-    ability:[['D',5], ['C',15],['B',25],['A',30],['S',25]],
-    item:   [['E',8],['D',22],['C',32],['B',24],['A',11],['S',3]],
-  };
-  const tbl = tables[type] || tables.normal;
-  const roll = Math.random()*100;
-  let acc=0;
-  for(const [g,w] of tbl){ acc+=w; if(roll<acc) return g; }
-  return 'C';
+// ═══════════════════════════════════════════
+// GRADE HELPERS
+// ═══════════════════════════════════════════
+const GS_SCORE={S:7,A:5,B:3,C:2,D:1,E:0};
+function gc(g){return'g'+(g||'E');}
+function gcolor(g){
+  const m={S:'var(--gS)',A:'var(--gA)',B:'var(--gB)',C:'var(--gC)',D:'var(--gD)',E:'var(--gE)'};
+  return m[g]||m.E;
+}
+function gradeEl(g){
+  if(!g||g==='-')return'<span class="g gE">—</span>';
+  return`<span class="g ${gc(g)}">${g}</span>`;
 }
 
-const CHARACTERS = [
-  // Part 1
-  {name:"Jonathan Joestar",part:1,partName:"Phantom Blood",stand:null,role:"Protagonist",
-    physDesc:"Ripple-infused gentleman warrior with immense natural strength and honor-bound resolve.",
-    itemType:"companion",itemDesc:"Zeppeli's martial arts mentorship / Ripple training"},
-  {name:"Dio Brando (Part 1)",part:1,partName:"Phantom Blood",stand:null,role:"Villain",
-    physDesc:"Undead vampire with superhuman strength and charm, wielding the Stone Mask's immortality.",
-    itemType:"item",itemDesc:"Stone Mask — grants vampirism and near-immortality"},
-  {name:"Will Anthonio Zeppeli",part:1,partName:"Phantom Blood",stand:null,role:"Mentor",
-    physDesc:"Ripple master capable of sending energy through bodies and objects to devastating effect.",
-    itemType:"item",itemDesc:"Ripple spinning top — a precision teaching weapon"},
-  {name:"Robert E. O. Speedwagon",part:1,partName:"Phantom Blood",stand:null,role:"Ally",
-    physDesc:"Street fighter with razor fedora, outstanding people-reading skills and unshakeable loyalty.",
-    itemType:"companion",itemDesc:"Speedwagon Foundation — global resource network"},
-  // Part 2
-  {name:"Joseph Joestar",part:2,partName:"Battle Tendency",stand:null,role:"Protagonist",
-    physDesc:"Cunning Ripple user who fights with improvisation, Clackers, and psychological warfare.",
-    itemType:"item",itemDesc:"Clacker Volley — Ripple-charged whip-clackers"},
-  {name:"Kars",part:2,partName:"Battle Tendency",stand:null,role:"Villain",
-    physDesc:"Ultimate Life Form with every natural ability, bladed forearms, and perfect intellect.",
-    itemType:"item",itemDesc:"Stone of Aja — amplifies Ripple to universe-destroying levels"},
-  {name:"Caesar Anthonio Zeppeli",part:2,partName:"Battle Tendency",stand:null,role:"Ally",
-    physDesc:"Refined Ripple warrior specialising in Bubble Launcher techniques and aerial combat.",
-    itemType:"item",itemDesc:"Bubble Launcher — gloves that create razor-sharp Ripple bubbles"},
-  {name:"Lisa Lisa",part:2,partName:"Battle Tendency",stand:null,role:"Mentor",
-    physDesc:"Elite Ripple master whose Red Scarf is a devastating extension of her will.",
-    itemType:"item",itemDesc:"Red Scarf — Ripple-conducting silk whip"},
-  // Part 3
-  {name:"Jotaro Kujo",part:3,partName:"Stardust Crusaders",stand:"Star Platinum",role:"Protagonist",
-    physDesc:"Stoic, composed brawler with phenomenal raw power and an iron will.",
-    itemType:"item",itemDesc:"School jacket as shield / hat combo"},
-  {name:"DIO",part:3,partName:"Stardust Crusaders",stand:"The World",role:"Villain",
-    physDesc:"Vampire overlord whose Stand stops time itself for up to nine seconds.",
-    itemType:"item",itemDesc:"Road roller — iconic improvisational heavy weapon"},
-  {name:"Jean Pierre Polnareff",part:3,partName:"Stardust Crusaders",stand:"Silver Chariot",role:"Ally",
-    physDesc:"French rapier virtuoso whose Stand is a lightning-fast armored swordsman.",
-    itemType:"companion",itemDesc:"Avdol — lifelong partner and tactical support"},
-  {name:"Muhammad Avdol",part:3,partName:"Stardust Crusaders",stand:"Magician's Red",role:"Ally",
-    physDesc:"Egyptian fire diviner of immense precision and experience using cross-fire hurricane.",
-    itemType:"item",itemDesc:"Red Bind — flame manacles with 30m range"},
-  {name:"Noriaki Kakyoin",part:3,partName:"Stardust Crusaders",stand:"Hierophant Green",role:"Ally",
-    physDesc:"Calculative tactician whose Stand can manifest from range and infiltrate bodies.",
-    itemType:"item",itemDesc:"Emerald Splash — 20 million marbles per strike"},
-  {name:"Joseph Joestar (Part 3)",part:3,partName:"Stardust Crusaders",stand:"Hermit Purple",role:"Veteran",
-    physDesc:"Seasoned veteran using Hermit Purple's thorns for recon and Ripple amplification.",
-    itemType:"item",itemDesc:"Camera divination — can photograph spiritual locations"},
-  {name:"Iggy",part:3,partName:"Stardust Crusaders",stand:"The Fool",role:"Ally",
-    physDesc:"Feral Boston Terrier whose sand Stand mimics any object and blinds foes.",
-    itemType:"item",itemDesc:"Coffee-flavored gum — unexpectedly effective bribe tool"},
-  {name:"Vanilla Ice",part:3,partName:"Stardust Crusaders",stand:"Cream",role:"Villain",
-    physDesc:"Devoted follower of DIO whose void Stand devours everything it passes through.",
-    itemType:"companion",itemDesc:"DIO's direct blessing — enhanced vampire stats"},
-  // Part 4
-  {name:"Josuke Higashikata (Part 4)",part:4,partName:"Diamond Is Unbreakable",stand:"Crazy Diamond",role:"Protagonist",
-    physDesc:"Hot-headed protector who can restore anything — except the dead — to a prior state.",
-    itemType:"item",itemDesc:"Pompadour — psychic intimidation tool (unironically)"},
-  {name:"Yoshikage Kira",part:4,partName:"Diamond Is Unbreakable",stand:"Killer Queen",role:"Villain",
-    physDesc:"Serial killer whose Stand turns objects into bombs and can loop time to undo death.",
-    itemType:"item",itemDesc:"Sheer Heart Attack — autonomous heat-seeking bomb"},
-  {name:"Rohan Kishibe",part:4,partName:"Diamond Is Unbreakable",stand:"Heaven's Door",role:"Rival",
-    physDesc:"Manga author who opens people like books, reads their memories and rewrites their being.",
-    itemType:"item",itemDesc:"Pink Dark Boy manga — draws power from dedication to craft"},
-  {name:"Koichi Hirose",part:4,partName:"Diamond Is Unbreakable",stand:"Echoes",role:"Ally",
-    physDesc:"Unassuming student who grew steadily until his Stand could fix gravitational weight.",
-    itemType:"companion",itemDesc:"Yukako Yamagishi — fiercely loyal and powerful partner"},
-  {name:"Okuyasu Nijimura",part:4,partName:"Diamond Is Unbreakable",stand:"The Hand",role:"Ally",
-    physDesc:"Blunt fighter whose Stand erases space, effectively teleporting anything it swipes away.",
-    itemType:"companion",itemDesc:"Josuke — an unbreakable bond that doubles their power"},
-  // Part 5
-  {name:"Giorno Giovanna",part:5,partName:"Golden Wind",stand:"Gold Experience Requiem",role:"Protagonist",
-    physDesc:"Son of DIO whose Requiem ability nullifies any action and wills back to zero.",
-    itemType:"item",itemDesc:"Ladybug brooch — created life as his first Stand act"},
-  {name:"Bruno Bucciarati",part:5,partName:"Golden Wind",stand:"Sticky Fingers",role:"Leader",
-    physDesc:"Honorable capo whose Stand creates zippers in anything, enabling stealth and severing attacks.",
-    itemType:"companion",itemDesc:"His gang — absolute loyalty of five elite Stand users"},
-  {name:"Diavolo",part:5,partName:"Golden Wind",stand:"King Crimson",role:"Villain",
-    physDesc:"Paranoid boss who erases 10-second intervals from reality, acting during a gap no one else can see.",
-    itemType:"item",itemDesc:"Epitaph — precognition sub-ability that predicts the immediate future"},
-  {name:"Guido Mista",part:5,partName:"Golden Wind",stand:"Sex Pistols",role:"Ally",
-    physDesc:"Gunslinger whose six Pistols redirect bullets mid-flight for impossible trick shots.",
-    itemType:"item",itemDesc:"Revolver — six bullets managed by six tiny Stand pilots"},
-  {name:"Narancia Ghirga",part:5,partName:"Golden Wind",stand:"Aerosmith",role:"Ally",
-    physDesc:"Hot-tempered fighter with a fighter-plane Stand capable of detecting CO2 for flawless tracking.",
-    itemType:"companion",itemDesc:"Abbacchio — recon partner who can replay the past"},
-  {name:"Pannacotta Fugo",part:5,partName:"Golden Wind",stand:"Purple Haze",role:"Ally",
-    physDesc:"Genius with a catastrophic Stand that releases a virulent flesh-eating virus — indiscriminate.",
-    itemType:"item",itemDesc:"Virus capsules — biological hazard extracted from Stand fists"},
-  // Part 6
-  {name:"Jolyne Cujoh",part:6,partName:"Stone Ocean",stand:"Stone Free",role:"Protagonist",
-    physDesc:"Resilient fighter who unravels her body into string for binding, long-range combat and defense.",
-    itemType:"item",itemDesc:"Stone Ocean amulet — the charm that awakened her Stand"},
-  {name:"Enrico Pucci",part:6,partName:"Stone Ocean",stand:"Made in Heaven",role:"Villain",
-    physDesc:"Priest who accelerates the universe's rotation to create a new world tailored to DIO's heaven plan.",
-    itemType:"item",itemDesc:"Green Baby — the key to Heaven, born from DIO's bone and the Joestar birthmark"},
-  {name:"Ermes Costello",part:6,partName:"Stone Ocean",stand:"Kiss",role:"Ally",
-    physDesc:"Tenacious brawler whose stickers duplicate objects and deal doubled damage on removal.",
-    itemType:"companion",itemDesc:"Gloria (memory) — vengeance as the ultimate motivation"},
-  {name:"Weather Report",part:6,partName:"Stone Ocean",stand:"Weather Report",role:"Ally",
-    physDesc:"Amnesiac with absolute weather manipulation — including snail-rain and heavy-weather hallucinations.",
-    itemType:"item",itemDesc:"Disc of Memories — restores full power when unlocked"},
-  {name:"Narciso Anasui",part:6,partName:"Stone Ocean",stand:"Diver Down",role:"Ally",
-    physDesc:"Calculated fighter whose Stand dives inside objects to store energy and restructure them.",
-    itemType:"item",itemDesc:"Diver Down bomb storage — detonates from inside any material"},
-  // Part 7
-  {name:"Johnny Joestar",part:7,partName:"Steel Ball Run",stand:"Tusk Act 4",role:"Protagonist",
-    physDesc:"Former jockey whose infinite rotation nails pierce dimensional barriers and ignore all defense.",
-    itemType:"item",itemDesc:"Race horse Slow Dancer — vital partner in the cross-country race"},
-  {name:"Gyro Zeppeli",part:7,partName:"Steel Ball Run",stand:"Ball Breaker",role:"Partner",
-    physDesc:"Neapolitan executioner who masters the Golden Spin to transmit infinite rotational energy.",
-    itemType:"item",itemDesc:"Steel Balls — perfect spheres that generate Golden Spin Fibonacci energy"},
-  {name:"Funny Valentine",part:7,partName:"Steel Ball Run",stand:"D4C Love Train",role:"Villain",
-    physDesc:"US President whose Stand redirects all harm to parallel-world doubles and shields with dimensional luck.",
-    itemType:"item",itemDesc:"Holy Corpse — the divine relic that empowers his Love Train"},
-  {name:"Diego Brando",part:7,partName:"Steel Ball Run",stand:"Scary Monsters",role:"Rival",
-    physDesc:"Ruthless rival jockey who uses a Stand that transforms himself and others into predatory dinosaurs.",
-    itemType:"item",itemDesc:"The World (Alternate) — stops time through the Corpse eye alone"},
-  // Part 8
-  {name:"Josuke Higashikata (Part 8)",part:8,partName:"JoJolion",stand:"Soft & Wet",role:"Protagonist",
-    physDesc:"Amnesiac fusion being whose Stand steals properties from anything it pops with soap bubbles.",
-    itemType:"companion",itemDesc:"Yasuho Hirose — recon partner with Paisley Park navigation Stand"},
-  {name:"Tooru",part:8,partName:"JoJolion",stand:"Wonder of U",role:"Villain",
-    physDesc:"Calamity incarnate — merely pursuing this Stand triggers catastrophic disaster on the pursuer.",
-    itemType:"item",itemDesc:"The Equivalent Exchange — the nut/bolt trade of fate"},
-  {name:"Rai Mamezuku",part:8,partName:"JoJolion",stand:"Doggy Style",role:"Ally",
-    physDesc:"Eccentric horticulturalist whose Stand unravels his body into wire for long-range piercing attacks.",
-    itemType:"item",itemDesc:"Orchard knowledge — botanical intelligence as a tactical resource"},
-  {name:"Norisuke Higashikata IV",part:8,partName:"JoJolion",stand:"King Nothing",role:"Ally",
-    physDesc:"Savvy trader whose Stand tracks any scent-trail to its precise original source.",
-    itemType:"item",itemDesc:"Higashikata family wealth and the trade-succession network"},
-  // Part 9
-  {name:"Jodio Joestar",part:9,partName:"The JoJoLands",stand:"November Rain",role:"Protagonist",
-    physDesc:"Young Hawai'i hustler whose Stand drops rain drops that become immovably heavy on contact.",
-    itemType:"item",itemDesc:"The JoJoLands diamond — the MacGuffin that sets the grand plot in motion"},
-  {name:"Dragona Joestar",part:9,partName:"The JoJoLands",stand:"Smooth Operators",role:"Sibling",
-    physDesc:"Composed sibling whose Stand relocates objects on the surface of people and entities seamlessly.",
-    itemType:"companion",itemDesc:"Jodio — unshakeable sibling synergy in every operation"},
-  {name:"Paco Laburantes",part:9,partName:"The JoJoLands",stand:"LMFAO Crossfire Hurricane",role:"Ally",
-    physDesc:"Jovial heavy-hitter whose Stand kicks out explosive force with overwhelming physical power.",
-    itemType:"companion",itemDesc:"Undying optimism — group morale anchor"},
-  {name:"Usagi Alohaoe",part:9,partName:"The JoJoLands",stand:"The Hustle",role:"Ally",
-    physDesc:"Enigmatic fighter whose Stand can redirect the trajectory of anything touching it.",
-    itemType:"item",itemDesc:"Rabbit mask — psychological pressure in negotiation"},
+// ═══════════════════════════════════════════
+// CHARACTER DATA
+// Stand users: item = their battle item
+// Non-stand users: companionGrade = grade for "take them as companion"
+// ═══════════════════════════════════════════
+const CHARS=[
+// ── Part 1 ──
+{name:"Jonathan Joestar",part:1,pname:"Phantom Blood",stand:null,role:"Protagonist",
+ desc:"Gentleman warrior trained in Ripple. Immense natural strength and iron will.",
+ stats:{strength:"B",durability:"B",speed:"C",battleIQ:"C"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"B"},
+
+{name:"Dio Brando (P1)",part:1,pname:"Phantom Blood",stand:null,role:"Villain",
+ desc:"Stone Mask vampire. Superhuman regeneration, vaporisation eye-beams, zombie creation.",
+ stats:{strength:"A",durability:"A",speed:"A",battleIQ:"B"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
+
+{name:"Will A. Zeppeli",part:1,pname:"Phantom Blood",stand:null,role:"Mentor",
+ desc:"Elite Ripple master. Zoom Punch, Sendo Wave Kick. Taught Jonathan everything.",
+ stats:{strength:"B",durability:"C",speed:"B",battleIQ:"A"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
+
+{name:"Speedwagon",part:1,pname:"Phantom Blood",stand:null,role:"Ally",
+ desc:"Street fighter turned eternal ally. Later founds the globe-spanning Speedwagon Foundation.",
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"B"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"B"},
+
+{name:"Bruford",part:1,pname:"Phantom Blood",stand:null,role:"Undead Knight",
+ desc:"Elite undead knight under Dio. Regained his honour in his final fight against Jonathan.",
+ stats:{strength:"A",durability:"B",speed:"A",battleIQ:"B"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
+
+// ── Part 2 ──
+{name:"Joseph Joestar",part:2,pname:"Battle Tendency",stand:null,role:"Protagonist",
+ desc:"Cunning Ripple user who fights through improvisation, Clackers, and psychological traps.",
+ stats:{strength:"B",durability:"B",speed:"B",battleIQ:"S"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
+
+{name:"Kars",part:2,pname:"Battle Tendency",stand:null,role:"Villain",
+ desc:"Ultimate Life Form. Every natural ability, bladed forearms, sunlight immunity, perfect intellect.",
+ stats:{strength:"S",durability:"S",speed:"S",battleIQ:"A"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"S"},
+
+{name:"Caesar A. Zeppeli",part:2,pname:"Battle Tendency",stand:null,role:"Ally",
+ desc:"Refined Ripple warrior specialising in razor bubble techniques and aerial combat.",
+ stats:{strength:"B",durability:"B",speed:"A",battleIQ:"A"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
+
+{name:"Wamuu",part:2,pname:"Battle Tendency",stand:null,role:"Villain",
+ desc:"Pillar Man warrior of honour. Wind Mode: Divine Sandstorm and Holy Sandstorm.",
+ stats:{strength:"A",durability:"A",speed:"S",battleIQ:"A"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
+
+{name:"Esidisi",part:2,pname:"Battle Tendency",stand:null,role:"Villain",
+ desc:"Pillar Man who weaponises superheated blood-vessel whips and emotional manipulation.",
+ stats:{strength:"A",durability:"A",speed:"B",battleIQ:"A"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
+
+{name:"Lisa Lisa",part:2,pname:"Battle Tendency",stand:null,role:"Mentor",
+ desc:"Elite Ripple master. Her Red Scarf channels Ripple at extraordinary efficiency.",
+ stats:{strength:"B",durability:"B",speed:"A",battleIQ:"S"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
+
+// ── Part 3 ──
+{name:"Jotaro Kujo",part:3,pname:"Stardust Crusaders",stand:"Star Platinum",role:"Protagonist",
+ desc:"Stoic powerhouse. Star Platinum's precision and power rivals The World itself.",
+ stats:{strength:"A",durability:"A",speed:"A",battleIQ:"A"},
+ standStats:{str:"A",spd:"A",range:"C",dur:"A",prec:"A",pot:"A"},
+ abilityDesc:"Star Platinum: The World — stops time for ~5 s; ORA barrage at near-light-speed precision",
+ abilityGrade:"S",
+ item:{desc:"Stopwatch — used to precisely measure DIO's time stop and decode it",grade:"B"},
+ companionGrade:null},
+
+{name:"DIO",part:3,pname:"Stardust Crusaders",stand:"The World",role:"Villain",
+ desc:"ZA WARUDO. Vampire overlord whose Stand stops all time for up to nine seconds.",
+ stats:{strength:"A",durability:"A",speed:"A",battleIQ:"A"},
+ standStats:{str:"A",spd:"A",range:"C",dur:"A",prec:"B",pot:"A"},
+ abilityDesc:"The World — stops all time for up to 9 s; knife barrage and Road Roller during stop",
+ abilityGrade:"S",
+ item:{desc:"Road Roller — a 10-tonne steamroller hurled and pounded on opponents during time stop",grade:"A"},
+ companionGrade:null},
+
+{name:"Muhammad Avdol",part:3,pname:"Stardust Crusaders",stand:"Magician's Red",role:"Ally",
+ desc:"Egyptian fire diviner with deep global Stand knowledge. Cross Fire Hurricane and Red Bind.",
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"A"},
+ standStats:{str:"B",spd:"B",range:"B",dur:"B",prec:"B",pot:"C"},
+ abilityDesc:"Magician's Red — Cross Fire Hurricane (fiery cross blast); Red Bind (30 m molten manacles)",
+ abilityGrade:"B",
+ item:{desc:"Stand encyclopaedia — global knowledge of Stands encountered before the journey",grade:"B"},
+ companionGrade:null},
+
+{name:"Noriaki Kakyoin",part:3,pname:"Stardust Crusaders",stand:"Hierophant Green",role:"Ally",
+ desc:"Calculative tactician. Emerald Splash, body infestation, and full-unravel form.",
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"A"},
+ standStats:{str:"C",spd:"B",range:"A",dur:"B",prec:"A",pot:"B"},
+ abilityDesc:"Hierophant Green — Emerald Splash (20 M marbles); body infestation; full range unravel",
+ abilityGrade:"A",
+ item:{desc:"Cherries — fine motor precision so extreme he ties cherry stems with his tongue",grade:"C"},
+ companionGrade:null},
+
+{name:"Jean Pierre Polnareff",part:3,pname:"Stardust Crusaders",stand:"Silver Chariot",role:"Ally",
+ desc:"French rapier virtuoso. Silver Chariot's armor shed doubles its already extreme speed.",
+ stats:{strength:"C",durability:"C",speed:"B",battleIQ:"C"},
+ standStats:{str:"C",spd:"A",range:"C",dur:"C",prec:"A",pot:"C"},
+ abilityDesc:"Silver Chariot — near-light-speed rapier thrusts; armor shed doubles speed; blade scatter",
+ abilityGrade:"A",
+ item:{desc:"Family honour — Sherry's memory drives him reliably past his limits in every fight",grade:"C"},
+ companionGrade:null},
+
+{name:"Joseph Joestar (P3)",part:3,pname:"Stardust Crusaders",stand:"Hermit Purple",role:"Veteran",
+ desc:"Veteran with psychic-photography thorn Stand. Retains Ripple mastery from youth.",
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"A"},
+ standStats:{str:"D",spd:"C",range:"A",dur:"C",prec:"C",pot:"C"},
+ abilityDesc:"Hermit Purple — psychic photography through cameras; Ripple thorn whip extension",
+ abilityGrade:"C",
+ item:{desc:"Clackers (P3) — the Ripple-charged weapon retained from his Battle Tendency days",grade:"C"},
+ companionGrade:null},
+
+{name:"Iggy",part:3,pname:"Stardust Crusaders",stand:"The Fool",role:"Ally",
+ desc:"Feral Boston Terrier. The Fool shapeshifts from sand into any form and enables flight.",
+ stats:{strength:"D",durability:"C",speed:"B",battleIQ:"B"},
+ standStats:{str:"B",spd:"B",range:"B",dur:"B",prec:"B",pot:"C"},
+ abilityDesc:"The Fool — shapeshifting sand (any form); sandstorm; flight; camouflage; extreme mobility",
+ abilityGrade:"B",
+ item:{desc:"Coffee-flavoured gum — his sole weakness and singular joy; unexpectedly effective bribe",grade:"E"},
+ companionGrade:null},
+
+{name:"Vanilla Ice",part:3,pname:"Stardust Crusaders",stand:"Cream",role:"Villain",
+ desc:"Devoted fanatic of DIO. Cream's void annihilates all matter including the user.",
+ stats:{strength:"B",durability:"A",speed:"A",battleIQ:"B"},
+ standStats:{str:"A",spd:"A",range:"A",dur:"A",prec:"C",pot:"B"},
+ abilityDesc:"Cream — void vortex annihilates all matter; user + Stand enter void to travel and ambush",
+ abilityGrade:"S",
+ item:{desc:"DIO's blood — vampire transformation granting full regeneration and power surge",grade:"A"},
+ companionGrade:null},
+
+{name:"N'Doul",part:3,pname:"Stardust Crusaders",stand:"Geb",role:"Villain",
+ desc:"Blind assassin who senses the world through water vibrations. Infinite-range water claw.",
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"A"},
+ standStats:{str:"B",spd:"A",range:"S",dur:"B",prec:"A",pot:"B"},
+ abilityDesc:"Geb — water-claw at infinite range; guided by vibration sense; near-instant movement",
+ abilityGrade:"A",
+ item:{desc:"Heightened senses — hears heartbeats, footsteps, and vibrations in lieu of sight",grade:"B"},
+ companionGrade:null},
+
+// ── Part 4 ──
+{name:"Josuke Higashikata",part:4,pname:"Diamond Is Unbreakable",stand:"Crazy Diamond",role:"Protagonist",
+ desc:"Hot-headed protector. Crazy Diamond restores anything except the dead to a prior state.",
+ stats:{strength:"B",durability:"B",speed:"B",battleIQ:"B"},
+ standStats:{str:"A",spd:"A",range:"C",dur:"A",prec:"B",pot:"A"},
+ abilityDesc:"Crazy Diamond — restores any object or body to a prior state; cannot resurrect the dead",
+ abilityGrade:"A",
+ item:{desc:"Pompadour — insulting it triggers a genuine in-universe berserk power surge",grade:"C"},
+ companionGrade:null},
+
+{name:"Yoshikage Kira",part:4,pname:"Diamond Is Unbreakable",stand:"Killer Queen",role:"Villain",
+ desc:"Serial killer who lives quietly. Killer Queen: primary bomb, Sheer Heart Attack, Bites the Dust.",
+ stats:{strength:"C",durability:"C",speed:"B",battleIQ:"A"},
+ standStats:{str:"B",spd:"B",range:"C",dur:"B",prec:"A",pot:"A"},
+ abilityDesc:"Killer Queen — primary bomb; Sheer Heart Attack (autonomous heat-seeker); Bites the Dust (time loop)",
+ abilityGrade:"S",
+ item:{desc:"Sheer Heart Attack — detachable B2 heat-seeking autonomous bomb; nearly indestructible",grade:"S"},
+ companionGrade:null},
+
+{name:"Rohan Kishibe",part:4,pname:"Diamond Is Unbreakable",stand:"Heaven's Door",role:"Rival",
+ desc:"Manga genius who opens people like books, reads their memories, and rewrites their will.",
+ stats:{strength:"D",durability:"D",speed:"C",battleIQ:"S"},
+ standStats:{str:"D",spd:"B",range:"C",dur:"C",prec:"S",pot:"A"},
+ abilityDesc:"Heaven's Door — turns targets into books; reads all memories; rewrites personality and commands",
+ abilityGrade:"S",
+ item:{desc:"Pink Dark Boy manga — his masterpiece; the obsession that grants him superhuman focus",grade:"C"},
+ companionGrade:null},
+
+{name:"Koichi Hirose",part:4,pname:"Diamond Is Unbreakable",stand:"Echoes",role:"Ally",
+ desc:"Quiet student who steadily grew. Echoes Act 3 fixes crippling gravity weight on any surface.",
+ stats:{strength:"D",durability:"D",speed:"C",battleIQ:"B"},
+ standStats:{str:"C",spd:"B",range:"B",dur:"C",prec:"B",pot:"A"},
+ abilityDesc:"Echoes Act 3: Three Freeze — applies enormous gravity weight to any surface or target",
+ abilityGrade:"A",
+ item:{desc:"Echoes Acts 1 & 2 — sound effects and written words that disorient, ignite, and confuse",grade:"B"},
+ companionGrade:null},
+
+{name:"Okuyasu Nijimura",part:4,pname:"Diamond Is Unbreakable",stand:"The Hand",role:"Ally",
+ desc:"Blunt fighter. The Hand's right palm erases physical space, teleporting anything swept away.",
+ stats:{strength:"B",durability:"B",speed:"B",battleIQ:"D"},
+ standStats:{str:"A",spd:"B",range:"C",dur:"B",prec:"C",pot:"A"},
+ abilityDesc:"The Hand — right palm erases physical space; sweeps targets out or closes distance instantly",
+ abilityGrade:"A",
+ item:{desc:"Reckless instinct — his impulsiveness occasionally opens angles no tactician would find",grade:"C"},
+ companionGrade:null},
+
+{name:"Akira Otoishi",part:4,pname:"Diamond Is Unbreakable",stand:"Red Hot Chili Pepper",role:"Villain",
+ desc:"Rockstar whose Stand travels through any electrical system at light speed, absorbing power.",
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"C"},
+ standStats:{str:"B",spd:"S",range:"S",dur:"B",prec:"B",pot:"B"},
+ abilityDesc:"Red Hot Chili Pepper — travels through electrical systems at light speed; absorbs electricity for power",
+ abilityGrade:"A",
+ item:{desc:"Electric guitar — a genuine talent that is entirely separate from his lethal Stand",grade:"C"},
+ companionGrade:null},
+
+// ── Part 5 ──
+{name:"Giorno Giovanna",part:5,pname:"Golden Wind",stand:"Gold Experience Requiem",role:"Protagonist",
+ desc:"Son of DIO. GER's Return to Zero nullifies any action and resets its cause to zero infinitely.",
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"A"},
+ standStats:{str:"A",spd:"A",range:"C",dur:"A",prec:"A",pot:"S"},
+ abilityDesc:"Gold Experience Requiem — Return to Zero: nullifies any action/will; resets cause to zero; infinite death",
+ abilityGrade:"S",
+ item:{desc:"Ladybug brooch — his first Stand act; symbolises his DIO lineage awakening",grade:"C"},
+ companionGrade:null},
+
+{name:"Bruno Bucciarati",part:5,pname:"Golden Wind",stand:"Sticky Fingers",role:"Leader",
+ desc:"Honourable capo. Sticky Fingers places zippers on any surface for phase-through and severing.",
+ stats:{strength:"B",durability:"B",speed:"B",battleIQ:"A"},
+ standStats:{str:"B",spd:"B",range:"C",dur:"B",prec:"B",pot:"B"},
+ abilityDesc:"Sticky Fingers — zippers on any surface; phase-through, amputation, spatial shortcuts",
+ abilityGrade:"A",
+ item:{desc:"Sweat lie detection — licks targets to detect deception; baseline truth-reading in every decision",grade:"B"},
+ companionGrade:null},
+
+{name:"Diavolo",part:5,pname:"Golden Wind",stand:"King Crimson",role:"Villain",
+ desc:"Paranoid boss. King Crimson erases 10 seconds; Epitaph foresees the immediate future.",
+ stats:{strength:"B",durability:"B",speed:"A",battleIQ:"A"},
+ standStats:{str:"A",spd:"A",range:"C",dur:"A",prec:"B",pot:"A"},
+ abilityDesc:"King Crimson — erases 10 s of time; Epitaph predicts 10 s ahead; acts unseen in the gap",
+ abilityGrade:"S",
+ item:{desc:"Epitaph — precognitive sub-Stand in his forehead; predicts exact events seconds ahead",grade:"S"},
+ companionGrade:null},
+
+{name:"Guido Mista",part:5,pname:"Golden Wind",stand:"Sex Pistols",role:"Ally",
+ desc:"Gunslinger whose six tiny Stand pilots redirect bullets mid-flight to impossible angles.",
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"B"},
+ standStats:{str:"C",spd:"B",range:"A",dur:"C",prec:"A",pot:"B"},
+ abilityDesc:"Sex Pistols — 6 pilots redirect bullets around cover or to multiple targets simultaneously",
+ abilityGrade:"A",
+ item:{desc:"Revolver — 6 bullets only (never 4); each assigned to a dedicated Stand pilot",grade:"B"},
+ companionGrade:null},
+
+{name:"Narancia Ghirga",part:5,pname:"Golden Wind",stand:"Aerosmith",role:"Ally",
+ desc:"Hothead with a fighter-plane Stand. CO2 radar tracks any breathing target anywhere.",
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"D"},
+ standStats:{str:"C",spd:"A",range:"A",dur:"B",prec:"B",pot:"B"},
+ abilityDesc:"Aerosmith — fighter-plane with machine gun; CO2 radar tracks any breathing target in wide radius",
+ abilityGrade:"B",
+ item:{desc:"Combat knife (leg holster) — backup close-quarters weapon when Aerosmith can't discriminate",grade:"C"},
+ companionGrade:null},
+
+{name:"Pannacotta Fugo",part:5,pname:"Golden Wind",stand:"Purple Haze",role:"Ally",
+ desc:"Genius with an uncontrollable Stand. Purple Haze's virus dissolves all flesh in 30 seconds.",
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"A"},
+ standStats:{str:"A",spd:"B",range:"C",dur:"B",prec:"E",pot:"B"},
+ abilityDesc:"Purple Haze — flesh-eating virus from fist capsules; dissolves targets in ~30 s; fully indiscriminate",
+ abilityGrade:"A",
+ item:{desc:"Rationality — the only member who correctly assessed the mission as suicidal",grade:"C"},
+ companionGrade:null},
+
+{name:"Leone Abbacchio",part:5,pname:"Golden Wind",stand:"Moody Blues",role:"Ally",
+ desc:"Former corrupt cop. Moody Blues replays any past event at any location in real time.",
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"A"},
+ standStats:{str:"C",spd:"C",range:"B",dur:"B",prec:"A",pot:"B"},
+ abilityDesc:"Moody Blues — replays any past event at real-time; forensic reconstruction of identities",
+ abilityGrade:"B",
+ item:{desc:"Wine — his coping mechanism; also the painful contrast that defined his arc",grade:"D"},
+ companionGrade:null},
+
+{name:"Trish Una",part:5,pname:"Golden Wind",stand:"Spice Girl",role:"Ally",
+ desc:"Diavolo's daughter. Spice Girl softens anything to rubber, absorbing and reflecting force.",
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"B"},
+ standStats:{str:"B",spd:"B",range:"C",dur:"B",prec:"B",pot:"B"},
+ abilityDesc:"Spice Girl — softens matter to rubber; absorbs and redirects force; near-indestructible defence",
+ abilityGrade:"B",
+ item:{desc:"Her name — being Diavolo's daughter makes her both the mission's target and its resolution",grade:"C"},
+ companionGrade:null},
+
+// ── Part 6 ──
+{name:"Jolyne Cujoh",part:6,pname:"Stone Ocean",stand:"Stone Free",role:"Protagonist",
+ desc:"Resilient brawler who unravels her body into string for binding, combat, and flight.",
+ stats:{strength:"B",durability:"B",speed:"B",battleIQ:"A"},
+ standStats:{str:"B",spd:"B",range:"B",dur:"B",prec:"B",pot:"A"},
+ abilityDesc:"Stone Free — unravels body into string; binding, range extension, hearing at distance, flight",
+ abilityGrade:"A",
+ item:{desc:"Stone Ocean amulet — the charm that awakened her Stand and bound her to the Joestar fate",grade:"B"},
+ companionGrade:null},
+
+{name:"Enrico Pucci",part:6,pname:"Stone Ocean",stand:"Made in Heaven",role:"Villain",
+ desc:"Priest. Made in Heaven accelerates universal time to create an entirely new world.",
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"S"},
+ standStats:{str:"C",spd:"S",range:"S",dur:"B",prec:"A",pot:"S"},
+ abilityDesc:"Made in Heaven — accelerates universal time rotation to light speed; resets reality to a new world",
+ abilityGrade:"S",
+ item:{desc:"Green Baby — divine infant born from DIO's bone + Joestar birthmarks; the gate to Heaven",grade:"S"},
+ companionGrade:null},
+
+{name:"Ermes Costello",part:6,pname:"Stone Ocean",stand:"Kiss",role:"Ally",
+ desc:"Tenacious brawler. Kiss stickers duplicate objects and deal doubled damage on removal.",
+ stats:{strength:"B",durability:"B",speed:"B",battleIQ:"B"},
+ standStats:{str:"B",spd:"C",range:"C",dur:"B",prec:"B",pot:"C"},
+ abilityDesc:"Kiss — sticker duplicates any object; rejoining the sticker doubles all damage to both copies",
+ abilityGrade:"B",
+ item:{desc:"Vengeance for Gloria — rage that consistently pushes her past her physical limits",grade:"C"},
+ companionGrade:null},
+
+{name:"Weather Report",part:6,pname:"Stone Ocean",stand:"Weather Report",role:"Ally",
+ desc:"Amnesiac with absolute weather control. Heavy Weather causes hallucinatory snail transformation.",
+ stats:{strength:"B",durability:"B",speed:"B",battleIQ:"B"},
+ standStats:{str:"B",spd:"A",range:"S",dur:"B",prec:"A",pot:"S"},
+ abilityDesc:"Weather Report — absolute weather control; lightning, hurricane, Heavy Weather (snail hallucination)",
+ abilityGrade:"S",
+ item:{desc:"Memory disc — retrieving it unlocks Heavy Weather and restores his true identity",grade:"A"},
+ companionGrade:null},
+
+{name:"Narciso Anasui",part:6,pname:"Stone Ocean",stand:"Diver Down",role:"Ally",
+ desc:"Calculated fighter. Diver Down dives inside matter to store and detonate kinetic energy.",
+ stats:{strength:"B",durability:"B",speed:"B",battleIQ:"B"},
+ standStats:{str:"A",spd:"B",range:"C",dur:"B",prec:"A",pot:"B"},
+ abilityDesc:"Diver Down — dives inside matter; stores and redirects force; detonates from within any solid",
+ abilityGrade:"A",
+ item:{desc:"Internal bomb storage — detonates from inside targets; no external defence can block it",grade:"A"},
+ companionGrade:null},
+
+{name:"Foo Fighters",part:6,pname:"Stone Ocean",stand:"Foo Fighters",role:"Ally",
+ desc:"Plankton colony Stand user. Possesses corpses, regenerates, fires high-speed water needles.",
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"B"},
+ standStats:{str:"C",spd:"B",range:"B",dur:"A",prec:"A",pot:"B"},
+ abilityDesc:"Foo Fighters — plankton colony; possesses corpses; near-unlimited regeneration; water needle barrage",
+ abilityGrade:"B",
+ item:{desc:"Stand DISC collection — holds the entire prison's Stand repertoire as tactical leverage",grade:"B"},
+ companionGrade:null},
+
+// ── Part 7 ──
+{name:"Johnny Joestar",part:7,pname:"Steel Ball Run",stand:"Tusk Act 4",role:"Protagonist",
+ desc:"Former jockey. Tusk Act 4 nails carry infinite rotation, piercing all defence and dimensions.",
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"B"},
+ standStats:{str:"A",spd:"A",range:"A",dur:"A",prec:"A",pot:"S"},
+ abilityDesc:"Tusk Act 4 — infinite rotation nails pierce all defence; dimensional puncture; opponent trapped in loop",
+ abilityGrade:"S",
+ item:{desc:"Slow Dancer — his racehorse and essential partner across the transcontinental Steel Ball Run",grade:"B"},
+ companionGrade:null},
+
+{name:"Gyro Zeppeli",part:7,pname:"Steel Ball Run",stand:"Ball Breaker",role:"Partner",
+ desc:"Neapolitan executioner. Ball Breaker channels Golden Spin to rapidly age Stand armour and flesh.",
+ stats:{strength:"B",durability:"B",speed:"A",battleIQ:"A"},
+ standStats:{str:"B",spd:"A",range:"A",dur:"B",prec:"A",pot:"A"},
+ abilityDesc:"Ball Breaker — transmits Golden Spin energy; rapidly ages and destroys Stand armour and flesh",
+ abilityGrade:"A",
+ item:{desc:"Steel Balls — precision spheres generating perfect Fibonacci Golden Spin rotation",grade:"A"},
+ companionGrade:null},
+
+{name:"Funny Valentine",part:7,pname:"Steel Ball Run",stand:"D4C Love Train",role:"Villain",
+ desc:"US President. D4C Love Train redirects all harm to infinite parallel-world doubles.",
+ stats:{strength:"B",durability:"B",speed:"B",battleIQ:"A"},
+ standStats:{str:"A",spd:"A",range:"A",dur:"A",prec:"A",pot:"S"},
+ abilityDesc:"D4C Love Train — dimensional shift; luck barrier deflects all harm to parallel-world doubles",
+ abilityGrade:"S",
+ item:{desc:"Holy Corpse Parts — divine relics of Christ that exponentially amplify D4C and grant Love Train",grade:"S"},
+ companionGrade:null},
+
+{name:"Diego Brando",part:7,pname:"Steel Ball Run",stand:"Scary Monsters",role:"Rival",
+ desc:"Ruthless rival jockey. Scary Monsters transforms himself and others into predator dinosaurs.",
+ stats:{strength:"B",durability:"B",speed:"A",battleIQ:"A"},
+ standStats:{str:"B",spd:"A",range:"B",dur:"B",prec:"B",pot:"B"},
+ abilityDesc:"Scary Monsters — infects self and others; transforms into Cretaceous predator dinosaurs",
+ abilityGrade:"A",
+ item:{desc:"The World (Alt Diego) — time stop via Corpse eye alone; ~5-second duration, no Stand needed",grade:"S"},
+ companionGrade:null},
+
+{name:"Sandman",part:7,pname:"Steel Ball Run",stand:null,role:"Rival",
+ desc:"Runs barefoot at superhuman speed. Slices with amplified sound waves through the ground.",
+ stats:{strength:"A",durability:"B",speed:"S",battleIQ:"B"},
+ standStats:null,abilityDesc:null,abilityGrade:null,item:null,companionGrade:"A"},
+
+{name:"Hot Pants",part:7,pname:"Steel Ball Run",stand:"Cream Starter",role:"Rival",
+ desc:"Disguised priest whose Cream Starter reshapes flesh using pressurised fat spray.",
+ stats:{strength:"B",durability:"B",speed:"B",battleIQ:"A"},
+ standStats:{str:"C",spd:"B",range:"B",dur:"B",prec:"A",pot:"B"},
+ abilityDesc:"Cream Starter — aerosol of pressurised fat; reshapes own or others' flesh; healing and disguise",
+ abilityGrade:"B",
+ item:{desc:"Priest disguise (cross) — maintaining the persona is her core tactical advantage throughout the race",grade:"C"},
+ companionGrade:null},
+
+// ── Part 8 ──
+{name:"Josuke Higashikata (P8)",part:8,pname:"JoJolion",stand:"Soft & Wet",role:"Protagonist",
+ desc:"Amnesiac fusion being. Soft & Wet steals properties via soap bubbles; Go Beyond pierces reality.",
+ stats:{strength:"B",durability:"B",speed:"B",battleIQ:"B"},
+ standStats:{str:"B",spd:"A",range:"C",dur:"B",prec:"A",pot:"S"},
+ abilityDesc:"Soft & Wet — bubbles steal properties (sight, friction, sound, oxygen); Go Beyond pierces reality",
+ abilityGrade:"A",
+ item:{desc:"Rokakaka fruit — Equivalent Exchange fruit at the centre of the Part 8 conspiracy",grade:"A"},
+ companionGrade:null},
+
+{name:"Tooru",part:8,pname:"JoJolion",stand:"Wonder of U",role:"Villain",
+ desc:"Calamity made manifest. Pursuing Wonder of U causes cascading catastrophic accidents.",
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"S"},
+ standStats:{str:"C",spd:"A",range:"S",dur:"A",prec:"S",pot:"S"},
+ abilityDesc:"Wonder of U — calamity: anyone pursuing it or its user suffers escalating catastrophic accidents",
+ abilityGrade:"S",
+ item:{desc:"Rock Disease equivalent exchange — the nut-and-bolt transaction that is his ultimate goal",grade:"A"},
+ companionGrade:null},
+
+{name:"Rai Mamezuku",part:8,pname:"JoJolion",stand:"Doggy Style",role:"Ally",
+ desc:"Eccentric horticulturalist who unravels his body into high-tension wire for piercing attacks.",
+ stats:{strength:"C",durability:"C",speed:"B",battleIQ:"A"},
+ standStats:{str:"B",spd:"A",range:"A",dur:"C",prec:"A",pot:"B"},
+ abilityDesc:"Doggy Style — unravels body into high-tension wire; long-range piercing; rapid self-propulsion",
+ abilityGrade:"B",
+ item:{desc:"Botanical expertise — encyclopaedic Rokakaka knowledge; essential for understanding the conspiracy",grade:"B"},
+ companionGrade:null},
+
+{name:"Norisuke Higashikata IV",part:8,pname:"JoJolion",stand:"King Nothing",role:"Ally",
+ desc:"Trade family patriarch. King Nothing tracks any scent perfectly back to its exact origin.",
+ stats:{strength:"C",durability:"C",speed:"C",battleIQ:"A"},
+ standStats:{str:"C",spd:"C",range:"A",dur:"C",prec:"S",pot:"C"},
+ abilityDesc:"King Nothing — follows any scent trail with perfect precision back to its exact point of origin",
+ abilityGrade:"B",
+ item:{desc:"Higashikata trade network — a legitimate business empire that serves as cover and logistics",grade:"B"},
+ companionGrade:null},
+
+{name:"Yasuho Hirose",part:8,pname:"JoJolion",stand:"Paisley Park",role:"Ally",
+ desc:"Supports Josuke remotely. Paisley Park navigates electronic networks to guide allies to safety.",
+ stats:{strength:"D",durability:"D",speed:"C",battleIQ:"A"},
+ standStats:{str:"D",spd:"B",range:"S",dur:"C",prec:"A",pot:"B"},
+ abilityDesc:"Paisley Park — guides via electronic networks; optimal-path navigation; remote assistance",
+ abilityGrade:"B",
+ item:{desc:"Smartphone — every electronic network becomes her tactical map through this single medium",grade:"B"},
+ companionGrade:null},
+
+{name:"Dolomite",part:8,pname:"JoJolion",stand:"Blue Hawaii",role:"Villain",
+ desc:"Blue Hawaii possesses anyone who touches water connected to a prior touch — chain control.",
+ stats:{strength:"D",durability:"D",speed:"D",battleIQ:"B"},
+ standStats:{str:"D",spd:"B",range:"S",dur:"C",prec:"B",pot:"B"},
+ abilityDesc:"Blue Hawaii — possesses anyone who touches water in contact with a prior touch; chain-reaction control",
+ abilityGrade:"B",
+ item:{desc:"Surfboard — his life before Rock Disease rendered him immobile; now his symbolic throne",grade:"D"},
+ companionGrade:null},
+
+// ── Part 9 ──
+{name:"Jodio Joestar",part:9,pname:"The JoJoLands",stand:"November Rain",role:"Protagonist",
+ desc:"Hawai'i hustler. November Rain drops become perfectly immovable on contact with any surface.",
+ stats:{strength:"B",durability:"B",speed:"B",battleIQ:"B"},
+ standStats:{str:"B",spd:"B",range:"B",dur:"B",prec:"B",pot:"A"},
+ abilityDesc:"November Rain — raindrops become perfectly immovable on contact; paralyses, crushes, and anchors",
+ abilityGrade:"A",
+ item:{desc:"The JoJoLands diamond — the MacGuffin at the heart of the heist that starts the adventure",grade:"B"},
+ companionGrade:null},
+
+{name:"Dragona Joestar",part:9,pname:"The JoJoLands",stand:"Smooth Operators",role:"Sibling",
+ desc:"Jodio's sibling. Smooth Operators relocates surface objects seamlessly without detection.",
+ stats:{strength:"C",durability:"C",speed:"B",battleIQ:"A"},
+ standStats:{str:"C",spd:"B",range:"B",dur:"C",prec:"A",pot:"B"},
+ abilityDesc:"Smooth Operators — relocates objects on any surface (including on people) undetected and seamlessly",
+ abilityGrade:"B",
+ item:{desc:"Composure — their calm tactical reading of chaos is the crew's most reliable asset",grade:"B"},
+ companionGrade:null},
+
+{name:"Paco Laburantes",part:9,pname:"The JoJoLands",stand:"LMFAO",role:"Ally",
+ desc:"The muscle. LMFAO Crossfire Hurricane launches massive concussive blasts per strike.",
+ stats:{strength:"A",durability:"B",speed:"B",battleIQ:"C"},
+ standStats:{str:"A",spd:"B",range:"C",dur:"A",prec:"C",pot:"B"},
+ abilityDesc:"LMFAO Crossfire Hurricane — massive concussive blast per kick; overwhelming close-range destruction",
+ abilityGrade:"A",
+ item:{desc:"Physical mass — legitimate intimidation factor and grappling advantage in close quarters",grade:"C"},
+ companionGrade:null},
+
+{name:"Usagi Alohaoe",part:9,pname:"The JoJoLands",stand:"The Hustle",role:"Ally",
+ desc:"Enigmatic fighter. The Hustle redirects the trajectory of anything it makes contact with.",
+ stats:{strength:"C",durability:"C",speed:"B",battleIQ:"A"},
+ standStats:{str:"C",spd:"A",range:"B",dur:"B",prec:"A",pot:"B"},
+ abilityDesc:"The Hustle — redirects the trajectory of any force or object that makes contact with it",
+ abilityGrade:"B",
+ item:{desc:"Rabbit mask — psychological pressure tool used in negotiations and infiltration",grade:"C"},
+ companionGrade:null},
 ];
 
-const STAND_ABILITIES = {
-  "Star Platinum": {ability:"The World (Shared) / Precision — ORA barrage and stopped time",grade:"S"},
-  "The World": {ability:"Time Stop — halts all time for up to 9 seconds",grade:"S"},
-  "Silver Chariot": {ability:"Armor-shed — removes armor for double speed, shoots blades",grade:"A"},
-  "Magician's Red": {ability:"Cross Fire Hurricane — flame cross projectile + Red Bind",grade:"B"},
-  "Hierophant Green": {ability:"Emerald Splash — 20M marbles barrage; body infestation",grade:"A"},
-  "Hermit Purple": {ability:"Psychic Photography & Ripple Thorn whip",grade:"C"},
-  "The Fool": {ability:"Sand mimicry — any shape, sandstorm, flight",grade:"B"},
-  "Cream": {ability:"Void — devours everything in its path including itself and user",grade:"S"},
-  "Crazy Diamond": {ability:"Restoration — restores any object or body to prior state",grade:"A"},
-  "Killer Queen": {ability:"Bomb transmutation + Sheer Heart Attack + Bites the Dust loop",grade:"S"},
-  "Heaven's Door": {ability:"Rewrite humans as books — read/alter memories and personality",grade:"S"},
-  "Echoes": {ability:"Act 3: Three Freeze — fixes gravity weight on any surface",grade:"A"},
-  "The Hand": {ability:"Space erasure — removes physical space with right hand swipe",grade:"A"},
-  "Gold Experience Requiem": {ability:"Return to Zero — nullifies any action and its cause infinitely",grade:"S"},
-  "Sticky Fingers": {ability:"Zipper creation on any surface — stealth, severing, teleport",grade:"A"},
-  "King Crimson": {ability:"Time Erasure + Epitaph — erase 10s of time; see 10s ahead",grade:"S"},
-  "Sex Pistols": {ability:"Bullet redirection — 6 Pistols guide bullets to any target",grade:"B"},
-  "Aerosmith": {ability:"CO2 tracking + machine gun plane + bomb; radar precision",grade:"B"},
-  "Purple Haze": {ability:"Virus release — flesh-eating capsules, instant death in 30s",grade:"A"},
-  "Stone Free": {ability:"String unravel — bind, extend range, hear with string, fly",grade:"A"},
-  "Made in Heaven": {ability:"Universal acceleration — speeds reality to create a new universe",grade:"S"},
-  "Kiss": {ability:"Sticker duplication — split/rejoin doubles damage on removal",grade:"B"},
-  "Weather Report": {ability:"Absolute weather control — lightning, snail-rain, Heavy Weather",grade:"S"},
-  "Diver Down": {ability:"Interior diving — stores/redirects impact inside solid matter",grade:"A"},
-  "Tusk Act 4": {ability:"Infinite rotation nails — ignore defense; pierce dimensions",grade:"S"},
-  "Ball Breaker": {ability:"Golden Spin transmission — ages targets rapidly through rotation",grade:"A"},
-  "D4C Love Train": {ability:"Dimensional luck shield — all harm deflected to parallel worlds",grade:"S"},
-  "Scary Monsters": {ability:"Dinosaur transformation of self and others; dino-virus spread",grade:"A"},
-  "Soft & Wet": {ability:"Property theft bubbles — steals sight, friction, heat, sound, etc.",grade:"A"},
-  "Wonder of U": {ability:"Calamity pursuit — any who chase it suffer cascading disaster",grade:"S"},
-  "Doggy Style": {ability:"Body-wire unraveling — long-range pierce and wire control",grade:"B"},
-  "King Nothing": {ability:"Scent tracking — perfectly traces any scent back to origin",grade:"B"},
-  "November Rain": {ability:"Immovable raindrops — drops become unmovable weights on contact",grade:"A"},
-  "Smooth Operators": {ability:"Surface object relocation — move items on any body painlessly",grade:"B"},
-  "LMFAO Crossfire Hurricane": {ability:"Explosive kick force — massive radial blast per strike",grade:"A"},
-  "The Hustle": {ability:"Trajectory redirection — alters direction of anything it touches",grade:"B"},
-};
-
-const STAT_LABELS = [
-  {key:"strength",     label:"Strength",           type:"normal"},
-  {key:"standStr",     label:"Stand Strength",     type:"stand"},
-  {key:"standSpd",     label:"Stand Speed",        type:"stand"},
-  {key:"standRange",   label:"Stand Range",        type:"stand"},
-  {key:"standDur",     label:"Stand Durability",   type:"stand"},
-  {key:"standPrec",    label:"Stand Precision",    type:"stand"},
-  {key:"standPot",     label:"Stand Potential",    type:"stand"},
-  {key:"standAbility", label:"Stand Ability",      type:"ability"},
-  {key:"durability",   label:"Durability",         type:"normal"},
-  {key:"speed",        label:"Speed",              type:"normal"},
-  {key:"battleIQ",     label:"Battle IQ",          type:"normal"},
-  {key:"item",         label:"Battle Item / Companion", type:"item"},
-];
-
-// =====================================
+// ═══════════════════════════════════════════
 // STATE
-// =====================================
-let allBuilds = [];
-let currentBuild = null; // { slots: [{char, aspect, label, grade, value}], charHistory: [] }
-let pendingAspect = null; // {char, stat, label, grade, value}
-let currentChar = null;
+// ═══════════════════════════════════════════
+let allBuilds=[];
+let curBuild=null;  // {name, slots:[{key,label,grade,value,charName}]}
+let usedChars=[];
+let curChar=null;
+let pendingPick=null;
 
-// =====================================
-// UTILITIES
-// =====================================
-function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+// ═══════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════
+function rand(a){return a[Math.floor(Math.random()*a.length)];}
+function doFlash(){const f=document.getElementById('flash');f.classList.add('on');setTimeout(()=>f.classList.remove('on'),140);}
 
-function gradeColor(g) {
-  const map = {S:'var(--gold)',A:'#ff8c42',B:'var(--green)',C:'var(--cyan)',D:'var(--muted)',E:'#555'};
-  return map[g]||'#888';
-}
-
-function gradeClass(g){ return 'grade-'+g; }
-
-function rollCharacterStats(char) {
-  const stats = {};
-  for(const s of STAT_LABELS) {
-    if(s.key==='standAbility') {
-      if(char.stand) {
-        const ab = STAND_ABILITIES[char.stand];
-        stats[s.key] = {grade: ab?ab.grade:'A', value: ab?ab.ability:'Unique Stand power', type:'ability'};
-      } else {
-        stats[s.key] = {grade:'N/A', value:'No Stand', type:'ability'};
-      }
-    } else if(s.key==='item') {
-      stats[s.key] = {grade: rollGrade(char.stand?'item':'item'), value: char.itemDesc, type:'item'};
-    } else if(s.key.startsWith('stand')) {
-      if(char.stand) {
-        stats[s.key] = {grade: rollGrade('stand'), type:'stand'};
-      } else {
-        stats[s.key] = {grade:'N/A', type:'stand'};
-      }
-    } else {
-      stats[s.key] = {grade: rollGrade('normal'), type:'normal'};
+// Build the list of pickable rows for a character
+function getRows(ch){
+  const rows=[];
+  // Physical stats (always present)
+  const physMap=[
+    {key:'strength',label:'Strength'},
+    {key:'durability',label:'Durability'},
+    {key:'speed',label:'Speed'},
+    {key:'battleIQ',label:'Battle IQ'}
+  ];
+  for(const p of physMap){
+    rows.push({key:p.key,label:p.label,grade:ch.stats[p.key]||'D',value:null,group:'physical'});
+  }
+  // Stand stats (only if has stand)
+  if(ch.standStats){
+    const standMap=[
+      {key:'standStr',label:'Stand Strength',sk:'str'},
+      {key:'standSpd',label:'Stand Speed',sk:'spd'},
+      {key:'standRange',label:'Stand Range',sk:'range'},
+      {key:'standDur',label:'Stand Durability',sk:'dur'},
+      {key:'standPrec',label:'Stand Precision',sk:'prec'},
+      {key:'standPot',label:'Stand Potential',sk:'pot'},
+    ];
+    for(const s of standMap){
+      rows.push({key:s.key,label:s.label,grade:ch.standStats[s.sk]||'D',value:null,group:'stand'});
     }
-  }
-  return stats;
-}
-
-function getStatDisplay(char, stats, key) {
-  const s = stats[key];
-  if(!s) return {grade:'C', value:'—'};
-  if(s.grade==='N/A') return {grade:'N/A', value:'No Stand'};
-  return s;
-}
-
-// =====================================
-// UI HELPERS
-// =====================================
-function flash() {
-  const f = document.getElementById('rollFlash');
-  f.classList.add('show');
-  setTimeout(()=>f.classList.remove('show'),150);
-}
-
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('screen-'+id).classList.add('active');
-}
-
-function showStart() {
-  showScreen('start');
-  if(allBuilds.length>0) {
-    document.getElementById('compareStartBtn').style.display='inline-block';
-  }
-}
-
-function showCompare() {
-  renderCompare();
-  showScreen('compare');
-}
-
-// =====================================
-// BUILD LOGIC
-// =====================================
-function startBuild() {
-  currentBuild = { slots: [], charHistory: [] };
-  showScreen('build');
-  updateBuildSidebar();
-  updateStepIndicator();
-  document.getElementById('cardArea').innerHTML = '<div class="empty-state">Press <strong style="color:var(--gold)">ROLL CHARACTER</strong> to begin</div>';
-  document.getElementById('rollBtn').disabled = false;
-}
-
-function updateStepIndicator() {
-  const el = document.getElementById('stepIndicator');
-  el.innerHTML = '';
-  for(let i=0;i<8;i++) {
-    const dot = document.createElement('div');
-    dot.className = 'step-dot';
-    if(i < currentBuild.slots.length) dot.classList.add('done');
-    else if(i === currentBuild.slots.length) dot.classList.add('current');
-    el.appendChild(dot);
-  }
-  document.getElementById('slotDisplay').textContent = currentBuild.slots.length+1;
-  document.getElementById('buildNumDisplay').textContent = allBuilds.length+1;
-}
-
-function updateBuildSidebar() {
-  const el = document.getElementById('buildSlots');
-  el.innerHTML = '';
-  for(let i=0;i<8;i++) {
-    const slot = currentBuild.slots[i];
-    const div = document.createElement('div');
-    div.className = 'build-slot '+(slot?'filled':'empty');
-    if(slot) {
-      div.innerHTML = `<div class="build-slot-num">SLOT ${i+1} · ${slot.char.name}</div>
-        <div class="build-slot-aspect" style="color:${gradeColor(slot.grade)}">${slot.label} <span style="font-size:1.1rem">${slot.grade}</span></div>
-        <div class="build-slot-content">${slot.value.length>40?slot.value.slice(0,40)+'…':slot.value}</div>`;
-    } else {
-      div.innerHTML = `<div class="build-slot-num">SLOT ${i+1}</div><div class="build-slot-content">— empty —</div>`;
+    // Stand ability
+    rows.push({key:'ability',label:'Stand Ability',grade:ch.abilityGrade||'C',value:ch.abilityDesc,group:'ability'});
+    // Battle item (stand user)
+    rows.push({key:'item',label:'Battle Item',grade:ch.item.grade,value:ch.item.desc,group:'item'});
+  } else {
+    // Stand stat rows → N/A
+    for(const k of ['standStr','standSpd','standRange','standDur','standPrec','standPot']){
+      rows.push({key:k,label:k,grade:null,value:null,group:'na'});
     }
-    el.appendChild(div);
+    // Ability → N/A
+    rows.push({key:'ability',label:'Stand Ability',grade:null,value:null,group:'na'});
+    // Item slot → this character as a companion
+    rows.push({
+      key:'item',
+      label:'Companion: '+ch.name,
+      grade:ch.companionGrade||'C',
+      value:ch.name+' ('+ch.pname+', '+ch.role+') — '+ch.desc,
+      group:'companion'
+    });
   }
-  document.getElementById('slotsLeft').textContent = currentBuild.slots.length+'/8';
+  return rows;
 }
 
-function rollCharacter() {
-  if(currentBuild.slots.length >= 8) { finishBuild(); return; }
+// ═══════════════════════════════════════════
+// SCREENS
+// ═══════════════════════════════════════════
+function show(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));document.getElementById('scr-'+id).classList.add('on');}
+function goStart(){if(allBuilds.length)document.getElementById('btnCmp').style.display='inline-block';show('start');}
+function goCompare(){renderCompare();show('compare');}
 
-  // Don't reroll same character in this build
-  let char;
-  let attempts=0;
-  do {
-    char = rand(CHARACTERS);
-    attempts++;
-  } while(currentBuild.charHistory.includes(char.name) && attempts < 50);
+// ═══════════════════════════════════════════
+// BUILD START
+// ═══════════════════════════════════════════
+function startNewBuild(){
+  curBuild={name:'',slots:[]};
+  usedChars=[];curChar=null;pendingPick=null;
+  document.getElementById('bname').value='';
+  document.getElementById('slotTxt').textContent='— PRESS ROLL TO START —';
+  document.getElementById('cardArea').innerHTML='<div class="empty">Press <b style="color:var(--gold)">ROLL CHARACTER</b> to begin.</div>';
+  document.getElementById('rollBtn').disabled=false;
+  document.getElementById('tbBN').textContent=allBuilds.length+1;
+  updateDots();updateSidebar();
+  show('build');
+}
 
-  currentBuild.charHistory.push(char.name);
-  currentChar = char;
-  currentChar.stats = rollCharacterStats(char);
-
-  document.getElementById('rollBtn').disabled = true;
-
-  // Slot animation
-  const slotDiv = document.createElement('div');
-  slotDiv.className = 'slot-container';
-  slotDiv.innerHTML = `<div class="slot-inner rolling" id="slotRoll">...</div>`;
-
-  const cardArea = document.getElementById('cardArea');
-  cardArea.innerHTML = '';
-  cardArea.appendChild(slotDiv);
-
-  const names = CHARACTERS.map(c=>c.name);
-  let count=0;
-  const total=22;
-  const iv = setInterval(()=>{
-    document.getElementById('slotRoll').textContent = rand(names);
-    count++;
-    if(count>=total) {
+// ═══════════════════════════════════════════
+// ROLL
+// ═══════════════════════════════════════════
+function doRoll(){
+  if(!curBuild||curBuild.slots.length>=8)return;
+  document.getElementById('rollBtn').disabled=true;
+  const pool=CHARS.filter(c=>!usedChars.includes(c.name));
+  if(!pool.length){saveBuild();return;}
+  const ch=rand(pool);
+  const names=CHARS.map(c=>c.name);
+  const el=document.getElementById('slotTxt');
+  el.classList.add('rolling');
+  let tick=0;
+  const iv=setInterval(()=>{
+    el.textContent=rand(names);
+    if(++tick>=22){
       clearInterval(iv);
-      document.getElementById('slotRoll').textContent = char.name;
-      document.getElementById('slotRoll').classList.remove('rolling');
-      setTimeout(()=>renderCharCard(char, cardArea),200);
-      flash();
+      el.classList.remove('rolling');
+      el.textContent=ch.name;
+      doFlash();
+      curChar=ch;
+      usedChars.push(ch.name);
+      renderCard(ch);
     }
-  }, 80);
+  },75);
 }
 
-function renderCharCard(char, container) {
-  const stats = char.stats;
+// ═══════════════════════════════════════════
+// RENDER CARD
+// ═══════════════════════════════════════════
+function renderCard(ch){
+  const rows=getRows(ch);
+  const physRows=rows.filter(r=>r.group==='physical');
+  const standRows=rows.filter(r=>r.group==='stand');
+  const naRows=rows.filter(r=>r.group==='na');
+  const abilityRow=rows.find(r=>r.key==='ability');
+  const itemRow=rows.find(r=>r.key==='item');
+  const hasStand=!!ch.standStats;
 
-  let standHtml = '';
-  if(char.stand) {
-    standHtml = `<div class="stand-name">◈ STAND: ${char.stand}</div>`;
+  const isTaken=(key)=>curBuild.slots.some(s=>s.key===key&&s.charName===ch.name);
+
+  let html=`<div class="ccard" style="animation:fIn .4s cubic-bezier(.17,.89,.32,1.28)">
+    <div class="ccard-top">
+      <div class="pbadge">PART ${ch.part}</div>
+      <div><div class="cname">${ch.name}</div><div class="csub">${ch.pname} · ${ch.role}</div></div>
+    </div>
+    <div class="physdesc">${ch.desc}</div>
+    ${hasStand?`<div class="standbar">◈ STAND: ${ch.stand}</div>`:`<div class="standbar" style="color:var(--muted);font-size:.78rem;letter-spacing:.1em">◈ NO STAND — last slot offers this character as your companion</div>`}
+    <div class="hintbar">▼ TAP ONE ROW TO CLAIM THAT ASPECT</div>
+    <div class="sg">`;
+
+  // Physical (2-col)
+  for(const r of physRows){
+    const t=isTaken(r.key);
+    html+=`<div class="sr ${t?'taken':'pick'}" onclick="tryPick('${r.key}')">
+      <span class="sl">${r.label}</span>${gradeEl(r.grade)}</div>`;
   }
 
-  // Build stats rows
-  let statsHtml = '<div class="stats-grid">';
+  // Stand stats (2-col) or NA
+  const standLabels={standStr:'Stand Str',standSpd:'Stand Spd',standRange:'Stand Range',
+    standDur:'Stand Dur',standPrec:'Stand Prec',standPot:'Stand Pot'};
+  if(hasStand){
+    for(const r of standRows){
+      const t=isTaken(r.key);
+      html+=`<div class="sr ${t?'taken':'pick'}" onclick="tryPick('${r.key}')">
+        <span class="sl">${r.label}</span>${gradeEl(r.grade)}</div>`;
+    }
+  } else {
+    for(const k of Object.keys(standLabels)){
+      html+=`<div class="sr na"><span class="sl">${standLabels[k]}</span><span class="g gE">N/A</span></div>`;
+    }
+  }
 
-  const basicStats = STAT_LABELS.filter(s=>s.key!=='standAbility'&&s.key!=='item');
-  for(const s of basicStats) {
-    const sd = getStatDisplay(char, stats, s.key);
-    const isNA = sd.grade==='N/A';
-    const takenIdx = currentBuild.slots.findIndex(sl=>sl.key===s.key&&sl.char.name===char.name);
-    const isTaken = takenIdx>=0;
+  html+=`</div>`; // close .sg
 
-    if(!isNA) {
-      statsHtml += `<div class="stat-row${isTaken?' chosen':''}" 
-        onclick="${!isTaken?`attemptChoose('${s.key}','${s.label}','${sd.grade}','','${char.name}')`:''}">
-        <span class="stat-label">${s.label}</span>
-        <span class="stat-grade ${gradeClass(sd.grade)}">${sd.grade}</span>
+  // Ability row (full width)
+  if(hasStand&&abilityRow){
+    const t=isTaken('ability');
+    html+=`<div class="sr sr-full ${t?'taken':'pick'}" onclick="tryPick('ability')" style="padding:9px 15px;cursor:pointer;">
+      <div style="flex:1"><div class="abl">◆ STAND ABILITY</div><div class="abt">${abilityRow.value}</div></div>
+      ${gradeEl(abilityRow.grade)}</div>`;
+  } else if(!hasStand){
+    html+=`<div class="sr sr-full na" style="padding:9px 15px;">
+      <div style="flex:1"><div class="abl">◆ STAND ABILITY</div><div class="abt" style="color:var(--muted)">No Stand</div></div>
+      <span class="g gE">N/A</span></div>`;
+  }
+
+  // Item / Companion row (full width)
+  if(itemRow){
+    const t=isTaken('item');
+    const lbl=itemRow.group==='companion'?'◆ COMPANION':'◆ BATTLE ITEM';
+    html+=`<div class="sr sr-full ${t?'taken':'pick'}" onclick="tryPick('item')" style="padding:9px 15px;cursor:pointer;">
+      <div style="flex:1"><div class="abl">${lbl}</div><div class="abt">${itemRow.value}</div></div>
+      ${gradeEl(itemRow.grade)}</div>`;
+  }
+
+  html+=`</div>`; // close .ccard
+  document.getElementById('cardArea').innerHTML=html;
+  document.getElementById('tbRN').textContent=curBuild.slots.length+1;
+  updateDots();
+}
+
+// ═══════════════════════════════════════════
+// PICK
+// ═══════════════════════════════════════════
+function tryPick(key){
+  if(!curChar||!curBuild)return;
+  if(curBuild.slots.length>=8)return;
+  if(curBuild.slots.some(s=>s.key===key&&s.charName===curChar.name))return;
+
+  const rows=getRows(curChar);
+  const row=rows.find(r=>r.key===key);
+  if(!row||row.group==='na')return;
+
+  pendingPick={key,label:row.label,grade:row.grade,value:row.value,charName:curChar.name};
+
+  document.getElementById('mChar').textContent=curChar.name+(curChar.stand?' — '+curChar.stand:'');
+  document.getElementById('mAsp').textContent=row.label;
+  document.getElementById('mGrd').innerHTML=`<span class="${gc(row.grade)}" style="color:${gcolor(row.grade)}">${row.grade}</span>`;
+  // Show value for ability/item/companion; just grade for numeric stats
+  const showVal=(row.group==='ability'||row.group==='item'||row.group==='companion')&&row.value;
+  document.getElementById('mVal').textContent=showVal?row.value:'Grade: '+row.grade;
+  document.getElementById('modal').classList.remove('hide');
+}
+
+function closeModal(){document.getElementById('modal').classList.add('hide');pendingPick=null;}
+
+function confirmPick(){
+  if(!pendingPick)return;
+  const pick={...pendingPick};
+  closeModal();
+  curBuild.slots.push(pick);
+  pendingPick=null;
+  updateSidebar();updateDots();
+  if(curBuild.slots.length>=8){setTimeout(saveBuild,500);return;}
+  // Auto-roll next character
+  setTimeout(doRoll,650);
+}
+
+// ═══════════════════════════════════════════
+// SIDEBAR & DOTS
+// ═══════════════════════════════════════════
+function updateSidebar(){
+  if(!curBuild)return;
+  document.getElementById('sbcnt').textContent=curBuild.slots.length+'/8';
+  let h='';
+  for(let i=0;i<8;i++){
+    const s=curBuild.slots[i];
+    if(s){
+      h+=`<div class="sbslot filled">
+        <div class="sbnum">SLOT ${i+1} · ${s.charName}</div>
+        <div class="sbaspect" style="color:${gcolor(s.grade)}">${s.label} — <span style="font-size:1.08rem">${s.grade}</span></div>
+        <div class="sbval">${s.value?(s.value.length>44?s.value.slice(0,44)+'…':s.value):('Grade '+s.grade)}</div>
       </div>`;
     } else {
-      statsHtml += `<div class="stat-row" style="opacity:0.35;cursor:default">
-        <span class="stat-label">${s.label}</span>
-        <span class="stat-grade" style="color:#444">N/A</span>
-      </div>`;
+      h+=`<div class="sbslot empty"><div class="sbnum">SLOT ${i+1}</div><div class="sbval">— empty —</div></div>`;
     }
   }
-  statsHtml += '</div>';
+  document.getElementById('sbslots').innerHTML=h;
+}
 
-  // Ability row
-  const ab = getStatDisplay(char, stats, 'standAbility');
-  const abTaken = currentBuild.slots.find(sl=>sl.key==='standAbility'&&sl.char.name===char.name);
-  let abilityHtml = '';
-  if(ab.grade!=='N/A') {
-    abilityHtml = `<div class="ability-row${abTaken?' chosen':''}" 
-      onclick="${!abTaken?`attemptChoose('standAbility','Stand Ability','${ab.grade}','${ab.value.replace(/'/g,"\\'")}','${char.name}')`:''}">
-      <div class="ability-label">◆ STAND ABILITY <span class="ability-grade ${gradeClass(ab.grade)}" style="color:${gradeColor(ab.grade)}">[${ab.grade}]</span></div>
-      <div class="ability-desc">${ab.value}</div>
-    </div>`;
+function updateDots(){
+  if(!curBuild)return;
+  let h='';
+  for(let i=0;i<8;i++){
+    const cls=i<curBuild.slots.length?'done':i===curBuild.slots.length?'now':'';
+    h+=`<div class="dot ${cls}"></div>`;
   }
+  document.getElementById('dots').innerHTML=h;
+}
 
-  // Item/companion row
-  const it = getStatDisplay(char, stats, 'item');
-  const itTaken = currentBuild.slots.find(sl=>sl.key==='item'&&sl.char.name===char.name);
-  const itemLabel = char.stand ? 'Battle Item' : 'Companion';
-  const itemHtml = `<div class="item-row${itTaken?' chosen':''}" 
-    onclick="${!itTaken?`attemptChoose('item','${itemLabel}','${it.grade}','${char.itemDesc.replace(/'/g,"\\'")}','${char.name}')`:''}">
-    <span class="stat-label">${itemLabel}</span>
-    <span class="stat-grade ${gradeClass(it.grade)}">${it.grade}</span>
-    <span style="font-size:0.82rem;color:var(--text);margin-left:8px;flex:1">${char.itemDesc}</span>
-  </div>`;
+// ═══════════════════════════════════════════
+// SAVE
+// ═══════════════════════════════════════════
+function saveBuild(){
+  if(!curBuild||curBuild.slots.length===0){goStart();return;}
+  curBuild.name=document.getElementById('bname').value.trim()||('Build '+(allBuilds.length+1));
+  allBuilds.push(JSON.parse(JSON.stringify(curBuild)));
+  curBuild=null;curChar=null;pendingPick=null;
+  goCompare();
+}
 
-  const html = `<div class="character-card card-reveal">
-    <div class="card-header">
-      <div class="part-badge">PART ${char.part}</div>
-      <div>
-        <div class="char-name">${char.name}</div>
-        <div class="char-subtitle">${char.partName} · ${char.role}</div>
+// ═══════════════════════════════════════════
+// SCORING
+// ═══════════════════════════════════════════
+function scoreSlots(slots){return slots.reduce((t,s)=>t+(GS_SCORE[s.grade]||0),0);}
+
+function calcSynergy(slots){
+  let bonus=0;const notes=[];
+  const has=k=>slots.some(s=>s.key===k);
+  const sCount=slots.filter(s=>s.grade==='S').length;
+  const aCount=slots.filter(s=>s.grade==='A'||s.grade==='S').length;
+  const standKeys=['standStr','standSpd','standRange','standDur','standPrec','standPot','ability'];
+  const standN=slots.filter(s=>standKeys.includes(s.key)).length;
+
+  if(standN>=4){bonus+=5;notes.push('Stand stack +5 ('+standN+' aspects)');}
+  else if(standN>=2){bonus+=2;notes.push('Stand synergy +2');}
+  if(has('ability')&&standN>=2){bonus+=3;notes.push('Ability+stats +3');}
+  if(has('speed')&&has('standSpd')){bonus+=2;notes.push('Speed combo +2');}
+  if(has('strength')&&has('standStr')){bonus+=2;notes.push('Strength combo +2');}
+  if(has('durability')&&has('standDur')){bonus+=2;notes.push('Durability combo +2');}
+  if(has('battleIQ')&&has('ability')){bonus+=2;notes.push('IQ+Ability +2');}
+  if(has('item')&&has('battleIQ')){bonus+=1;notes.push('Item mastery +1');}
+  if(sCount>=3){bonus+=6;notes.push('S-tier dominance +6 ('+sCount+'×S)');}
+  else if(sCount===2){bonus+=3;notes.push('Dual S +3');}
+  else if(sCount===1){bonus+=1;notes.push('S anchor +1');}
+  if(aCount>=6){bonus+=3;notes.push('Consistent elite floor +3');}
+  return{bonus,notes};
+}
+
+// ═══════════════════════════════════════════
+// COMPARE
+// ═══════════════════════════════════════════
+function renderCompare(){
+  if(!allBuilds.length){
+    document.getElementById('winbox').innerHTML='';
+    document.getElementById('cgrid').innerHTML='<div class="empty">No builds yet.</div>';
+    return;
+  }
+  const scored=allBuilds.map((b,i)=>{
+    const base=scoreSlots(b.slots);
+    const{bonus,notes}=calcSynergy(b.slots);
+    return{build:b,idx:i,base,bonus,total:base+bonus,notes};
+  }).sort((a,b)=>b.total-a.total);
+
+  const top=scored[0];
+  document.getElementById('winbox').innerHTML=`
+    <div class="winbox">
+      <div class="wlbl">◆ CHAMPION BUILD ◆</div>
+      <div class="wname">${top.build.name}</div>
+      <div class="wscore" style="color:var(--gold)">SCORE: ${top.total}</div>
+      <div class="wdesc">${top.build.slots.map(s=>s.label+' ['+s.grade+']').join(' · ')}</div>
+    </div>`;
+
+  const rl=i=>i===0?'★ 1ST':i===1?'2ND':i===2?'3RD':`${i+1}TH`;
+  const rc=i=>i===0?'r1':i===1?'r2':i===2?'r3':'';
+  const sc=t=>t>=55?'var(--gS)':t>=38?'var(--gA)':t>=26?'var(--gB)':'var(--gC)';
+
+  document.getElementById('cgrid').innerHTML=scored.map((s,rank)=>`
+    <div class="fc ${rc(rank)}">
+      <div class="rtag">${rl(rank)}</div>
+      <div class="fch">
+        <div class="fcname">${s.build.name}</div>
+        <div class="fcsrc">${s.build.slots.length} aspects absorbed</div>
       </div>
-    </div>
-    ${standHtml}
-    <div class="choose-hint">▼ TAP AN ASPECT TO CLAIM IT</div>
-    ${statsHtml}
-    ${abilityHtml}
-    ${itemHtml}
-  </div>`;
-
-  container.innerHTML = html;
-  updateStepIndicator();
+      <div class="fcscore" style="color:${sc(s.total)}">${s.total}</div>
+      <div class="fcslbl">BASE ${s.base} + SYNERGY ${s.bonus}</div>
+      <div class="fcasp">
+        ${s.build.slots.map(sl=>`<div class="ac">
+          <span class="acn">${sl.label}</span>
+          <span class="acv">${sl.charName}</span>
+          <span class="g ${gc(sl.grade)}" style="font-size:.88rem;min-width:18px;text-align:right">${sl.grade}</span>
+        </div>`).join('')}
+      </div>
+      ${s.notes.length?`<div class="synbox">
+        <div class="synlbl">⚡ SYNERGIES <span class="synbonus">+${s.bonus}</span></div>
+        <div class="syntxt">${s.notes.join(' · ')}</div>
+      </div>`:''}
+      <button class="delbtn" onclick="deleteBuild(${s.idx})">✕ DELETE</button>
+    </div>`).join('');
 }
 
-function attemptChoose(key, label, grade, value, charName) {
-  // get value from char
-  const char = currentChar;
-  if(!char || char.name !== charName) return;
-
-  let displayValue = value;
-  if(!displayValue) {
-    // numeric grade display only
-    displayValue = `Grade ${grade}`;
-  }
-
-  pendingAspect = {char, key, label, grade, value: displayValue};
-
-  document.getElementById('modalChar').textContent = char.name + (char.stand ? ` — ${char.stand}` : '');
-  document.getElementById('modalAspect').textContent = label;
-  document.getElementById('modalGrade').innerHTML = `<span class="${gradeClass(grade)}" style="color:${gradeColor(grade)}">${grade}</span>`;
-  document.getElementById('modalValue').textContent = displayValue !== `Grade ${grade}` ? displayValue : '';
-
-  document.getElementById('modal').classList.remove('hidden');
+function deleteBuild(idx){
+  allBuilds.splice(idx,1);
+  if(!allBuilds.length){goStart();return;}
+  renderCompare();
 }
 
-function closeModal() {
-  document.getElementById('modal').classList.add('hidden');
-  pendingAspect = null;
-}
-
-function confirmAspect() {
-  if(!pendingAspect) return;
-  closeModal();
-
-  currentBuild.slots.push({
-    char: pendingAspect.char,
-    key: pendingAspect.key,
-    label: pendingAspect.label,
-    grade: pendingAspect.grade,
-    value: pendingAspect.value,
-  });
-
-  updateBuildSidebar();
-  updateStepIndicator();
-
-  if(currentBuild.slots.length >= 8) {
-    // Auto-finish
-    setTimeout(finishBuild, 600);
-    return;
-  }
-
-  // Ready for next roll
-  document.getElementById('rollBtn').disabled = false;
-  document.getElementById('cardArea').innerHTML = `<div class="empty-state" style="color:var(--green)">✦ Aspect absorbed! Roll next character.</div>`;
-  pendingAspect = null;
-}
-
-function finishBuild() {
-  if(!currentBuild || currentBuild.slots.length === 0) {
-    showStart();
-    return;
-  }
-  allBuilds.push(JSON.parse(JSON.stringify(currentBuild)));
-  currentBuild = null;
-  currentChar = null;
-  showCompare();
-}
-
-// =====================================
-// SCORING & SYNERGY
-// =====================================
-function scoreGrade(g) { return GRADE_SCORE[g]||0; }
-
-function calcSynergy(slots) {
-  // Check for synergies:
-  // 1. Has Stand + Stand stats: bonus
-  // 2. High IQ + high precision: bonus
-  // 3. Multiple S grades
-  // 4. Item/companion matching stand
-  const bonuses = [];
-  let bonus = 0;
-
-  const standKeys = ['standStr','standSpd','standRange','standDur','standPrec','standPot','standAbility'];
-  const standSlots = slots.filter(s=>standKeys.includes(s.key)&&s.grade!=='N/A');
-
-  const hasAbility = slots.find(s=>s.key==='standAbility');
-  const hasItem = slots.find(s=>s.key==='item');
-  const hasIQ = slots.find(s=>s.key==='battleIQ');
-  const hasSpeed = slots.find(s=>s.key==='speed');
-  const hasStr = slots.find(s=>s.key==='strength');
-  const hasDur = slots.find(s=>s.key==='durability');
-  const sCount = slots.filter(s=>s.grade==='S').length;
-  const aCount = slots.filter(s=>s.grade==='A'||s.grade==='S').length;
-
-  if(standSlots.length>=3) { bonus+=4; bonuses.push(`Stand synergy (+4): multiple stand aspects compound`); }
-  if(hasAbility&&standSlots.length>=2) { bonus+=3; bonuses.push(`Ability+stats synergy (+3): Stand ability backed by solid stats`); }
-  if(hasIQ&&hasAbility) { bonus+=2; bonuses.push(`IQ+Ability (+2): smart use of Stand power`); }
-  if(hasSpeed&&standSlots.find(s=>s.key==='standSpd')) { bonus+=2; bonuses.push(`Physical+Stand speed (+2): blinding combined velocity`); }
-  if(hasStr&&standSlots.find(s=>s.key==='standStr')) { bonus+=2; bonuses.push(`Physical+Stand strength (+2): overwhelming force`); }
-  if(hasDur&&standSlots.find(s=>s.key==='standDur')) { bonus+=2; bonuses.push(`Physical+Stand durability (+2): nigh-unstoppable endurance`); }
-  if(sCount>=3) { bonus+=5; bonuses.push(`S-tier dominance (+5): ${sCount} S-grade aspects`); }
-  else if(sCount>=2) { bonus+=3; bonuses.push(`Dual S-tier (+3): elite power pairing`); }
-  else if(sCount===1) { bonus+=1; bonuses.push(`S-tier anchor (+1): one supreme ability`); }
-  if(aCount>=5) { bonus+=3; bonuses.push(`High-floor build (+3): consistently elite across ${aCount} aspects`); }
-  if(hasItem&&hasIQ) { bonus+=1; bonuses.push(`Item mastery (+1): tactical genius maximizes equipment`); }
-
-  return {bonus, bonuses};
-}
-
-function calcBuildScore(build) {
-  let base = 0;
-  for(const s of build.slots) {
-    base += scoreGrade(s.grade);
-  }
-  const {bonus, bonuses} = calcSynergy(build.slots);
-  return {base, bonus, total: base+bonus, bonuses};
-}
-
-function buildDisplayName(build) {
-  // Name based on most notable character/ability
-  const s = build.slots.find(sl=>sl.grade==='S') || build.slots[0];
-  return s ? `${s.char.name}'s ${s.label}` : 'Unknown Build';
-}
-
-// =====================================
-// COMPARE RENDER
-// =====================================
-function renderCompare() {
-  const grid = document.getElementById('compareGrid');
-  const winnerArea = document.getElementById('winnerArea');
-
-  if(allBuilds.length===0) {
-    grid.innerHTML = '<div class="empty-state">No builds yet. Start building!</div>';
-    winnerArea.innerHTML = '';
-    return;
-  }
-
-  // Score all
-  const scored = allBuilds.map((b,i)=>({build:b, idx:i, ...calcBuildScore(b)}));
-  scored.sort((a,b)=>b.total-a.total);
-
-  // Winner banner
-  const top = scored[0];
-  const topSlots = top.build.slots;
-  const topAspects = topSlots.map(s=>`${s.label}(${s.grade})`).join(', ');
-  const winName = topSlots.find(s=>s.grade==='S')?.char.name || topSlots[0]?.char.name || 'Build 1';
-
-  winnerArea.innerHTML = `
-    <div class="winner-banner">
-      <div class="winner-label">◆ CHAMPION BUILD ◆</div>
-      <div class="winner-name">${winName}'s Vessel</div>
-      <div class="winner-score" style="color:var(--gold)">SCORE: ${top.total}</div>
-      <div class="winner-aspects">${topAspects}</div>
-    </div>`;
-
-  grid.innerHTML = '';
-  scored.forEach((sc,rank)=>{
-    const b = sc.build;
-    const rankClass = rank===0?'rank-1':rank===1?'rank-2':rank===2?'rank-3':'';
-    const rankLabel = rank===0?'★ 1ST':rank===1?'2ND':rank===2?'3RD':`${rank+1}TH`;
-    const scoreColor = sc.total>=50?'var(--gold)':sc.total>=35?'#ff8c42':sc.total>=25?'var(--green)':'var(--cyan)';
-
-    const aspectsHtml = b.slots.map(sl=>`
-      <div class="aspect-chip">
-        <span class="aspect-name">${sl.label}</span>
-        <span class="aspect-val">${sl.char.name.split(' ')[0]}</span>
-        <span class="aspect-g ${gradeClass(sl.grade)}">${sl.grade}</span>
-      </div>`).join('');
-
-    const synergyHtml = sc.bonuses.length>0 ? `
-      <div class="synergy-section">
-        <div class="synergy-label">⚡ SYNERGY BONUS: <span class="synergy-bonus">+${sc.bonus}</span></div>
-        <div class="synergy-text">${sc.bonuses.slice(0,3).join(' · ')}</div>
-      </div>` : '';
-
-    grid.innerHTML += `
-      <div class="fighter-card ${rankClass}">
-        <div class="rank-banner">${rankLabel}</div>
-        <div class="fighter-header">
-          <div class="fighter-name">Build ${sc.idx+1}</div>
-          <div class="fighter-source">${b.slots.length} aspects absorbed</div>
-        </div>
-        <div class="fighter-score" style="color:${scoreColor}">${sc.total}</div>
-        <div class="score-label">BASE ${sc.base} + SYNERGY ${sc.bonus}</div>
-        <div class="fighter-aspects">${aspectsHtml}</div>
-        ${synergyHtml}
-      </div>`;
-  });
-}
-
-// =====================================
 // INIT
-// =====================================
-showStart();
+goStart();
 </script>
 </body>
 </html>
