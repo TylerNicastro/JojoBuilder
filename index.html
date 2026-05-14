@@ -803,18 +803,15 @@ const CHARS=[
  item:{desc:"Rabbit mask — psychological pressure tool used in negotiations and infiltration",grade:"C"},
  companionGrade:null},
 ];
-
 // ═══════════════════════════════════════════
-// STATE
+// STATE & CONFIG
 // ═══════════════════════════════════════════
+const GS_SCORE = { 'S': 10, 'A': 8, 'B': 6, 'C': 4, 'D': 2, 'E': 0 };
 let allBuilds=[];
-let curBuild=null;  // {name, slots:[{key,label,grade,value,charName}]}
+let curBuild=null;  
 let usedChars=[];
 let curChar=null;
 let pendingPick=null;
-
-// Score system configuration mapping
-const GS_SCORE = { 'S': 10, 'A': 8, 'B': 6, 'C': 4, 'D': 2 };
 
 // ═══════════════════════════════════════════
 // HELPERS
@@ -828,7 +825,7 @@ function gc(g) {
 }
 
 function gcolor(g) {
-  switch(g) {
+  switch(g ? g.toUpperCase() : '') {
     case 'S': return 'var(--gS)';
     case 'A': return 'var(--gA)';
     case 'B': return 'var(--gB)';
@@ -863,11 +860,18 @@ function getRows(ch){
       {key:'standPrec',label:'Stand Precision',sk:'prec'},
       {key:'standPot',label:'Stand Potential',sk:'pot'},
     ];
-    for(const s of standMap){
-      rows.push({key:s.key,label:s.label,grade:ch.standStats[s.sk]||'D',value:null,group:'stand'});
-    }
-    rows.push({key:'ability',label:'Stand Ability',grade:ch.abilityGrade||'C',value:ch.abilityDesc,group:'ability'});
-    rows.push({key:'item',label:'Battle Item',grade:ch.item.grade,value:ch.item.desc,group:'item'});
+for(const s of standMap){
+  rows.push({key:s.key,label:s.label,grade:ch.standStats[s.sk]||'D',value:null,group:'stand'});
+}
+    rows.push({key:'ability',label:'Stand Ability',grade:ch.abilityGrade||'C',value:ch.abilityDesc||'',group:'ability'});
+    rows.push({
+      key:'item',
+      label:'Battle Item',
+      grade: (ch.item && ch.item.grade) ? ch.item.grade : 'C',
+      value: (ch.item && ch.item.desc) ? ch.item.desc : 'No item equipped',
+      group:'item'
+    });
+
   } else {
     for(const k of ['standStr','standSpd','standRange','standDur','standPrec','standPot']){
       rows.push({key:k,label:k,grade:null,value:null,group:'na'});
@@ -929,6 +933,7 @@ function doRoll(){
       curChar=ch;
       usedChars.push(ch.name);
       renderCard(ch);
+      // document.getElementById('rollBtn').disabled=false; // Uncomment here if rolling shouldn't lock during picking
     }
   },75);
 }
@@ -952,7 +957,7 @@ function tryPick(key){
   // Target display nodes securely via structural IDs
   document.getElementById('mChar').textContent=curChar.name+(curChar.stand?' — '+curChar.stand:''); 
   document.getElementById('mAsp').textContent=row.label; 
-  document.getElementById('mGrd').innerHTML=`<span class="${gc(row.grade)}" style="color:${gcolor(row.grade)}">${row.grade}</span>`; 
+  document.getElementById('mGrd').innerHTML=`<span class="g ${gc(row.grade)}" style="color:${gcolor(row.grade)}">${row.grade}</span>`;
   
   const showVal=(row.group==='ability'||row.group==='item'||row.group==='companion')&&row.value; 
   document.getElementById('mVal').textContent=showVal?row.value:'Grade: '+row.grade; 
