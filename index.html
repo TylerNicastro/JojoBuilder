@@ -1053,17 +1053,15 @@ function renderCard(ch){
       <span class="sl">${r.label}</span>${gradeEl(r.grade)}</div>`;
   }
 
-  // Stand stats or N/A templates
+  // Single clean master dictionary maps both code paths smoothly
   const standLabels={standStr:'Stand Str',standSpd:'Stand Spd',standRange:'Stand Range',
     standDur:'Stand Dur',standPrec:'Stand Prec',standPot:'Stand Pot'};
-    if(hasStand){
-    // Text labels are cleanly compressed to prevent running off the UI grid borders
-    const shortLabels={standStr:'Stand Str',standSpd:'Stand Spd',standRange:'Stand Range',
-      standDur:'Stand Dur',standPrec:'Stand Prec',standPot:'Stand Pot'};
+    
+  if(hasStand){
     for(const r of standRows){
       const t=isTaken(r.key);
       html+=`<div class="sr ${t?'taken':'pick'}" ${t?'':`onclick="tryPick('${r.key}')"`}>
-        <span class="sl">${shortLabels[r.key] || r.label}</span>${gradeEl(r.grade)}</div>`;
+        <span class="sl">${standLabels[r.key] || r.label}</span>${gradeEl(r.grade)}</div>`;
     }
   } else {
     for(const k of Object.keys(standLabels)){
