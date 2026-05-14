@@ -816,8 +816,8 @@ function gc(g) {
 
 function gcolor(g) {
   switch(g ? g.toUpperCase() : '') {
-    case 'SS': return 'var(--pink)'; // Uses existing hot pink theme variable
-    case 'F': return 'var(--red)';   // Uses existing tactical red theme variable
+    case 'SS': return 'var(--pink)'; 
+    case 'F': return 'var(--red)';   
     case 'S': return 'var(--gS)';
     case 'A': return 'var(--gA)';
     case 'B': return 'var(--gB)';
@@ -828,9 +828,10 @@ function gcolor(g) {
 }
 
 function gradeEl(g){
-  return `<span class="g ${gc(g)}" style="color:${gcolor(g)}">${g||'N/A'}</span>`;
+  return `<span class="g ${gc(g)}">${g||'N/A'}</span>`;
 }
 
+// Build the list of pickable rows for a character
 // Build the list of pickable rows for a character
 function getRows(ch){
   const rows=[];
@@ -852,9 +853,11 @@ function getRows(ch){
       {key:'standPrec',label:'Stand Precision',sk:'prec'},
       {key:'standPot',label:'Stand Potential',sk:'pot'},
     ];
-for(const s of standMap){
-  rows.push({key:s.key,label:s.label,grade:ch.standStats[s.sk]||'D',value:null,group:'stand'});
-}
+    for(const s of standMap){
+      // Checks for both character data models: shorthand property vs full name property
+      const directStat = ch.standStats[s.sk] || ch.standStats[s.key];
+      rows.push({key:s.key,label:s.label,grade:directStat||'D',value:null,group:'stand'});
+    }
     rows.push({key:'ability',label:'Stand Ability',grade:ch.abilityGrade||'C',value:ch.abilityDesc||'',group:'ability'});
     rows.push({
       key:'item',
@@ -863,10 +866,17 @@ for(const s of standMap){
       value: (ch.item && ch.item.desc) ? ch.item.desc : 'No item equipped',
       group:'item'
     });
-
   } else {
-    for(const k of ['standStr','standSpd','standRange','standDur','standPrec','standPot']){
-      rows.push({key:k,label:k,grade:null,value:null,group:'na'});
+    const naMap = [
+      {key:'standStr',label:'Stand Strength'},
+      {key:'standSpd',label:'Stand Speed'},
+      {key:'standRange',label:'Stand Range'},
+      {key:'standDur',label:'Stand Durability'},
+      {key:'standPrec',label:'Stand Precision'},
+      {key:'standPot',label:'Stand Potential'}
+    ];
+    for(const k of naMap){
+      rows.push({key:k.key,label:k.label,grade:null,value:null,group:'na'});
     }
     rows.push({key:'ability',label:'Stand Ability',grade:null,value:null,group:'na'});
 
