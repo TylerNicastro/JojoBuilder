@@ -914,7 +914,8 @@ function startNewBuild(){
 // ROLL
 // ═══════════════════════════════════════════
 function doRoll(){
-  if(!curBuild||curBuild.slots.length>=8)return;
+  if(!curBuild||curBuild.slots.length>=12)return; // 12-slot capacity ceiling check
+  isRolling = true; // Strict lock engagement
   document.getElementById('rollBtn').disabled=true;
   const pool=CHARS.filter(c=>!usedChars.includes(c.name));
   if(!pool.length){saveBuild();return;}
@@ -932,8 +933,8 @@ function doRoll(){
       doFlash();
       curChar=ch;
       usedChars.push(ch.name);
+      isRolling = false; // Safely release interaction lock now that rendering is ready
       renderCard(ch);
-      // document.getElementById('rollBtn').disabled=false; // Uncomment here if rolling shouldn't lock during picking
     }
   },75);
 }
@@ -1083,9 +1084,9 @@ function renderCard(ch){
 // ═══════════════════════════════════════════
 function updateSidebar(){
   if(!curBuild)return;
-  document.getElementById('sbcnt').textContent=curBuild.slots.length+'/8';
+  document.getElementById('sbcnt').textContent=curBuild.slots.length+'/12';
   let h='';
-  for(let i=0;i<8;i++){
+  for(let i=0;i<12;i++){ // Render 12 sidebar items
     const s=curBuild.slots[i];
     if(s){
       h+=`<div class="sbslot filled">
@@ -1103,7 +1104,7 @@ function updateSidebar(){
 function updateDots(){
   if(!curBuild)return;
   let h='';
-  for(let i=0;i<8;i++){
+  for(let i=0;i<12;i++){
     const cls=i<curBuild.slots.length?'done':i===curBuild.slots.length?'now':'';
     h+=`<div class="dot ${cls}"></div>`;
   }
