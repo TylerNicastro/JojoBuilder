@@ -921,8 +921,8 @@ function renderCard(ch){
   const itemRow=rows.find(r=>r.key==='item');
   const hasStand=!!ch.standStats;
 
-  const isTaken=(key)=>curBuild.slots.some(s=>s.key===key&&s.charName===ch.name);
-
+  const isTaken=(key)=>curBuild.slots.some(s=>s.key===key);
+  
   let html=`<div class="ccard" style="animation:fIn .4s cubic-bezier(.17,.89,.32,1.28)">
     <div class="ccard-top">
       <div class="pbadge">PART ${ch.part}</div>
