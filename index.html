@@ -979,37 +979,29 @@ function renderCard(ch){
 // PICK
 // ═══════════════════════════════════════════
 function tryPick(key){
-  if(!curChar||!curBuild)return;
-  if(curBuild.slots.length>=8)return;
-  if(curBuild.slots.some(s=>s.key===key&&s.charName===curChar.name))return;
+    if(!curChar || !curBuild) return;
+    if(curBuild.slots.length >= 8) return;
+    
+    // Check if the character already has this specific attribute (key) picked
+    if(curBuild.slots.some(s => s.key === key && s.charName === curChar.name)) return;
 
-  const rows=getRows(curChar);
-  const row=rows.find(r=>r.key===key);
-  if(!row||row.group==='na')return;
+    // ADDED: Prevent picking the SAME attribute key AGAIN across the entire build
+    if(curBuild.slots.some(s => s.key === key)) return;
 
-  pendingPick={key,label:row.label,grade:row.grade,value:row.value,charName:curChar.name};
+    const rows = getRows(curChar);
+    const row = rows.find(r => r.key === key);
+    if(!row || row.group === 'na') return;
 
-  document.getElementById('mChar').textContent=curChar.name+(curChar.stand?' — '+curChar.stand:'');
-  document.getElementById('mAsp').textContent=row.label;
-  document.getElementById('mGrd').innerHTML=`<span class="${gc(row.grade)}" style="color:${gcolor(row.grade)}">${row.grade}</span>`;
-  // Show value for ability/item/companion; just grade for numeric stats
-  const showVal=(row.group==='ability'||row.group==='item'||row.group==='companion')&&row.value;
-  document.getElementById('mVal').textContent=showVal?row.value:'Grade: '+row.grade;
-  document.getElementById('modal').classList.remove('hide');
-}
+    pendingPick = {key, label: row.label, grade: row.grade, value: row.value, charName: curChar.name};
 
-function closeModal(){document.getElementById('modal').classList.add('hide');pendingPick=null;}
+    document.getElementById('mChar').textContent = curChar.name + (curChar.stand ? ' — ' + curChar.stand : '');
+    document.getElementById('mAsp').textContent = row.label;
+    document.getElementById('mGrd').innerHTML = `<span class="${gc(row.grade)}" style="color:${gcolor(row.grade)}">${row.grade}</span>`; 
 
-function confirmPick(){
-  if(!pendingPick)return;
-  const pick={...pendingPick};
-  closeModal();
-  curBuild.slots.push(pick);
-  pendingPick=null;
-  updateSidebar();updateDots();
-  if(curBuild.slots.length>=8){setTimeout(saveBuild,500);return;}
-  // Auto-roll next character
-  setTimeout(doRoll,650);
+    // Show value for ability/item/companion; just grade for numeric stats 
+    const showVal = (row.group === 'ability' || row.group === 'item' || row.group === 'companion') && row.value;
+    document.getElementById('mVal').textContent = showVal ? row.value : 'Grade: ' + row.grade;
+    document.getElementById('modal').classList.remove('hide');
 }
 
 // ═══════════════════════════════════════════
