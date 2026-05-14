@@ -1152,7 +1152,7 @@ function scoreSlots(slots){return slots.reduce((t,s)=>t+(GS_SCORE[s.grade]||0),0
 function calcSynergy(slots){
   let bonus=0;const notes=[];
   const has=k=>slots.some(s=>s.key===k);
-  const sCount=slots.filter(s=>s.grade==='S').length;
+  const sCount=slots.filter(s=>s.grade==='S' || s.grade==='SS').length;
   const aCount=slots.filter(s=>s.grade==='A'||s.grade==='S').length;
   const standKeys=['standStr','standSpd','standRange','standDur','standPrec','standPot','ability'];
   const standN=slots.filter(s=>standKeys.includes(s.key)).length;
@@ -1220,12 +1220,19 @@ function renderCompare(){
         <div class="synlbl">⚡ SYNERGIES <span class="synbonus">+${s.bonus}</span></div>
         <div class="syntxt">${s.notes.join(' · ')}</div>
       </div>`:''}
-      <button class="delbtn" onclick="deleteBuild(${s.idx})">✕ DELETE</button>
+      <button class="delbtn" onclick="deleteBuild(allBuilds[${s.idx}])">✕ DELETE</button>
     </div>`).join('');
 }
 
 function deleteBuild(idx){
-  allBuilds.splice(idx,1);
+  // Reference object safety check replaces shifting index lookups safely
+  if (typeof idx === 'object') {
+    const targetIndex = allBuilds.indexOf(idx);
+    if (targetIndex !== -1) allBuilds.splice(targetIndex, 1);
+  } else {
+    allBuilds.splice(idx, 1);
+  }
+  
   if(!allBuilds.length){goStart();return;}
   renderCompare();
 }
