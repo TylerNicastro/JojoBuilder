@@ -204,6 +204,32 @@ header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:
   padding:2px 7px;border:1px solid rgba(255,68,68,.3);color:var(--red);background:transparent;
   border-radius:2px;cursor:pointer;transition:all .15s;position:absolute;bottom:9px;right:9px;}
 .delbtn:hover{background:rgba(255,68,68,.08);}
+
+/* ── REVEAL SYSTEM ── */
+.reveal-bar{display:flex;align-items:center;justify-content:space-between;
+  padding:7px 15px;background:rgba(0,229,255,.035);border-bottom:1px solid rgba(0,229,255,.1);}
+.reveal-pips{display:flex;gap:6px;align-items:center;}
+.reveal-pip{width:13px;height:13px;border-radius:50%;border:2px solid var(--cyan);
+  background:var(--cyan);box-shadow:0 0 7px var(--cyan);transition:all .25s;}
+.reveal-pip.spent{background:transparent;box-shadow:none;opacity:.35;}
+.reveal-lbl{font-family:'Bebas Neue',sans-serif;font-size:.76rem;letter-spacing:.17em;color:var(--cyan);}
+.reveal-hint{font-family:'Bebas Neue',sans-serif;font-size:.72rem;letter-spacing:.12em;
+  color:var(--muted);font-style:normal;}
+/* hidden row — shows ??? fog */
+.sr.hidden-stat{cursor:pointer;position:relative;}
+.sr.hidden-stat:hover{background:rgba(0,229,255,.055);}
+.sr.hidden-stat .g{display:none;}
+.grade-fog{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;font-weight:700;
+  margin-left:auto;min-width:20px;text-align:right;color:rgba(255,255,255,.12);
+  letter-spacing:.05em;user-select:none;}
+.sr.hidden-stat .fog-hint{font-family:'Bebas Neue',sans-serif;font-size:.64rem;
+  letter-spacing:.1em;color:rgba(0,229,255,.45);margin-left:4px;white-space:nowrap;}
+/* ability/item hidden overlay */
+.sr-full.hidden-stat .abt{filter:blur(4px);pointer-events:none;user-select:none;opacity:.5;}
+.sr-full.hidden-stat .abl{opacity:.45;}
+/* revealed flash */
+@keyframes revealPop{0%{transform:scale(1.18);opacity:.6}100%{transform:scale(1);opacity:1}}
+.sr.just-revealed .g{animation:revealPop .28s cubic-bezier(.17,.89,.32,1.28);}
 </style>
 </head>
 <body>
@@ -219,19 +245,20 @@ header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:
 <!-- START -->
 <div class="scr on" id="scr-start">
   <div class="sw">
-    <p class="sdesc">Roll random characters from <b style="color:var(--gold)">Parts 1–9</b>. Each roll shows a full character — pick <b style="color:var(--gold)">one aspect</b> to absorb. The next character then auto-rolls. Fill up to 12 slots, then save and compare builds.</p>
+    <p class="sdesc">Roll random characters from <b style="color:var(--gold)">Parts 1–8</b>. Each roll shows a full character — pick <b style="color:var(--gold)">one aspect</b> to absorb. The next character then auto-rolls. Fill up to 12 slots, then save and compare builds.</p>
     <div class="parts-row">
       <span class="ptag">PART 1</span><span class="ptag">PART 2</span><span class="ptag">PART 3</span>
       <span class="ptag">PART 4</span><span class="ptag">PART 5</span><span class="ptag">PART 6</span>
-      <span class="ptag">PART 7</span><span class="ptag">PART 8</span><span class="ptag">PART 9</span>
+      <span class="ptag">PART 7</span><span class="ptag">PART 8</span>
     </div>
     <div class="howto">
       <h3>How It Works</h3>
       <ol>
-        <li><b>Roll</b> — a random JoJo character appears with all their stats</li>
-        <li><b>Pick ONE aspect</b> — absorbed into your build, no re-rolls</li>
+        <li><b>Roll</b> — a random JoJo character appears, all stats <b>hidden</b></li>
+        <li>You have <b>2 Reveals</b> per character — tap any row to uncover its grade</li>
+        <li><b>Pick ONE aspect</b> — pick blind or spend reveals first, no re-rolls</li>
         <li>Next character <b>auto-rolls</b> after you pick — up to 12 characters total</li>
-        <li><b>Stand users</b> offer their stand stats, ability, and <b>battle item</b></li>
+        <li><b>Stand users</b> offer stand stats, ability, and <b>battle item</b></li>
         <li><b>Non-Stand users</b> offer physical stats and <b>themselves as a companion</b></li>
         <li><b>Save</b> your build and <b>compare</b> multiple builds by score + synergy</li>
       </ol>
@@ -296,22 +323,13 @@ header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:
     <div class="mgrd"  id="mGrd"></div>
     <div class="mval"  id="mVal"></div>
     <div class="mbtns">
-      <button class="btn btn-gold" onclick="confirmPick()">✦ TAKE IT</button>
-      <button class="btn btn-ghost" onclick="closeModal()">CANCEL</button>
+      <button class="btn btn-gold" id="btnConfirm" onclick="confirmPick()">✦ TAKE IT</button>
+      <button class="btn btn-ghost" id="btnCancel" onclick="closeModal()">CANCEL</button>
     </div>
   </div>
 </div>
 
 <script>
-// DEBUG
-  window.onerror = function(message, source, lineno, colno, error) {
-  const errDiv = document.createElement('div');
-  errDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:red;color:white;padding:20px;z-index:99999;font-family:monospace;font-size:16px;white-space:pre-wrap;';
-  errDiv.innerHTML = `<strong>CRASH DETECTED:</strong><br>${message}<br>Line: ${lineno}, Column: ${colno}`;
-  document.body.appendChild(errDiv);
-  return false;
-};
-
 // ═══════════════════════════════════════════
 // CHARACTER DATA
 // Stand users: item = their battle item
@@ -389,7 +407,7 @@ const CHARS=[
  desc:"ZA WARUDO. Vampire overlord whose Stand stops all time for up to nine seconds.",
  stats:{strength:"A",durability:"A",speed:"A",battleIQ:"A"},
  standStats:{str:"A",spd:"A",range:"C",dur:"A",prec:"B",pot:"B"},
- abilityDesc:"The World — stops all time for up to 9 s; knife barrage and Road Roller during stop",
+ abilityDesc:"The World — stops all time for up to 9 s; knife barrage and Road Roller during time stop",
  abilityGrade:"S",
  item:{desc:"Road Roller — a 10-tonne steamroller hurled and pounded on opponents during time stop",grade:"A"},
  companionGrade:null},
@@ -461,7 +479,7 @@ const CHARS=[
  desc:"Serial killer who murdered Polnareff's sister. Later worked for Dio.",
  stats:{strength:"C",durability:"C",speed:"C",battleIQ:"C"},
  standStats:{str:"C",spd:"SS",range:"A",dur:"B",prec:"D",pot:"D"},
- abilityDesc:"Hanged Man - made of light, travels through reflective surfaces, attacks a target's reflection",
+ abilityDesc:"Hanged Man — made of light, travels through reflective surfaces, attacks a target's reflection",
  abilityGrade:"C",
  item:{desc:"None",grade:"E"},
  companionGrade:null},
@@ -753,56 +771,22 @@ const CHARS=[
  abilityDesc:"Blue Hawaii — possesses anyone who touches water in contact with a prior touch; chain-reaction control",
  abilityGrade:"B",
  item:{desc:"Surfboard — his life before Rock Disease rendered him immobile; now his symbolic throne",grade:"D"},
- companionGrade:null},
+ companionGrade:null}
+]; // ← FIX 1: Properly closed CHARS array (was left open due to commented-out Part 9 block)
 
-// ── Part 9 ──
-//{name:"Jodio Joestar",part:9,pname:"The JoJoLands",stand:"November Rain",role:"Protagonist",
- //desc:"Hawai'i hustler. November Rain drops become perfectly immovable on contact with any surface.",
- //stats:{strength:"B",durability:"B",speed:"B",battleIQ:"B"},
- //standStats:{str:"B",spd:"B",range:"B",dur:"B",prec:"B",pot:"A"},
- //abilityDesc:"November Rain — raindrops become perfectly immovable on contact; paralyses, crushes, and anchors",
- //abilityGrade:"A",
- //item:{desc:"The JoJoLands diamond — the MacGuffin at the heart of the heist that starts the adventure",grade:"B"},
- //companionGrade:null},
-
-//{name:"Dragona Joestar",part:9,pname:"The JoJoLands",stand:"Smooth Operators",role:"Sibling",
- //desc:"Jodio's sibling. Smooth Operators relocates surface objects seamlessly without detection.",
- //stats:{strength:"C",durability:"C",speed:"B",battleIQ:"A"},
- //standStats:{str:"C",spd:"B",range:"B",dur:"C",prec:"A",pot:"B"},
- //abilityDesc:"Smooth Operators — relocates objects on any surface (including on people) undetected and seamlessly",
- //abilityGrade:"B",
- //item:{desc:"Composure — their calm tactical reading of chaos is the crew's most reliable asset",grade:"B"},
- //companionGrade:null},
-
-//{name:"Paco Laburantes",part:9,pname:"The JoJoLands",stand:"LMFAO",role:"Ally",
- //desc:"The muscle. LMFAO Crossfire Hurricane launches massive concussive blasts per strike.",
- //stats:{strength:"A",durability:"B",speed:"B",battleIQ:"C"},
- //standStats:{str:"A",spd:"B",range:"C",dur:"A",prec:"C",pot:"B"},
- //abilityDesc:"LMFAO Crossfire Hurricane — massive concussive blast per kick; overwhelming close-range destruction",
- //abilityGrade:"A",
- //item:{desc:"Physical mass — legitimate intimidation factor and grappling advantage in close quarters",grade:"C"},
- //companionGrade:null},
-
-//{name:"Usagi Alohaoe",part:9,pname:"The JoJoLands",stand:"The Hustle",role:"Ally",
- //desc:"Enigmatic fighter. The Hustle redirects the trajectory of anything it makes contact with.",
- //stats:{strength:"C",durability:"C",speed:"B",battleIQ:"A"},
- //standStats:{str:"C",spd:"A",range:"B",dur:"B",prec:"A",pot:"B"},
- //abilityDesc:"The Hustle — redirects the trajectory of any force or object that makes contact with it",
- //abilityGrade:"B",
- //item:{desc:"Rabbit mask — psychological pressure tool used in negotiations and infiltration",grade:"C"},
- //companionGrade:null},
-//];
 // ═══════════════════════════════════════════
 // STATE & CONFIG
 // ═══════════════════════════════════════════
 const GS_SCORE = { 'SS': 20, 'S': 10, 'A': 8, 'B': 6, 'C': 4, 'D': 2, 'E': 0, 'F': -5 };
 let allBuilds=[];
-let curBuild=null;  
+let curBuild=null;
 let usedChars=[];
 let curChar=null;
 let pendingPick=null;
 let isRolling=false;
-  
+let revealsLeft=2;  // resets each character roll
+let revealedKeys=new Set(); // which keys are currently revealed this character
+
 // ═══════════════════════════════════════════
 // HELPERS
 // ═══════════════════════════════════════════
@@ -811,13 +795,16 @@ function doFlash(){const f=document.getElementById('flash');if(f){f.classList.ad
 
 function gc(g) {
   if (!g) return 'gE';
-  return 'g' + g.toUpperCase();
+  const u = g.toUpperCase();
+  if (u === 'SS') return 'gSS';
+  if (u === 'F') return 'gF';
+  return 'g' + u;
 }
 
 function gcolor(g) {
   switch(g ? g.toUpperCase() : '') {
-    case 'SS': return 'var(--pink)'; 
-    case 'F': return 'var(--red)';   
+    case 'SS': return 'var(--pink)';
+    case 'F': return 'var(--red)';
     case 'S': return 'var(--gS)';
     case 'A': return 'var(--gA)';
     case 'B': return 'var(--gB)';
@@ -853,7 +840,6 @@ function getRows(ch){
       {key:'standPot',label:'Stand Potential',sk:'pot'},
     ];
     for(const s of standMap){
-      // Checks for both character data models: shorthand property vs full name property
       const directStat = ch.standStats[s.sk] || ch.standStats[s.key];
       rows.push({key:s.key,label:s.label,grade:directStat||'D',value:null,group:'stand'});
     }
@@ -879,7 +865,6 @@ function getRows(ch){
     }
     rows.push({key:'ability',label:'Stand Ability',grade:null,value:null,group:'na'});
 
-    // Use standard companion asset tier if valid, otherwise drop to softlock fallback F variant
     const customGrade = ch.companionGrade || 'F';
     const isSoftlockFallback = customGrade === 'F';
 
@@ -906,20 +891,16 @@ function goCompare(){renderCompare();show('compare');}
 // ═══════════════════════════════════════════
 function startNewBuild(){
   curBuild={name:'',slots:[]};
-  usedChars=[];curChar=null;pendingPick=null;
+  usedChars=[];curChar=null;pendingPick=null;isRolling=false;
+  revealsLeft=2;revealedKeys=new Set();
   document.getElementById('bname').value='';
-    document.getElementById('slotTxt').textContent='— PRESS ROLL TO START —';
+  document.getElementById('slotTxt').textContent='— PRESS ROLL TO START —';
   document.getElementById('cardArea').innerHTML='<div class="empty">Press <b style="color:var(--gold)">ROLL CHARACTER</b> to begin.</div>';
   document.getElementById('rollBtn').disabled=false;
-  // Dynamic accurate counter indicator mapping
   document.getElementById('tbBN').textContent=allBuilds.length+1;
-  // Explicit counter ceiling sync safely updates topbar text nodes
-  document.getElementById('tbRN').textContent='1'; 
-  
-  // Safe execution guards prevent script halts if functions load downstream
-  if (typeof updateDots === 'function') updateDots();
-  if (typeof updateSidebar === 'function') updateSidebar();
-
+  document.getElementById('tbRN').textContent='1';
+  updateDots();
+  updateSidebar();
   show('build');
 }
 
@@ -927,8 +908,8 @@ function startNewBuild(){
 // ROLL
 // ═══════════════════════════════════════════
 function doRoll(){
-  if(!curBuild||curBuild.slots.length>=12)return; // 12-slot capacity ceiling check
-  isRolling = true; // Strict lock engagement
+  if(!curBuild||curBuild.slots.length>=12)return;
+  isRolling=true;
   document.getElementById('rollBtn').disabled=true;
   const pool=CHARS.filter(c=>!usedChars.includes(c.name));
   if(!pool.length){saveBuild();return;}
@@ -946,7 +927,8 @@ function doRoll(){
       doFlash();
       curChar=ch;
       usedChars.push(ch.name);
-      isRolling = false; // Safely release interaction lock now that rendering is ready
+      isRolling=false;
+      revealsLeft=2; revealedKeys=new Set(); // reset reveals for new character
       renderCard(ch);
     }
   },75);
@@ -955,70 +937,81 @@ function doRoll(){
 // ═══════════════════════════════════════════
 // SELECTION INTERFACES & MODAL CORE
 // ═══════════════════════════════════════════
-function tryPick(key){ 
-  if(!curChar||!curBuild||isRolling)return; // Block picking if actively rolling or locking a character
-  if(curBuild.slots.length>=12)return; // Block picking if build is full
-  
-  // Strict global key comparison blocks duplicate selections across different characters
-  if(curBuild.slots.some(s=>s.key===key))return; 
-  
-  const rows=getRows(curChar); 
-  const row=rows.find(r=>r.key===key); 
-  if(!row||row.group==='na')return; 
-  
-  pendingPick={key,label:row.label,grade:row.grade,value:row.value,charName:curChar.name}; 
-  
-  // Target display nodes securely via structural IDs
-  document.getElementById('mChar').textContent=curChar.name+(curChar.stand?' — '+curChar.stand:''); 
-  document.getElementById('mAsp').textContent=row.label; 
-  document.getElementById('mGrd').innerHTML=`<span class="g ${gc(row.grade)}">${row.grade}</span>`;
-  
-  const showVal=(row.group==='ability'||row.group==='item'||row.group==='companion')&&row.value; 
-  document.getElementById('mVal').textContent=showVal?row.value:'Grade: '+row.grade; 
-  
-  // Native click routing fallback mechanism ensures buttons close the container safely
-  const mConfirm = document.getElementById('btnConfirm') || document.querySelector('#modal button:first-of-type') || document.querySelector('#modal .btn-gold');
-  const mCancel = document.getElementById('btnCancel') || document.querySelector('#modal button:last-of-type') || document.querySelector('#modal .btn-ghost');
-  
-  if(mConfirm) {
-  mConfirm.onclick = null; 
-  mConfirm.onclick = (e) => { e.preventDefault(); confirmPick(); };
-  }
-  if(mCancel) mCancel.onclick = function(e){ e.preventDefault(); closeModal(); };
+function tryPick(key){
+  if(!curChar||!curBuild||isRolling)return;
+  if(curBuild.slots.length>=12)return;
+  if(curBuild.slots.some(s=>s.key===key))return;
+  const rows=getRows(curChar);
+  const row=rows.find(r=>r.key===key);
+  if(!row||row.group==='na')return;
 
-  document.getElementById('modal').classList.remove('hide'); 
-} 
+  pendingPick={key,label:row.label,grade:row.grade,value:row.value,charName:curChar.name};
+
+  const isRowRevealed=revealedKeys.has(key);
+  document.getElementById('mChar').textContent=curChar.name+(curChar.stand?' — '+curChar.stand:'');
+  document.getElementById('mAsp').textContent=row.label;
+  if(isRowRevealed){
+    document.getElementById('mGrd').innerHTML=`<span class="g ${gc(row.grade)}">${row.grade}</span>`;
+  } else {
+    document.getElementById('mGrd').innerHTML=`<span style="color:rgba(255,255,255,.18);font-family:'Bebas Neue',sans-serif;font-size:2.6rem">???</span>`;
+  }
+  const showVal=(row.group==='ability'||row.group==='item'||row.group==='companion')&&row.value;
+  if(isRowRevealed){
+    document.getElementById('mVal').textContent=showVal?row.value:'Grade: '+row.grade;
+  } else {
+    document.getElementById('mVal').textContent='Grade hidden — you're picking blind!';
+  }
+
+  document.getElementById('modal').classList.remove('hide');
+}
 
 function closeModal(){
   document.getElementById('modal').classList.add('hide');
   pendingPick=null;
-} 
+}
 
-function confirmPick(){ 
-  if(!pendingPick)return; 
-  const pick={...pendingPick}; 
-  
-    closeModal(); 
-  isRolling = true; // Actively lock further choices from this character card
-  curBuild.slots.push(pick); 
+function confirmPick(){
+  if(!pendingPick)return;
+  const pick={...pendingPick};
+  closeModal();
+  isRolling=true;
+  curBuild.slots.push(pick);
   pendingPick=null;
-
   updateSidebar();
-  updateDots(); 
-
+  updateDots();
   renderCard(curChar);
 
-  if(curBuild.slots.length>=12){ // 12-slot capacity check
-    isRolling = false;
+  if(curBuild.slots.length>=12){
+    isRolling=false;
     setTimeout(saveBuild,500);
     return;
-  } 
+  }
 
   setTimeout(()=>{
-    if(curBuild && curBuild.slots.length < 12) { // 12-slot limit transition guard
+    if(curBuild&&curBuild.slots.length<12){
       doRoll();
     }
-  },650); 
+  },650);
+}
+
+// ═══════════════════════════════════════════
+// REVEAL SYSTEM
+// ═══════════════════════════════════════════
+function doReveal(key){
+  if(isRolling)return;
+  if(revealedKeys.has(key))return; // already revealed — fall through to tryPick
+  if(revealsLeft<=0){
+    // No reveals left: clicking a hidden row still picks it blind
+    tryPick(key);
+    return;
+  }
+  revealsLeft--;
+  revealedKeys.add(key);
+  // Animate the pip
+  renderCard(curChar);
+  // Flash the specific row
+  const el=document.querySelector(`[data-key="${key}"]`);
+  if(el){el.classList.add('just-revealed');setTimeout(()=>el.classList.remove('just-revealed'),400);}
 }
 
 // ═══════════════════════════════════════════
@@ -1031,9 +1024,73 @@ function renderCard(ch){
   const abilityRow=rows.find(r=>r.key==='ability');
   const itemRow=rows.find(r=>r.key==='item');
   const hasStand=!!ch.standStats;
-
-  // Strict Global Lock Check: Gray out and disable rows if the key is picked anywhere in the build
   const isTaken=(key)=>curBuild.slots.some(s=>s.key===key);
+  const isRevealed=(key)=>revealedKeys.has(key);
+
+  // Pip indicators
+  const pips=[0,1].map(i=>`<div class="reveal-pip${i>=revealsLeft?' spent':''}"></div>`).join('');
+  const revealBarHtml=`<div class="reveal-bar">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="reveal-lbl">REVEALS</div>
+      <div class="reveal-pips">${pips}</div>
+    </div>
+    <div class="reveal-hint">${revealsLeft>0?`${revealsLeft} left — tap any row to uncover`:'No reveals left — pick blind or reveal’d'}</div>
+  </div>`;
+
+  // Helper: build a stat row with fog or revealed grade
+  function statRow(r, extraClass='', extraStyle=''){
+    const t=isTaken(r.key);
+    if(t){
+      return `<div class="sr taken${extraClass?' '+extraClass:''}" data-key="${r.key}" style="${extraStyle}">
+        <span class="sl">${r.label}</span>${gradeEl(r.grade)}</div>`;
+    }
+    if(r.group==='na'){
+      return `<div class="sr na${extraClass?' '+extraClass:''}" style="${extraStyle}">
+        <span class="sl">${r.label}</span><span class="g gE">N/A</span></div>`;
+    }
+    const rev=isRevealed(r.key);
+    if(rev){
+      // Revealed: show grade, clicking picks
+      return `<div class="sr pick${extraClass?' '+extraClass:''}" data-key="${r.key}" onclick="tryPick('${r.key}')" style="${extraStyle}">
+        <span class="sl">${r.label}</span>${gradeEl(r.grade)}</div>`;
+    } else {
+      // Hidden: clicking spends a reveal (or picks blind if no reveals)
+      const fogLabel=revealsLeft>0?'TAP TO REVEAL':'TAP TO PICK BLIND';
+      return `<div class="sr hidden-stat pick${extraClass?' '+extraClass:''}" data-key="${r.key}" onclick="doReveal('${r.key}')" style="${extraStyle}">
+        <span class="sl">${r.label}</span>
+        <span class="fog-hint">${fogLabel}</span>
+        <span class="grade-fog">❓❓❓</span></div>`;
+    }
+  }
+
+  // Helper: full-width row (ability / item) with fog on text
+  function fullRow(key, labelText, isStandRow, desc, grade, borderNone=false){
+    const t=isTaken(key);
+    const extraStyle=`padding:9px 15px;${borderNone?'border-bottom:none;':''}`;
+    if(t){
+      return `<div class="sr sr-full taken" data-key="${key}" style="${extraStyle}">
+        <div style="flex:1"><div class="abl">◆ ${labelText}</div><div class="abt">${desc}</div></div>
+        ${gradeEl(grade)}</div>`;
+    }
+    if(!isStandRow){
+      // N/A
+      return `<div class="sr sr-full na" style="${extraStyle}">
+        <div style="flex:1"><div class="abl">◆ ${labelText}</div><div class="abt" style="color:var(--muted)">${desc}</div></div>
+        <span class="g gE">N/A</span></div>`;
+    }
+    const rev=isRevealed(key);
+    if(rev){
+      return `<div class="sr sr-full pick" data-key="${key}" onclick="tryPick('${key}')" style="${extraStyle}">
+        <div style="flex:1"><div class="abl">◆ ${labelText}</div><div class="abt">${desc}</div></div>
+        ${gradeEl(grade)}</div>`;
+    } else {
+      const fogLabel=revealsLeft>0?'TAP TO REVEAL':'TAP TO PICK BLIND';
+      return `<div class="sr sr-full hidden-stat pick" data-key="${key}" onclick="doReveal('${key}')" style="${extraStyle}">
+        <div style="flex:1"><div class="abl">◆ ${labelText}</div><div class="abt">${desc}</div></div>
+        <span class="fog-hint" style="margin-left:auto;white-space:nowrap">${fogLabel}</span>
+        <span class="grade-fog" style="margin-left:8px">❓❓❓</span></div>`;
+    }
+  }
 
   let html=`<div class="ccard" style="animation:fIn .4s cubic-bezier(.17,.89,.32,1.28)">
     <div class="ccard-top">
@@ -1041,27 +1098,22 @@ function renderCard(ch){
       <div><div class="cname">${ch.name}</div><div class="csub">${ch.pname} · ${ch.role}</div></div>
     </div>
     <div class="physdesc">${ch.desc}</div>
-    ${hasStand?`<div class="standbar">◈ STAND: ${ch.stand || ch.standName || 'Active'}</div>`:`<div class="standbar" style="color:var(--muted);font-size:.78rem;letter-spacing:.1em">◈ NO STAND — last slot offers this character as your companion</div>`}
-    <div class="hintbar">▼ TAP ONE ROW TO CLAIM THAT ASPECT</div>
+    ${hasStand?`<div class="standbar">◈ STAND: ${ch.stand||'Active'}</div>`:`<div class="standbar" style="color:var(--muted);font-size:.78rem;letter-spacing:.1em">◈ NO STAND — last slot offers this character as your companion</div>`}
+    ${revealBarHtml}
+    <div class="hintbar">▼ TAP A HIDDEN ROW TO REVEAL · OR PICK BLIND</div>
     <div class="sg">`;
 
-
-  // Physical Attributes
   for(const r of physRows){
-    const t=isTaken(r.key);
-    html+=`<div class="sr ${t?'taken':'pick'}" ${t?'':`onclick="tryPick('${r.key}')"`}>
-      <span class="sl">${r.label}</span>${gradeEl(r.grade)}</div>`;
+    html+=statRow(r);
   }
 
-  // Single clean master dictionary maps both code paths smoothly
   const standLabels={standStr:'Stand Str',standSpd:'Stand Spd',standRange:'Stand Range',
     standDur:'Stand Dur',standPrec:'Stand Prec',standPot:'Stand Pot'};
-    
+
   if(hasStand){
     for(const r of standRows){
-      const t=isTaken(r.key);
-      html+=`<div class="sr ${t?'taken':'pick'}" ${t?'':`onclick="tryPick('${r.key}')"`}>
-        <span class="sl">${standLabels[r.key] || r.label}</span>${gradeEl(r.grade)}</div>`;
+      r.label=standLabels[r.key]||r.label;
+      html+=statRow(r);
     }
   } else {
     for(const k of Object.keys(standLabels)){
@@ -1069,26 +1121,19 @@ function renderCard(ch){
     }
   }
 
-  html+=`</div>`; // close stat grid
+  html+=`</div>`;
 
-  // Ability Row Processing
+  // Ability row
   if(hasStand&&abilityRow){
-    const t=isTaken('ability');
-    html+=`<div class="sr sr-full ${t?'taken':'pick'}" ${t?'':`onclick="tryPick('ability')"`} style="padding:9px 15px;">
-      <div style="flex:1"><div class="abl">◆ STAND ABILITY</div><div class="abt">${abilityRow.value}</div></div>
-      ${gradeEl(abilityRow.grade)}</div>`;
+    html+=fullRow('ability','STAND ABILITY',true,abilityRow.value,abilityRow.grade);
   } else if(!hasStand){
-    html+=`<div class="sr sr-full na" style="padding:9px 15px;">
-      <div style="flex:1"><div class="abl">◆ STAND ABILITY</div><div class="abt" style="color:var(--muted)">No Stand</div></div>
-      <span class="g gE">N/A</span></div>`;
+    html+=fullRow('ability','STAND ABILITY',false,'No Stand',null);
   }
 
-  // Item or Companion Processing Row
+  // Item / companion row
   if(itemRow){
-    const t=isTaken('item');
-    html+=`<div class="sr sr-full ${t?'taken':'pick'}" ${t?'':`onclick="tryPick('item')"`} style="padding:9px 15px; border-bottom:none;">
-      <div style="flex:1"><div class="abl">◆ ${hasStand?'BATTLE ITEM':'COMPANION ASSIST'}</div><div class="abt">${itemRow.value}</div></div>
-      ${gradeEl(itemRow.grade)}</div>`;
+    const lbl=hasStand?'BATTLE ITEM':'COMPANION ASSIST';
+    html+=fullRow('item',lbl,true,itemRow.value,itemRow.grade,true);
   }
 
   html+=`</div>`;
@@ -1101,12 +1146,10 @@ function renderCard(ch){
 function updateSidebar(){
   if(!curBuild)return;
   document.getElementById('sbcnt').textContent=curBuild.slots.length+'/12';
-  
-  // Cleanly updates progress topbar node alongside slots (capped to max 12)
-  const tbRN = document.getElementById('tbRN');
-  if (tbRN) tbRN.textContent = Math.min(curBuild.slots.length + 1, 12);
+  const tbRN=document.getElementById('tbRN');
+  if(tbRN) tbRN.textContent=Math.min(curBuild.slots.length+1,12);
   let h='';
-  for(let i=0;i<12;i++){ // Render 12 sidebar items
+  for(let i=0;i<12;i++){
     const s=curBuild.slots[i];
     if(s){
       h+=`<div class="sbslot filled">
@@ -1132,19 +1175,19 @@ function updateDots(){
 }
 
 // ═══════════════════════════════════════════
-// SAVE
+// SAVE — FIX 2: now actually navigates to compare after saving
 // ═══════════════════════════════════════════
 function saveBuild(){
   if(!curBuild||curBuild.slots.length===0){goStart();return;}
   curBuild.name=document.getElementById('bname').value.trim()||('Build '+(allBuilds.length+1));
-  
-  // Dynamic Calculation Guard: Run build calculations if engine is declared down below
-  if(typeof calculateBuildScore === 'function') {
-    calculateBuildScore(curBuild);
-  }
-  
+  // FIX 2: calculateBuildScore was called but never defined — removed the guard,
+  // scoring is handled inline inside renderCompare via scoreSlots + calcSynergy
   allBuilds.push(JSON.parse(JSON.stringify(curBuild)));
+  curBuild=null; // FIX 3: clear curBuild so a fresh build starts clean next time
+  document.getElementById('btnCmp').style.display='inline-block';
+  goCompare(); // FIX 2: actually navigate to compare screen after saving
 }
+
 // ═══════════════════════════════════════════
 // SCORING
 // ═══════════════════════════════════════════
@@ -1153,7 +1196,7 @@ function scoreSlots(slots){return slots.reduce((t,s)=>t+(GS_SCORE[s.grade]||0),0
 function calcSynergy(slots){
   let bonus=0;const notes=[];
   const has=k=>slots.some(s=>s.key===k);
-  const sCount=slots.filter(s=>s.grade==='S' || s.grade==='SS').length;
+  const sCount=slots.filter(s=>s.grade==='S'||s.grade==='SS').length;
   const aCount=slots.filter(s=>s.grade==='A'||s.grade==='S').length;
   const standKeys=['standStr','standSpd','standRange','standDur','standPrec','standPot','ability'];
   const standN=slots.filter(s=>standKeys.includes(s.key)).length;
@@ -1174,7 +1217,7 @@ function calcSynergy(slots){
 }
 
 // ═══════════════════════════════════════════
-// COMPARE
+// COMPARE — FIX 4: deleteBuild uses stable object reference, not drifting index
 // ═══════════════════════════════════════════
 function renderCompare(){
   if(!allBuilds.length){
@@ -1185,7 +1228,7 @@ function renderCompare(){
   const scored=allBuilds.map((b,i)=>{
     const base=scoreSlots(b.slots);
     const{bonus,notes}=calcSynergy(b.slots);
-    return{build:b,idx:i,base,bonus,total:base+bonus,notes};
+    return{build:b,base,bonus,total:base+bonus,notes};
   }).sort((a,b)=>b.total-a.total);
 
   const top=scored[0];
@@ -1201,6 +1244,7 @@ function renderCompare(){
   const rc=i=>i===0?'r1':i===1?'r2':i===2?'r3':'';
   const sc=t=>t>=55?'var(--gS)':'var(--gA)';
 
+  // FIX 4: pass the build object itself, not a captured index that drifts after deletions
   document.getElementById('cgrid').innerHTML=scored.map((s,rank)=>`
     <div class="fc ${rc(rank)}">
       <div class="rtag">${rl(rank)}</div>
@@ -1221,28 +1265,23 @@ function renderCompare(){
         <div class="synlbl">⚡ SYNERGIES <span class="synbonus">+${s.bonus}</span></div>
         <div class="syntxt">${s.notes.join(' · ')}</div>
       </div>`:''}
-      <button class="delbtn" onclick="deleteBuild(allBuilds[${s.idx}])">✕ DELETE</button>
+      <button class="delbtn" data-buildname="${s.build.name}" onclick="deleteBuild(this)">✕ DELETE</button>
     </div>`).join('');
 }
 
-function deleteBuild(idx){
-  // Reference object safety check replaces shifting index lookups safely
-  if (typeof idx === 'object') {
-    const targetIndex = allBuilds.indexOf(idx);
-    if (targetIndex !== -1) allBuilds.splice(targetIndex, 1);
-  } else {
-    allBuilds.splice(idx, 1);
-  }
-  
+// FIX 4: look up by build name (unique enough) instead of stale index
+function deleteBuild(btnEl){
+  const name = btnEl.getAttribute('data-buildname');
+  const idx = allBuilds.findIndex(b=>b.name===name);
+  if(idx!==-1) allBuilds.splice(idx,1);
   if(!allBuilds.length){goStart();return;}
   renderCompare();
 }
 
 // INITIALIZATION
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded',()=>{
   goStart();
 });
-
 </script>
 </body>
 </html>
