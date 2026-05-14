@@ -244,7 +244,7 @@ header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:
 <!-- BUILD -->
 <div class="scr" id="scr-build">
   <div class="topbar">
-    <div class="tbl">BUILD <em id="tbBN">1</em> &nbsp;·&nbsp; CHARACTER <em id="tbRN">1</em> / 8</div>
+    <div class="tbl">BUILD <em id="tbBN">1</em> &nbsp;·&nbsp; CHARACTER <em id="tbRN">1</em> / 12</div>
     <div style="display:flex;gap:7px;">
       <button class="btn btn-ghost btn-sm" onclick="saveBuild()">SAVE BUILD</button>
       <button class="btn btn-ghost btn-sm" onclick="goStart()">← MENU</button>
@@ -262,7 +262,7 @@ header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:
       </div>
     </div>
     <div class="sbar">
-      <div class="sbhead">YOUR BUILD <span class="sbcnt" id="sbcnt">0/8</span></div>
+      <div class="sbhead">YOUR BUILD <span class="sbcnt" id="sbcnt">0/12</span></div>
       <div id="sbslots"></div>
       <div class="sbact">
         <button class="btn btn-pink" style="width:100%;font-size:.9rem;padding:10px" onclick="saveBuild()">SAVE &amp; COMPARE</button>
@@ -811,7 +811,8 @@ let curBuild=null;
 let usedChars=[];
 let curChar=null;
 let pendingPick=null;
-
+let isRolling=false;
+  
 // ═══════════════════════════════════════════
 // HELPERS
 // ═══════════════════════════════════════════
@@ -941,8 +942,8 @@ function doRoll(){
 // SELECTION INTERFACES & MODAL CORE
 // ═══════════════════════════════════════════
 function tryPick(key){ 
-  if(!curChar||!curBuild)return; 
-  if(curBuild.slots.length>=8)return; 
+  if(!curChar||!curBuild||isRolling)return; // Block picking if actively rolling or locking a character
+  if(curBuild.slots.length>=12)return; // 12-slot upgrade cap
   
   // Strict global key comparison blocks duplicate selections across different characters
   if(curBuild.slots.some(s=>s.key===key))return; 
@@ -983,24 +984,23 @@ function confirmPick(){
   if(!pendingPick)return; 
   const pick={...pendingPick}; 
   
-  closeModal(); 
+    closeModal(); 
+  isRolling = true; // Actively lock further choices from this character card
   curBuild.slots.push(pick); 
   pendingPick=null;
-  
+
   updateSidebar();
   updateDots(); 
-  
-  // Re-render card layout visually lock chosen entries
+
   renderCard(curChar);
-  
-  if(curBuild.slots.length>=8){
+
+  if(curBuild.slots.length>=12){ // 12-slot capacity check
     setTimeout(saveBuild,500);
     return;
   } 
-  
-  // Guard loop runner prevents async roll failures during state transition gaps
+
   setTimeout(()=>{
-    if(curBuild && curBuild.slots.length < 8) {
+    if(curBuild && curBuild.slots.length < 12) { // 12-slot limit transition guard
       doRoll();
     }
   },650); 
