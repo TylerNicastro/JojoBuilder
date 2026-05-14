@@ -987,30 +987,25 @@ function renderCard(ch){
 // ═══════════════════════════════════════════
 // PICK
 // ═══════════════════════════════════════════
-function tryPick(key){
-    if(!curChar || !curBuild) return;
-    if(curBuild.slots.length >= 8) return;
-    
-    // Check if the character already has this specific attribute (key) picked
-    if(curBuild.slots.some(s => s.key === key && s.charName === curChar.name)) return;
-
-    // ADDED: Prevent picking the SAME attribute key AGAIN across the entire build
-    if(curBuild.slots.some(s => s.key === key)) return;
-
-    const rows = getRows(curChar);
-    const row = rows.find(r => r.key === key);
-    if(!row || row.group === 'na') return;
-
-    pendingPick = {key, label: row.label, grade: row.grade, value: row.value, charName: curChar.name};
-
-    document.getElementById('mChar').textContent = curChar.name + (curChar.stand ? ' — ' + curChar.stand : '');
-    document.getElementById('mAsp').textContent = row.label;
-    document.getElementById('mGrd').innerHTML = `<span class="${gc(row.grade)}" style="color:${gcolor(row.grade)}">${row.grade}</span>`; 
-
-    // Show value for ability/item/companion; just grade for numeric stats 
-    const showVal = (row.group === 'ability' || row.group === 'item' || row.group === 'companion') && row.value;
-    document.getElementById('mVal').textContent = showVal ? row.value : 'Grade: ' + row.grade;
-    document.getElementById('modal').classList.remove('hide');
+function tryPick(key){ 
+  if(!curChar||!curBuild)return; 
+  if(curBuild.slots.length>=8)return; 
+  
+  // Strict global check: block if this key is used anywhere in the build
+  if(curBuild.slots.some(s=>s.key===key))return; 
+  
+  const rows=getRows(curChar); 
+  const row=rows.find(r=>r.key===key); 
+  if(!row||row.group==='na')return; 
+  
+  pendingPick={key,label:row.label,grade:row.grade,value:row.value,charName:curChar.name}; 
+  document.getElementById('mChar').textContent=curChar.name+(curChar.stand?' — '+curChar.stand:''); 
+  document.getElementById('mAsp').textContent=row.label; 
+  document.getElementById('mGrd').innerHTML=`<span class="${gc(row.grade)}" style="color:${gcolor(row.grade)}">${row.grade}</span>`; 
+  
+  const showVal=(row.group==='ability'||row.group==='item'||row.group==='companion')&&row.value; 
+  document.getElementById('mVal').textContent=showVal?row.value:'Grade: '+row.grade; 
+  document.getElementById('modal').classList.remove('hide'); 
 }
 
 // ═══════════════════════════════════════════
