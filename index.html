@@ -953,7 +953,10 @@ function tryPick(key){
   const mConfirm = document.getElementById('btnConfirm') || document.querySelector('#modal button:first-of-type') || document.querySelector('#modal .btn-gold');
   const mCancel = document.getElementById('btnCancel') || document.querySelector('#modal button:last-of-type') || document.querySelector('#modal .btn-ghost');
   
-  if(mConfirm) mConfirm.onclick = function(e){ e.preventDefault(); confirmPick(); };
+  if(mConfirm) {
+  mConfirm.onclick = null; 
+  mConfirm.onclick = (e) => { e.preventDefault(); confirmPick(); };
+  }
   if(mCancel) mCancel.onclick = function(e){ e.preventDefault(); closeModal(); };
 
   document.getElementById('modal').classList.remove('hide'); 
@@ -1193,7 +1196,9 @@ function deleteBuild(idx){
 }
 
 // INITIALIZATION
-goStart();
+window.addEventListener('DOMContentLoaded', () => {
+  goStart();
+});
 </script>
 </body>
 </html>
