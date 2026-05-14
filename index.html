@@ -991,7 +991,7 @@ function tryPick(key){
   if(!curChar||!curBuild)return; 
   if(curBuild.slots.length>=8)return; 
   
-  // Strict global check: block if this key is used anywhere in the build
+  // Enforce single-attribute constraint globally
   if(curBuild.slots.some(s=>s.key===key))return; 
   
   const rows=getRows(curChar); 
@@ -999,13 +999,54 @@ function tryPick(key){
   if(!row||row.group==='na')return; 
   
   pendingPick={key,label:row.label,grade:row.grade,value:row.value,charName:curChar.name}; 
-  document.getElementById('mChar').textContent=curChar.name+(curChar.stand?' — '+curChar.stand:''); 
-  document.getElementById('mAsp').textContent=row.label; 
-  document.getElementById('mGrd').innerHTML=`<span class="${gc(row.grade)}" style="color:${gcolor(row.grade)}">${row.grade}</span>`; 
+  
+  // Safely populate modal elements if they exist
+  const mChar = document.getElementById('mChar');
+  const mAsp = document.getElementById('mAsp');
+  const mGrd = document.getElementById('mGrd');
+  const mVal = document.getElementById('mVal');
+  const modal = document.getElementById('modal');
+
+  if(mChar) mChar.textContent=curChar.name+(curChar.stand?' — '+curChar.stand:''); 
+  if(mAsp) mAsp.textContent=row.label; 
+  if(mGrd) mGrd.innerHTML=`<span class="${gc(row.grade)}" style="color:${gcolor(row.grade)}">${row.grade}</span>`; 
   
   const showVal=(row.group==='ability'||row.group==='item'||row.group==='companion')&&row.value; 
-  document.getElementById('mVal').textContent=showVal?row.value:'Grade: '+row.grade; 
-  document.getElementById('modal').classList.remove('hide'); 
+  if(mVal) mVal.textContent=showVal?row.value:'Grade: '+row.grade; 
+  
+  if(modal) modal.classList.remove('hide'); 
+} 
+
+function closeModal(){
+  const modal = document.getElementById('modal');
+  if(modal) modal.classList.add('hide');
+  pendingPick=null;
+} 
+
+function confirmPick(){ 
+  if(!pendingPick)return; 
+  const pick={...pendingPick}; 
+  
+  // Clear modal visual layer first
+  closeModal(); 
+  
+  // Commit to build state
+  curBuild.slots.push(pick); 
+  
+  // Update overall app state templates
+  updateSidebar();
+  updateDots(); 
+  
+  // Re-render current card so it visually updates chosen classes immediately
+  renderCard(curChar);
+  
+  if(curBuild.slots.length>=8){
+    setTimeout(saveBuild,500);
+    return;
+  } 
+  
+  // Auto-roll next character 
+  setTimeout(doRoll,650); 
 }
 
 // ═══════════════════════════════════════════
