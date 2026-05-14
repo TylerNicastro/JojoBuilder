@@ -264,8 +264,8 @@ header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:
       </ol>
     </div>
     <div style="display:flex;gap:11px;flex-wrap:wrap;justify-content:center;">
-      <button class="btn btn-gold" onclick="startNewBuild()">⚡ NEW BUILD</button>
-      <button class="btn btn-ghost" id="btnCmp" onclick="goCompare()" style="display:none">⚔ COMPARE BUILDS</button>
+      <button class="btn btn-gold" id="btnNewBuild">⚡ NEW BUILD</button>
+      <button class="btn btn-ghost" id="btnCmp" style="display:none">⚔ COMPARE BUILDS</button>
     </div>
   </div>
 </div>
@@ -275,8 +275,8 @@ header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:
   <div class="topbar">
     <div class="tbl">BUILD <em id="tbBN">1</em> &nbsp;·&nbsp; CHARACTER <em id="tbRN">1</em> / 12</div>
     <div style="display:flex;gap:7px;">
-      <button class="btn btn-ghost btn-sm" onclick="saveBuild()">SAVE BUILD</button>
-      <button class="btn btn-ghost btn-sm" onclick="goStart()">← MENU</button>
+      <button class="btn btn-ghost btn-sm" id="btnSaveTop">SAVE BUILD</button>
+      <button class="btn btn-ghost btn-sm" id="btnGoStart">← MENU</button>
     </div>
   </div>
   <div class="dots" id="dots"></div>
@@ -286,15 +286,15 @@ header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:
       <div class="slot-wrap"><div class="slot-txt" id="slotTxt">— PRESS ROLL TO START —</div></div>
       <div id="cardArea"><div class="empty">Press <b style="color:var(--gold)">ROLL CHARACTER</b> to begin.</div></div>
       <div class="rctrls">
-        <button class="btn btn-gold" id="rollBtn" onclick="doRoll()">🎲 ROLL CHARACTER</button>
-        <button class="btn btn-ghost btn-sm" onclick="saveBuild()">✓ SAVE &amp; FINISH</button>
+        <button class="btn btn-gold" id="rollBtn">🎲 ROLL CHARACTER</button>
+        <button class="btn btn-ghost btn-sm" id="btnSaveFinish">✓ SAVE &amp; FINISH</button>
       </div>
     </div>
     <div class="sbar">
       <div class="sbhead">YOUR BUILD <span class="sbcnt" id="sbcnt">0/12</span></div>
       <div id="sbslots"></div>
       <div class="sbact">
-        <button class="btn btn-pink" style="width:100%;font-size:.9rem;padding:10px" onclick="saveBuild()">SAVE &amp; COMPARE</button>
+        <button class="btn btn-pink" id="btnSaveCmp" style="width:100%;font-size:.9rem;padding:10px">SAVE &amp; COMPARE</button>
       </div>
     </div>
   </div>
@@ -306,8 +306,8 @@ header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:
     <div id="winbox"></div>
     <div class="cgrid" id="cgrid"></div>
     <div class="navrow">
-      <button class="btn btn-gold" onclick="startNewBuild()">＋ NEW BUILD</button>
-      <button class="btn btn-ghost" onclick="goStart()">↺ MENU</button>
+      <button class="btn btn-gold" id="btnNewBuild2">＋ NEW BUILD</button>
+      <button class="btn btn-ghost" id="btnGoStart2">↺ MENU</button>
     </div>
   </div>
 </div>
@@ -323,8 +323,8 @@ header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:
     <div class="mgrd"  id="mGrd"></div>
     <div class="mval"  id="mVal"></div>
     <div class="mbtns">
-      <button class="btn btn-gold" id="btnConfirm" onclick="confirmPick()">✦ TAKE IT</button>
-      <button class="btn btn-ghost" id="btnCancel" onclick="closeModal()">CANCEL</button>
+      <button class="btn btn-gold" id="btnConfirm">✦ TAKE IT</button>
+      <button class="btn btn-ghost" id="btnCancel">CANCEL</button>
     </div>
   </div>
 </div>
@@ -959,7 +959,7 @@ function tryPick(key){
   if(isRowRevealed){
     document.getElementById('mVal').textContent=showVal?row.value:'Grade: '+row.grade;
   } else {
-    document.getElementById('mVal').textContent='Grade hidden — you're picking blind!';
+    document.getElementById('mVal').textContent='Grade hidden 2014 picking blind 2014 grade unknown!';
   }
 
   document.getElementById('modal').classList.remove('hide');
@@ -1051,12 +1051,12 @@ function renderCard(ch){
     const rev=isRevealed(r.key);
     if(rev){
       // Revealed: show grade, clicking picks
-      return `<div class="sr pick${extraClass?' '+extraClass:''}" data-key="${r.key}" onclick="tryPick('${r.key}')" style="${extraStyle}">
+      return `<div class="sr pick${extraClass?' '+extraClass:''}" data-key="${r.key}" data-action="pick" data-key="${r.key}" style="${extraStyle}">
         <span class="sl">${r.label}</span>${gradeEl(r.grade)}</div>`;
     } else {
       // Hidden: clicking spends a reveal (or picks blind if no reveals)
       const fogLabel=revealsLeft>0?'TAP TO REVEAL':'TAP TO PICK BLIND';
-      return `<div class="sr hidden-stat pick${extraClass?' '+extraClass:''}" data-key="${r.key}" onclick="doReveal('${r.key}')" style="${extraStyle}">
+      return `<div class="sr hidden-stat pick${extraClass?' '+extraClass:''}" data-key="${r.key}" data-action="reveal" data-key="${r.key}" style="${extraStyle}">
         <span class="sl">${r.label}</span>
         <span class="fog-hint">${fogLabel}</span>
         <span class="grade-fog">❓❓❓</span></div>`;
@@ -1080,12 +1080,12 @@ function renderCard(ch){
     }
     const rev=isRevealed(key);
     if(rev){
-      return `<div class="sr sr-full pick" data-key="${key}" onclick="tryPick('${key}')" style="${extraStyle}">
+      return `<div class="sr sr-full pick" data-key="${key}" data-action="pick" data-key="${key}" style="${extraStyle}">
         <div style="flex:1"><div class="abl">◆ ${labelText}</div><div class="abt">${desc}</div></div>
         ${gradeEl(grade)}</div>`;
     } else {
       const fogLabel=revealsLeft>0?'TAP TO REVEAL':'TAP TO PICK BLIND';
-      return `<div class="sr sr-full hidden-stat pick" data-key="${key}" onclick="doReveal('${key}')" style="${extraStyle}">
+      return `<div class="sr sr-full hidden-stat pick" data-key="${key}" data-action="reveal" data-key="${key}" style="${extraStyle}">
         <div style="flex:1"><div class="abl">◆ ${labelText}</div><div class="abt">${desc}</div></div>
         <span class="fog-hint" style="margin-left:auto;white-space:nowrap">${fogLabel}</span>
         <span class="grade-fog" style="margin-left:8px">❓❓❓</span></div>`;
@@ -1265,7 +1265,7 @@ function renderCompare(){
         <div class="synlbl">⚡ SYNERGIES <span class="synbonus">+${s.bonus}</span></div>
         <div class="syntxt">${s.notes.join(' · ')}</div>
       </div>`:''}
-      <button class="delbtn" data-buildname="${s.build.name}" onclick="deleteBuild(this)">✕ DELETE</button>
+      <button class="delbtn" data-buildname="${s.build.name}" data-action="delete">✕ DELETE</button>
     </div>`).join('');
 }
 
@@ -1278,19 +1278,33 @@ function deleteBuild(btnEl){
   renderCompare();
 }
 
-// INITIALIZATION — expose all functions inline handlers need to window scope
-window.startNewBuild = startNewBuild;
-window.goCompare     = goCompare;
-window.goStart       = goStart;
-window.doRoll        = doRoll;
-window.tryPick       = tryPick;
-window.doReveal      = doReveal;
-window.confirmPick   = confirmPick;
-window.closeModal    = closeModal;
-window.saveBuild     = saveBuild;
-window.deleteBuild   = deleteBuild;
+// INITIALIZATION — wire all buttons via addEventListener (no inline onclick)
+document.addEventListener('DOMContentLoaded', () => {
 
-window.addEventListener('DOMContentLoaded',()=>{
+  // Static buttons
+  document.getElementById('btnNewBuild').addEventListener('click', startNewBuild);
+  document.getElementById('btnCmp').addEventListener('click', goCompare);
+  document.getElementById('btnSaveTop').addEventListener('click', saveBuild);
+  document.getElementById('btnGoStart').addEventListener('click', goStart);
+  document.getElementById('rollBtn').addEventListener('click', doRoll);
+  document.getElementById('btnSaveFinish').addEventListener('click', saveBuild);
+  document.getElementById('btnSaveCmp').addEventListener('click', saveBuild);
+  document.getElementById('btnNewBuild2').addEventListener('click', startNewBuild);
+  document.getElementById('btnGoStart2').addEventListener('click', goStart);
+  document.getElementById('btnConfirm').addEventListener('click', confirmPick);
+  document.getElementById('btnCancel').addEventListener('click', closeModal);
+
+  // Event delegation for dynamically rendered card rows & delete buttons
+  document.addEventListener('click', e => {
+    const target = e.target.closest('[data-action]');
+    if (!target) return;
+    const action = target.getAttribute('data-action');
+    const key    = target.getAttribute('data-key');
+    if (action === 'pick')   tryPick(key);
+    if (action === 'reveal') doReveal(key);
+    if (action === 'delete') deleteBuild(target);
+  });
+
   goStart();
 });
 </script>
