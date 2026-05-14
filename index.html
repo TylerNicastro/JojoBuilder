@@ -853,6 +853,7 @@ function gradeEl(g){
 }
 
 // Build the list of pickable rows for a character
+// Build the list of pickable rows for a character
 function getRows(ch){
   const rows=[];
   const physMap=[
@@ -864,6 +865,7 @@ function getRows(ch){
   for(const p of physMap){
     rows.push({key:p.key,label:p.label,grade:ch.stats[p.key]||'D',value:null,group:'physical'});
   }
+  
   if(ch.standStats){
     const standMap=[
       {key:'standStr',label:'Stand Strength',sk:'str'},
@@ -873,28 +875,29 @@ function getRows(ch){
       {key:'standPrec',label:'Stand Precision',sk:'prec'},
       {key:'standPot',label:'Stand Potential',sk:'pot'},
     ];
-for(const s of standMap){
-  rows.push({key:s.key,label:s.label,grade:ch.standStats[s.sk]||'D',value:null,group:'stand'});
-}
+    for(const s of standMap){
+      rows.push({key:s.key,label:s.label,grade:ch.standStats[s.sk]||'D',value:null,group:'stand'});
+    }
     rows.push({key:'ability',label:'Stand Ability',grade:ch.abilityGrade||'C',value:ch.abilityDesc||'',group:'ability'});
+    
+    // SAFE EXTRACTION CORE: Safeguards profiles like Carne that have an item sub-object
     rows.push({
       key:'item',
       label:'Battle Item',
-      grade: (ch.item && ch.item.grade) ? ch.item.grade : 'C',
+      grade: (ch.item && ch.item.grade) ? ch.item.grade : 'E',
       value: (ch.item && ch.item.desc) ? ch.item.desc : 'No item equipped',
       group:'item'
     });
-
   } else {
     for(const k of ['standStr','standSpd','standRange','standDur','standPrec','standPot']){
       rows.push({key:k,label:k,grade:null,value:null,group:'na'});
     }
     rows.push({key:'ability',label:'Stand Ability',grade:null,value:null,group:'na'});
-
-    // Use standard companion asset tier if valid, otherwise drop to softlock fallback F variant
+    
+    // SAFE FALLBACK CORE: Handles Part 1 & 2 characters lacking a Stand
     const customGrade = ch.companionGrade || 'F';
     const isSoftlockFallback = customGrade === 'F';
-
+    
     rows.push({
       key:'item',
       label: isSoftlockFallback ? 'PASS CHARACTER (Softlock Fallback)' : 'Companion: '+ch.name,
@@ -905,6 +908,7 @@ for(const s of standMap){
   }
   return rows;
 }
+
 
 // ═══════════════════════════════════════════
 // SCREENS
