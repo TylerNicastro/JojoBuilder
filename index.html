@@ -805,16 +805,38 @@ let usedChars=[];
 let curChar=null;
 let pendingPick=null;
 
+// Score system configuration mapping
+const GS_SCORE = { 'S': 10, 'A': 8, 'B': 6, 'C': 4, 'D': 2 };
+
 // ═══════════════════════════════════════════
 // HELPERS
 // ═══════════════════════════════════════════
 function rand(a){return a[Math.floor(Math.random()*a.length)];}
-function doFlash(){const f=document.getElementById('flash');f.classList.add('on');setTimeout(()=>f.classList.remove('on'),140);}
+function doFlash(){const f=document.getElementById('flash');if(f){f.classList.add('on');setTimeout(()=>f.classList.remove('on'),140);}}
+
+function gc(g) {
+  if (!g) return 'gE';
+  return 'g' + g.toUpperCase();
+}
+
+function gcolor(g) {
+  switch(g) {
+    case 'S': return 'var(--gS)';
+    case 'A': return 'var(--gA)';
+    case 'B': return 'var(--gB)';
+    case 'C': return 'var(--gC)';
+    case 'D': return 'var(--gD)';
+    default: return 'var(--gE)';
+  }
+}
+
+function gradeEl(g){
+  return `<span class="g ${gc(g)}" style="color:${gcolor(g)}">${g||'N/A'}</span>`;
+}
 
 // Build the list of pickable rows for a character
 function getRows(ch){
   const rows=[];
-  // Physical stats (always present)
   const physMap=[
     {key:'strength',label:'Strength'},
     {key:'durability',label:'Durability'},
@@ -824,7 +846,6 @@ function getRows(ch){
   for(const p of physMap){
     rows.push({key:p.key,label:p.label,grade:ch.stats[p.key]||'D',value:null,group:'physical'});
   }
-  // Stand stats (only if has stand)
   if(ch.standStats){
     const standMap=[
       {key:'standStr',label:'Stand Strength',sk:'str'},
@@ -837,18 +858,13 @@ function getRows(ch){
     for(const s of standMap){
       rows.push({key:s.key,label:s.label,grade:ch.standStats[s.sk]||'D',value:null,group:'stand'});
     }
-    // Stand ability
     rows.push({key:'ability',label:'Stand Ability',grade:ch.abilityGrade||'C',value:ch.abilityDesc,group:'ability'});
-    // Battle item (stand user)
     rows.push({key:'item',label:'Battle Item',grade:ch.item.grade,value:ch.item.desc,group:'item'});
   } else {
-    // Stand stat rows → N/A
     for(const k of ['standStr','standSpd','standRange','standDur','standPrec','standPot']){
       rows.push({key:k,label:k,grade:null,value:null,group:'na'});
     }
-    // Ability → N/A
     rows.push({key:'ability',label:'Stand Ability',grade:null,value:null,group:'na'});
-    // Item slot → this character as a companion
     rows.push({
       key:'item',
       label:'Companion: '+ch.name,
@@ -910,19 +926,85 @@ function doRoll(){
 }
 
 // ═══════════════════════════════════════════
+// SELECTION INTERFACES & MODAL CORE
+// ═══════════════════════════════════════════
+function tryPick(key){ 
+  if(!curChar||!curBuild)return; 
+  if(curBuild.slots.length>=8)return; 
+  
+  // Strict global key comparison blocks duplicate selections across different characters
+  if(curBuild.slots.some(s=>s.key===key))return; 
+  
+  const rows=getRows(curChar); 
+  const row=rows.find(r=>r.key===key); 
+  if(!row||row.group==='na')return; 
+  
+  pendingPick={key,label:row.label,grade:row.grade,value:row.value,charName:curChar.name}; 
+  
+  // Target display nodes securely via structural IDs
+  document.getElementById('mChar').textContent=curChar.name+(curChar.stand?' — '+curChar.stand:''); 
+  document.getElementById('mAsp').textContent=row.label; 
+  document.getElementById('mGrd').innerHTML=`<span class="${gc(row.grade)}" style="color:${gcolor(row.grade)}">${row.grade}</span>`; 
+  
+  const showVal=(row.group==='ability'||row.group==='item'||row.group==='companion')&&row.value; 
+  document.getElementById('mVal').textContent=showVal?row.value:'Grade: '+row.grade; 
+  
+  // Native click routing fallback mechanism ensures buttons close the container safely
+  const mConfirm = document.getElementById('btnConfirm') || document.querySelector('#modal button:first-of-type') || document.querySelector('#modal .btn-gold');
+  const mCancel = document.getElementById('btnCancel') || document.querySelector('#modal button:last-of-type') || document.querySelector('#modal .btn-ghost');
+  
+  if(mConfirm) mConfirm.onclick = function(e){ e.preventDefault(); confirmPick(); };
+  if(mCancel) mCancel.onclick = function(e){ e.preventDefault(); closeModal(); };
+
+  document.getElementById('modal').classList.remove('hide'); 
+} 
+
+function closeModal(){
+  document.getElementById('modal').classList.add('hide');
+  pendingPick=null;
+} 
+
+function confirmPick(){ 
+  if(!pendingPick)return; 
+  const pick={...pendingPick}; 
+  
+  closeModal(); 
+  curBuild.slots.push(pick); 
+  pendingPick=null;
+  
+  updateSidebar();
+  updateDots(); 
+  
+  // Re-render card layout visually lock chosen entries
+  renderCard(curChar);
+  
+  if(curBuild.slots.length>=8){
+    setTimeout(saveBuild,500);
+    return;
+  } 
+  
+  // Guard loop runner prevents async roll failures during state transition gaps
+  setTimeout(()=>{
+    if(curBuild && curBuild.slots.length < 8) {
+      doRoll();
+    }
+  },650); 
+}
+
+// ═══════════════════════════════════════════
 // RENDER CARD
 // ═══════════════════════════════════════════
 function renderCard(ch){
   const rows=getRows(ch);
   const physRows=rows.filter(r=>r.group==='physical');
   const standRows=rows.filter(r=>r.group==='stand');
-  const naRows=rows.filter(r=>r.group==='na');
   const abilityRow=rows.find(r=>r.key==='ability');
   const itemRow=rows.find(r=>r.key==='item');
   const hasStand=!!ch.standStats;
 
+  // Strict Global Lock Check: Gray out and disable rows if the key is picked anywhere in the build
   const isTaken=(key)=>curBuild.slots.some(s=>s.key===key);
-  
+
   let html=`<div class="ccard" style="animation:fIn .4s cubic-bezier(.17,.89,.32,1.28)">
     <div class="ccard-top">
       <div class="pbadge">PART ${ch.part}</div>
@@ -933,20 +1015,20 @@ function renderCard(ch){
     <div class="hintbar">▼ TAP ONE ROW TO CLAIM THAT ASPECT</div>
     <div class="sg">`;
 
-  // Physical (2-col)
+  // Physical Attributes
   for(const r of physRows){
     const t=isTaken(r.key);
-    html+=`<div class="sr ${t?'taken':'pick'}" onclick="tryPick('${r.key}')">
+    html+=`<div class="sr ${t?'taken':'pick'}" ${t?'':`onclick="tryPick('${r.key}')"`}>
       <span class="sl">${r.label}</span>${gradeEl(r.grade)}</div>`;
   }
 
-  // Stand stats (2-col) or NA
+  // Stand stats or N/A templates
   const standLabels={standStr:'Stand Str',standSpd:'Stand Spd',standRange:'Stand Range',
     standDur:'Stand Dur',standPrec:'Stand Prec',standPot:'Stand Pot'};
   if(hasStand){
     for(const r of standRows){
       const t=isTaken(r.key);
-      html+=`<div class="sr ${t?'taken':'pick'}" onclick="tryPick('${r.key}')">
+      html+=`<div class="sr ${t?'taken':'pick'}" ${t?'':`onclick="tryPick('${r.key}')"`}>
         <span class="sl">${r.label}</span>${gradeEl(r.grade)}</div>`;
     }
   } else {
@@ -955,12 +1037,12 @@ function renderCard(ch){
     }
   }
 
-  html+=`</div>`; // close .sg
+  html+=`</div>`; // close stat grid
 
-  // Ability row (full width)
+  // Ability Row Processing
   if(hasStand&&abilityRow){
     const t=isTaken('ability');
-    html+=`<div class="sr sr-full ${t?'taken':'pick'}" onclick="tryPick('ability')" style="padding:9px 15px;cursor:pointer;">
+    html+=`<div class="sr sr-full ${t?'taken':'pick'}" ${t?'':`onclick="tryPick('ability')"`} style="padding:9px 15px;">
       <div style="flex:1"><div class="abl">◆ STAND ABILITY</div><div class="abt">${abilityRow.value}</div></div>
       ${gradeEl(abilityRow.grade)}</div>`;
   } else if(!hasStand){
@@ -969,84 +1051,16 @@ function renderCard(ch){
       <span class="g gE">N/A</span></div>`;
   }
 
-  // Item / Companion row (full width)
+  // Item or Companion Processing Row
   if(itemRow){
     const t=isTaken('item');
-    const lbl=itemRow.group==='companion'?'◆ COMPANION':'◆ BATTLE ITEM';
-    html+=`<div class="sr sr-full ${t?'taken':'pick'}" onclick="tryPick('item')" style="padding:9px 15px;cursor:pointer;">
-      <div style="flex:1"><div class="abl">${lbl}</div><div class="abt">${itemRow.value}</div></div>
+    html+=`<div class="sr sr-full ${t?'taken':'pick'}" ${t?'':`onclick="tryPick('item')"`} style="padding:9px 15px; border-bottom:none;">
+      <div style="flex:1"><div class="abl">◆ ${hasStand?'BATTLE ITEM':'COMPANION ASSIST'}</div><div class="abt">${itemRow.value}</div></div>
       ${gradeEl(itemRow.grade)}</div>`;
   }
 
-  html+=`</div>`; // close .ccard
+  html+=`</div>`;
   document.getElementById('cardArea').innerHTML=html;
-  document.getElementById('tbRN').textContent=curBuild.slots.length+1;
-  updateDots();
-}
-
-// ═══════════════════════════════════════════
-// PICK
-// ═══════════════════════════════════════════
-function tryPick(key){ 
-  if(!curChar||!curBuild)return; 
-  if(curBuild.slots.length>=8)return; 
-  
-  // Enforce single-attribute constraint globally
-  if(curBuild.slots.some(s=>s.key===key))return; 
-  
-  const rows=getRows(curChar); 
-  const row=rows.find(r=>r.key===key); 
-  if(!row||row.group==='na')return; 
-  
-  pendingPick={key,label:row.label,grade:row.grade,value:row.value,charName:curChar.name}; 
-  
-  // Safely populate modal elements if they exist
-  const mChar = document.getElementById('mChar');
-  const mAsp = document.getElementById('mAsp');
-  const mGrd = document.getElementById('mGrd');
-  const mVal = document.getElementById('mVal');
-  const modal = document.getElementById('modal');
-
-  if(mChar) mChar.textContent=curChar.name+(curChar.stand?' — '+curChar.stand:''); 
-  if(mAsp) mAsp.textContent=row.label; 
-  if(mGrd) mGrd.innerHTML=`<span class="${gc(row.grade)}" style="color:${gcolor(row.grade)}">${row.grade}</span>`; 
-  
-  const showVal=(row.group==='ability'||row.group==='item'||row.group==='companion')&&row.value; 
-  if(mVal) mVal.textContent=showVal?row.value:'Grade: '+row.grade; 
-  
-  if(modal) modal.classList.remove('hide'); 
-} 
-
-function closeModal(){
-  const modal = document.getElementById('modal');
-  if(modal) modal.classList.add('hide');
-  pendingPick=null;
-} 
-
-function confirmPick(){ 
-  if(!pendingPick)return; 
-  const pick={...pendingPick}; 
-  
-  // Clear modal visual layer first
-  closeModal(); 
-  
-  // Commit to build state
-  curBuild.slots.push(pick); 
-  
-  // Update overall app state templates
-  updateSidebar();
-  updateDots(); 
-  
-  // Re-render current card so it visually updates chosen classes immediately
-  renderCard(curChar);
-  
-  if(curBuild.slots.length>=8){
-    setTimeout(saveBuild,500);
-    return;
-  } 
-  
-  // Auto-roll next character 
-  setTimeout(doRoll,650); 
 }
 
 // ═══════════════════════════════════════════
@@ -1146,7 +1160,7 @@ function renderCompare(){
 
   const rl=i=>i===0?'★ 1ST':i===1?'2ND':i===2?'3RD':`${i+1}TH`;
   const rc=i=>i===0?'r1':i===1?'r2':i===2?'r3':'';
-  const sc=t=>t>=55?'var(--gS)':t>=38?'var(--gA)':t>=26?'var(--gB)':'var(--gC)';
+  const sc=t=>t>=55?'var(--gS)':'var(--gA)';
 
   document.getElementById('cgrid').innerHTML=scored.map((s,rank)=>`
     <div class="fc ${rc(rank)}">
@@ -1178,7 +1192,7 @@ function deleteBuild(idx){
   renderCompare();
 }
 
-// INIT
+// INITIALIZATION
 goStart();
 </script>
 </body>
