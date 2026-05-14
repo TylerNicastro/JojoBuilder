@@ -219,7 +219,7 @@ header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:
 <!-- START -->
 <div class="scr on" id="scr-start">
   <div class="sw">
-    <p class="sdesc">Roll random characters from <b style="color:var(--gold)">Parts 1–9</b>. Each roll shows a full character — pick <b style="color:var(--gold)">one aspect</b> to absorb. The next character then auto-rolls. Fill up to 8 slots, then save and compare builds.</p>
+    <p class="sdesc">Roll random characters from <b style="color:var(--gold)">Parts 1–9</b>. Each roll shows a full character — pick <b style="color:var(--gold)">one aspect</b> to absorb. The next character then auto-rolls. Fill up to 12 slots, then save and compare builds.</p>
     <div class="parts-row">
       <span class="ptag">PART 1</span><span class="ptag">PART 2</span><span class="ptag">PART 3</span>
       <span class="ptag">PART 4</span><span class="ptag">PART 5</span><span class="ptag">PART 6</span>
@@ -230,7 +230,7 @@ header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:
       <ol>
         <li><b>Roll</b> — a random JoJo character appears with all their stats</li>
         <li><b>Pick ONE aspect</b> — absorbed into your build, no re-rolls</li>
-        <li>Next character <b>auto-rolls</b> after you pick — up to 8 characters total</li>
+        <li>Next character <b>auto-rolls</b> after you pick — up to 12 characters total</li>
         <li><b>Stand users</b> offer their stand stats, ability, and <b>battle item</b></li>
         <li><b>Non-Stand users</b> offer physical stats and <b>themselves as a companion</b></li>
         <li><b>Save</b> your build and <b>compare</b> multiple builds by score + synergy</li>
@@ -915,7 +915,10 @@ function startNewBuild(){
   document.getElementById('tbBN').textContent=allBuilds.length+1;
   // Explicit counter ceiling sync safely updates topbar text nodes
   document.getElementById('tbRN').textContent='1'; 
-  updateDots();updateSidebar();
+  
+  // Safe execution guards prevent script halts if functions load downstream
+  if (typeof updateDots === 'function') updateDots();
+  if (typeof updateSidebar === 'function') updateSidebar();
 
   show('build');
 }
@@ -1143,7 +1146,7 @@ function saveBuild(){
   }
   
   allBuilds.push(JSON.parse(JSON.stringify(curBuild)));
-
+}
 // ═══════════════════════════════════════════
 // SCORING
 // ═══════════════════════════════════════════
