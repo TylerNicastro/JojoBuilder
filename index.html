@@ -370,12 +370,12 @@ const CHARS=[
 // ── Part 2 ──
 {name:"Joseph Joestar",part:2,pname:"Battle Tendency",stand:null,role:"Protagonist",
  desc:"Cunning Ripple user who fights through improvisation, Clackers, and psychological traps.",
- stats:{strength:"B",durability:"B",speed:"B",battleIQ:"S"},
+ stats:{strength:"B",durability:"B",speed:"B",battleIQ:"SS"},
  standStats:"F",abilityDesc:"None",abilityGrade:"F",item:null,companionGrade:"A"},
 
 {name:"Kars",part:2,pname:"Battle Tendency",stand:null,role:"Villain",
  desc:"Ultimate Life Form. Every natural ability, bladed forearms, sunlight immunity, perfect intellect.",
- stats:{strength:"S",durability:"S",speed:"S",battleIQ:"A"},
+ stats:{strength:"S",durability:"S",speed:"S",battleIQ:"SS"},
  standStats:"F",abilityDesc:"None",abilityGrade:"F",item:null,companionGrade:"S"},
 
 {name:"Caesar A. Zeppeli",part:2,pname:"Battle Tendency",stand:null,role:"Ally",
@@ -390,7 +390,7 @@ const CHARS=[
 
 {name:"Rudol von Stroheim",part:2,pname:"Battle Tendency",stand:null,role:"Ally",
  desc:"German military officer rebuilt as a cyborg through experimental augmentation. Combines overwhelming firepower with extreme pride and combat discipline.",
- stats:{strength:"A",durability:"A",speed:"B",battleIQ:"C"},
+ stats:{strength:"A",durability:"S",speed:"B",battleIQ:"C"},
  standStats:"F",
  abilityDesc:"None",
  abilityGrade:"F",
@@ -409,16 +409,16 @@ const CHARS=[
 
 // ── Part 3 ──
 {name:"Jotaro Kujo",part:3,pname:"Stardust Crusaders",stand:"Star Platinum",role:"Protagonist",
- desc:"Stoic powerhouse. Star Platinum's precision and power rivals The World itself.",
+ desc:"Stoic powerhouse. Star Platinum rivals The World itself.",
  stats:{strength:"A",durability:"A",speed:"A",battleIQ:"A"},
- standStats:{str:"A",spd:"A",range:"C",dur:"A",prec:"A",pot:"C"},
+ standStats:{str:"S",spd:"A",range:"C",dur:"A",prec:"SS",pot:"C"},
  abilityDesc:"Star Platinum: The World — stops time for ~5 s; ORA barrage at near-light-speed precision",
  abilityGrade:"S",
  item:{desc:"None",grade:"E"},
  companionGrade:null},
 
 {name:"DIO",part:3,pname:"Stardust Crusaders",stand:"The World",role:"Villain",
- desc:"ZA WARUDO. Vampire overlord whose Stand stops all time for up to nine seconds.",
+ desc:"ZA WARUDO. Vampire overlord whose Stand breaks time itself.",
  stats:{strength:"A",durability:"A",speed:"A",battleIQ:"A"},
  standStats:{str:"A",spd:"A",range:"C",dur:"A",prec:"B",pot:"B"},
  abilityDesc:"The World — stops all time for up to 9 s; knife barrage and Road Roller during time stop",
@@ -445,7 +445,7 @@ const CHARS=[
  companionGrade:null},
 
 {name:"Jean Pierre Polnareff",part:3,pname:"Stardust Crusaders",stand:"Silver Chariot",role:"Ally",
- desc:"French rapier virtuoso. Silver Chariot's armor shed doubles its already extreme speed.",
+ desc:"French rapier virtuoso. Quite concerned with clean toilets.",
  stats:{strength:"C",durability:"C",speed:"B",battleIQ:"C"},
  standStats:{str:"C",spd:"A",range:"C",dur:"B",prec:"B",pot:"C"},
  abilityDesc:"Silver Chariot — near-light-speed rapier thrusts; armor shed doubles speed; blade scatter",
@@ -476,7 +476,7 @@ const CHARS=[
  stats:{strength:"B",durability:"A",speed:"A",battleIQ:"B"},
  standStats:{str:"SS",spd:"B",range:"D",dur:"C",prec:"D",pot:"D"},
  abilityDesc:"Cream — void vortex annihilates all matter; user + Stand enter void to travel and ambush",
- abilityGrade:"B",
+ abilityGrade:"S",
  item:{desc:"DIO's blood — vampire transformation granting full regeneration and power surge",grade:"A"},
  companionGrade:null},
 
@@ -531,7 +531,7 @@ const CHARS=[
  stats:{strength:"D",durability:"D",speed:"C",battleIQ:"S"},
  standStats:{str:"D",spd:"B",range:"D",dur:"B",prec:"B",pot:"A"},
  abilityDesc:"Heaven's Door — turns targets into books; reads all memories; rewrites personality and commands",
- abilityGrade:"A",
+ abilityGrade:"S",
  item:{desc:"Pink Dark Boy manga — his masterpiece; the obsession that grants him superhuman focus",grade:"D"},
  companionGrade:null},
 
@@ -635,6 +635,15 @@ const CHARS=[
  item:{desc:"Her name — being Diavolo's daughter makes her both the mission's target and its resolution",grade:"C"},
  companionGrade:null},
 
+{name:"Carne",part:5,pname:"Golden Wind",stand:"Notorious B.I.G",role:"Villain",
+ desc:"Diavolo's daughter. Spice Girl softens anything to rubber, absorbing and reflecting force.",
+ stats:{strength:"D",durability:"C",speed:"D",battleIQ:"D"},
+ standStats:{str:"A",spd:"SS",range:"SS",dur: "SS",prec:"SS",pot:"A"},
+ abilityDesc:"Notorious B.I.G. - gains immense strength after the user dies.",
+ abilityGrade:"S",
+ item:{desc:"Her name — being Diavolo's daughter makes her both the mission's target and its resolution",grade:"C"},
+ companionGrade:null},
+
 // ── Part 6 ──
 {name:"Jolyne Cujoh",part:6,pname:"Stone Ocean",stand:"Stone Free",role:"Protagonist",
  desc:"Resilient brawler who unravels her body into string for binding, combat, and flight.",
@@ -714,7 +723,7 @@ const CHARS=[
  stats:{strength:"B",durability:"B",speed:"B",battleIQ:"A"},
  standStats:{str:"A",spd:"A",range:"A",dur:"A",prec:"A",pot:"S"},
  abilityDesc:"D4C Love Train — dimensional shift; luck barrier deflects all harm to parallel-world doubles",
- abilityGrade:"SS",
+ abilityGrade:"S",
  item:{desc:"Holy Corpse Parts — divine relics of Christ that exponentially amplify D4C and grant Love Train",grade:"S"},
  companionGrade:null},
 
@@ -798,7 +807,7 @@ const CHARS=[
  item:{desc:"Surfboard — his life before Rock Disease rendered him immobile; now his symbolic throne",grade:"D"},
  companionGrade:null},
 
-{name:"Jabubu",part:5,pname:"Afton’s Revenge",stand:"",role:"Ally",
+{name:"Jabubu",part:5,pname:"Golden Wind",stand:"Afton’s Revenge",role:"Ally",
  desc:"He looks like a Labubu but his name is Jaiden so he’s Jabubu",
  stats:{strength:"E",durability:"D",speed:"C",battleIQ:"D"},
  standStats:{str:"C",spd:"B",range:"C",dur:"C",prec:"A",pot:"S"},
