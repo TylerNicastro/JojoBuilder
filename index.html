@@ -53,9 +53,34 @@ header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:
 /* START */
 .sw{display:flex;flex-direction:column;align-items:center;gap:20px;padding:28px 0;text-align:center;}
 .sdesc{max-width:460px;line-height:1.75;color:#ccc;font-size:1.02rem;}
-.parts-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:480px;}
-.ptag{font-family:'Bebas Neue',sans-serif;font-size:.76rem;letter-spacing:.15em;padding:4px 10px;
-  border:1px solid rgba(245,197,24,.26);color:var(--gold);border-radius:2px;background:rgba(245,197,24,.04);}
+
+/* PART FILTER */
+.part-filter-wrap{background:var(--panel);border:1px solid var(--border);border-radius:4px;
+  padding:16px 20px;max-width:520px;width:100%;}
+.part-filter-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.part-filter-lbl{font-family:'Bebas Neue',sans-serif;font-size:.88rem;letter-spacing:.22em;color:var(--cyan);}
+.part-filter-controls{display:flex;gap:8px;}
+.part-filter-btn{font-family:'Bebas Neue',sans-serif;font-size:.68rem;letter-spacing:.14em;
+  padding:3px 9px;border-radius:2px;cursor:pointer;border:1px solid rgba(255,255,255,.15);
+  background:transparent;color:var(--muted);transition:all .15s;}
+.part-filter-btn:hover{color:var(--text);border-color:rgba(255,255,255,.3);}
+.parts-row{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;}
+.ptag{font-family:'Bebas Neue',sans-serif;font-size:.78rem;letter-spacing:.17em;padding:6px 13px;
+  border-radius:2px;cursor:pointer;user-select:none;transition:all .18s;position:relative;
+  /* ENABLED state (default) */
+  border:1px solid rgba(245,197,24,.55);color:var(--gold);background:rgba(245,197,24,.08);
+  box-shadow:0 0 8px rgba(245,197,24,.12);}
+.ptag:hover{border-color:var(--gold);background:rgba(245,197,24,.16);transform:translateY(-1px);}
+.ptag.disabled{
+  border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.25);
+  background:transparent;box-shadow:none;text-decoration:line-through;text-decoration-color:rgba(255,255,255,.2);}
+.ptag.disabled:hover{border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.38);transform:none;}
+.part-count{font-family:'Bebas Neue',sans-serif;font-size:.72rem;letter-spacing:.12em;
+  color:var(--muted);margin-top:10px;text-align:center;}
+.part-count em{color:var(--gold);font-style:normal;}
+.no-chars-warn{font-family:'Bebas Neue',sans-serif;font-size:.76rem;letter-spacing:.12em;
+  color:var(--red);margin-top:6px;animation:pulse 1.5s ease-in-out infinite;}
+
 .howto{background:var(--panel);border:1px solid var(--border);border-radius:4px;
   padding:16px 20px;max-width:460px;text-align:left;}
 .howto h3{font-family:'Bebas Neue',sans-serif;letter-spacing:.2em;color:var(--cyan);margin-bottom:9px;font-size:.95rem;}
@@ -243,15 +268,37 @@ header::after{content:'';display:block;height:3px;margin-top:16px;border-radius:
 <!-- START -->
 <div class="scr on" id="scr-start">
   <div class="sw">
-    <p class="sdesc">Roll random characters from <b style="color:var(--gold)">Parts 1–8</b>. Each roll shows a full character — pick <b style="color:var(--gold)">one aspect</b> to absorb. The next character then auto-rolls. Fill up to 12 slots, then save and compare builds.</p>
-    <div class="parts-row">
-      <span class="ptag">PART 1</span><span class="ptag">PART 2</span><span class="ptag">PART 3</span>
-      <span class="ptag">PART 4</span><span class="ptag">PART 5</span><span class="ptag">PART 6</span>
-      <span class="ptag">PART 7</span><span class="ptag">PART 8</span>
+    <p class="sdesc">Roll random characters from <b style="color:var(--gold)">Parts 1–10</b>. Each roll shows a full character — pick <b style="color:var(--gold)">one aspect</b> to absorb. The next character then auto-rolls. Fill up to 12 slots, then save and compare builds.</p>
+
+    <!-- PART FILTER -->
+    <div class="part-filter-wrap">
+      <div class="part-filter-head">
+        <div class="part-filter-lbl">◈ ACTIVE PARTS</div>
+        <div class="part-filter-controls">
+          <button class="part-filter-btn" id="btnSelectAll">ALL</button>
+          <button class="part-filter-btn" id="btnSelectNone">NONE</button>
+        </div>
+      </div>
+      <div class="parts-row" id="partsRow">
+        <span class="ptag" data-part="1">PART 1</span>
+        <span class="ptag" data-part="2">PART 2</span>
+        <span class="ptag" data-part="3">PART 3</span>
+        <span class="ptag" data-part="4">PART 4</span>
+        <span class="ptag" data-part="5">PART 5</span>
+        <span class="ptag" data-part="6">PART 6</span>
+        <span class="ptag" data-part="7">PART 7</span>
+        <span class="ptag" data-part="8">PART 8</span>
+        <span class="ptag" data-part="9">PART 9</span>
+        <span class="ptag" data-part="10">PART 10</span>
+      </div>
+      <div class="part-count" id="partCount"></div>
+      <div class="no-chars-warn" id="noCharsWarn" style="display:none">⚠ No characters available in selected parts — enable at least one part with characters</div>
     </div>
+
     <div class="howto">
       <h3>How It Works</h3>
       <ol>
+        <li><b>Toggle parts</b> above — only characters from enabled parts will roll</li>
         <li><b>Roll</b> — a random JoJo character appears, all stats <b>hidden</b></li>
         <li>You have <b>2 Reveals</b> per character — tap any row to uncover its grade</li>
         <li><b>Pick ONE aspect</b> — pick blind or spend reveals first, no re-rolls</li>
@@ -1057,7 +1104,7 @@ const CHARS=[
  standStats:{str:"B",spd:"B",range:"B",dur:"B",prec:"B",pot:"B"},
  abilityDesc:"Brain Storm — releases swarms of drill-shaped organisms that burrow into targets and detonate from within",
  abilityGrade:"A",item:{desc:"None",grade:"E"},companionGrade:null,hamon:null},
-  
+// ── Part 10 ──
 {name:"Jaoquin Joestar",part:10,pname:"Liberty Eyes",stand:"Libertango",role:"Protagonist",
  desc:"A blind detective from 1950s Argentina who uses his stand for sight.",
  stats:{strength:"A",durability:"B",speed:"C",battleIQ:"A"},
@@ -1070,7 +1117,6 @@ const CHARS=[
  standStats:{str:"S",spd:"S",range:"A",dur:"D",prec:"C",pot:"S"},
  abilityDesc:"This stand grants the ability of perspective materialization: whatever 3d space that is seen can be realized.",
  abilityGrade:"SS",item:{desc:"None",grade:"E"},companionGrade:null,hamon:null},
-  
 {name:"Jabubu",part:5,pname:"Golden Wind",stand:"Afton's Revenge",role:"Ally",
  desc:"They look like a Labubu but their name is Jaiden so they're Jabubu",
  stats:{strength:"E",durability:"D",speed:"C",battleIQ:"D"},
@@ -1078,6 +1124,72 @@ const CHARS=[
  abilityDesc:"Afton's Revenge — Upon death you will be revived with a permanent increase to your stats, you must kill the person who killed you, if you fail to kill them in a designated amount of time you stay dead",
  abilityGrade:"A",item:{desc:"Alastor Staff & Dave Miller Doll — Jabubu's favorite toy",grade:"SS"},companionGrade:null,hamon:null},
 ];
+
+// ═══════════════════════════════════════════
+// PART FILTER STATE
+// ═══════════════════════════════════════════
+// All parts enabled by default
+const ALL_PARTS = [1,2,3,4,5,6,7,8,9,10];
+let enabledParts = new Set(ALL_PARTS);
+
+function getEnabledPool() {
+  return CHARS.filter(c => enabledParts.has(c.part));
+}
+
+function countCharsInPart(p) {
+  return CHARS.filter(c => c.part === p).length;
+}
+
+function updatePartFilter() {
+  // Update tag visuals
+  document.querySelectorAll('.ptag').forEach(tag => {
+    const p = parseInt(tag.getAttribute('data-part'));
+    if (enabledParts.has(p)) {
+      tag.classList.remove('disabled');
+    } else {
+      tag.classList.add('disabled');
+    }
+  });
+
+  // Update count label
+  const pool = getEnabledPool();
+  const activeParts = ALL_PARTS.filter(p => enabledParts.has(p) && countCharsInPart(p) > 0);
+  const countEl = document.getElementById('partCount');
+  if (countEl) {
+    const partNums = ALL_PARTS.filter(p => enabledParts.has(p)).map(p => 'P'+p).join(', ');
+    countEl.innerHTML = `<em>${pool.length}</em> characters available across <em>${[...enabledParts].length}</em> active part${[...enabledParts].length !== 1 ? 's' : ''}`;
+  }
+
+  // Warn if no characters
+  const warnEl = document.getElementById('noCharsWarn');
+  if (warnEl) {
+    warnEl.style.display = pool.length === 0 ? 'block' : 'none';
+  }
+
+  // Enable/disable new build button
+  const btn = document.getElementById('btnNewBuild');
+  if (btn) btn.disabled = pool.length === 0;
+}
+
+function togglePart(partNum) {
+  if (enabledParts.has(partNum)) {
+    // Don't allow disabling if it's the only enabled part WITH characters
+    const otherPool = CHARS.filter(c => enabledParts.has(c.part) && c.part !== partNum);
+    if (otherPool.length === 0 && countCharsInPart(partNum) > 0) {
+      // Shake the tag to indicate it can't be disabled
+      const tag = document.querySelector(`.ptag[data-part="${partNum}"]`);
+      if (tag) {
+        tag.style.animation = 'shake .3s ease';
+        setTimeout(() => tag.style.animation = '', 350);
+      }
+      return;
+    }
+    enabledParts.delete(partNum);
+  } else {
+    enabledParts.add(partNum);
+  }
+  updatePartFilter();
+}
 
 // ═══════════════════════════════════════════
 // STATE & CONFIG
@@ -1091,8 +1203,8 @@ let pendingPick=null;
 let isRolling=false;
 let revealsLeft=2;
 let revealedKeys=new Set();
-let hamonUsed=false; // tracks whether Hamon has been claimed this build session
-let hamonPending=null; // when set, holds the hamon grade awaiting slot selection
+let hamonUsed=false;
+let hamonPending=null;
 
 // ═══════════════════════════════════════════
 // HELPERS
@@ -1117,9 +1229,6 @@ function gcolor(g){
 function gradeEl(g){return `<span class="g ${gc(g)}">${g||'N/A'}</span>`;}
 
 // ── BUILD ROW LIST ──────────────────────────────────────────────
-// KEY CHANGE: non-stand users get a 'companion' row instead of an 'item' row.
-// The grade is always ch.companionGrade (defaulting to 'F' if somehow null).
-// Stand users keep the 'item' row as before.
 function getRows(ch){
   const rows=[];
   const physMap=[
@@ -1133,7 +1242,6 @@ function getRows(ch){
   }
 
   if(ch.stand && ch.standStats){
-    // ── Stand user ───────────────────────────────────────────────
     const standMap=[
       {key:'standStr',label:'Stand Strength',sk:'str'},
       {key:'standSpd',label:'Stand Speed',sk:'spd'},
@@ -1147,7 +1255,6 @@ function getRows(ch){
       rows.push({key:s.key,label:s.label,grade:g,value:null,group:'stand'});
     }
     rows.push({key:'ability',label:'Stand Ability',grade:ch.abilityGrade||'C',value:ch.abilityDesc||'',group:'ability'});
-    // Battle item row — blocked if a companion was already taken
     const takenKeysStand=curBuild?curBuild.slots.map(s=>s.key):[];
     const companionAlreadyTaken=takenKeysStand.includes('companion');
     if(!companionAlreadyTaken){
@@ -1168,7 +1275,6 @@ function getRows(ch){
       });
     }
   } else {
-    // ── Non-stand user ───────────────────────────────────────────
     const takenKeys=curBuild?curBuild.slots.map(s=>s.key):[];
     const physKeys=['strength','durability','speed','battleIQ'];
     const physFree=physKeys.filter(k=>!takenKeys.includes(k));
@@ -1177,7 +1283,6 @@ function getRows(ch){
     const compTaken=takenKeys.includes('companion');
 
     if(!softlocked){
-      // Normal mode: stand stats are N/A
       const naKeys=['standStr','standSpd','standRange','standDur','standPrec','standPot'];
       const naLabels={standStr:'Stand Strength',standSpd:'Stand Speed',standRange:'Stand Range',
                       standDur:'Stand Durability',standPrec:'Stand Precision',standPot:'Stand Potential'};
@@ -1186,7 +1291,6 @@ function getRows(ch){
       }
       rows.push({key:'ability',label:'Stand Ability',grade:null,value:null,group:'na'});
     } else {
-      // SOFTLOCK MODE: stand stat slots become sacrifice slots (grade F)
       const standSacrificeMap=[
         {key:'standStr',label:'Stand Strength (SACRIFICE)'},
         {key:'standSpd',label:'Stand Speed (SACRIFICE)'},
@@ -1206,9 +1310,6 @@ function getRows(ch){
         group:takenKeys.includes('ability')?'taken-sacrifice':'sacrifice'});
     }
 
-    // Hamon option — always offered if character has hamon (any grade incl. F) and none claimed yet
-    // In softlock: shown as alternative to sacrifice
-    // Outside softlock: shown as an extra option (two-step: pick hamon, then pick which stand slot)
     const hamonGrade=ch.hamon;
     if(hamonGrade!==null&&hamonGrade!==undefined&&!hamonUsed){
       rows.push({
@@ -1224,7 +1325,6 @@ function getRows(ch){
       });
     }
 
-    // Companion row
     const itemTaken=takenKeys.includes('item');
     if(!compTaken&&!itemTaken){
       const compGrade=ch.companionGrade||'F';
@@ -1238,7 +1338,6 @@ function getRows(ch){
   return rows;
 }
 
-
 // ═══════════════════════════════════════════
 // SCREENS
 // ═══════════════════════════════════════════
@@ -1250,6 +1349,7 @@ function goCompare(){renderCompare();show('compare');}
 // BUILD START
 // ═══════════════════════════════════════════
 function startNewBuild(){
+  if(getEnabledPool().length===0)return;
   curBuild={name:'',slots:[]};
   usedChars=[];curChar=null;pendingPick=null;isRolling=false;
   revealsLeft=2;revealedKeys=new Set();hamonUsed=false;hamonPending=null;
@@ -1269,10 +1369,12 @@ function doRoll(){
   if(!curBuild||curBuild.slots.length>=12)return;
   isRolling=true;
   document.getElementById('rollBtn').disabled=true;
-  const pool=CHARS.filter(c=>!usedChars.includes(c.name));
+  // Filter pool to enabled parts only, excluding already used chars
+  const pool=getEnabledPool().filter(c=>!usedChars.includes(c.name));
   if(!pool.length){saveBuild();return;}
   const ch=rand(pool);
-  const names=CHARS.map(c=>c.name);
+  // For the slot animation, use names from the enabled pool only
+  const names=getEnabledPool().map(c=>c.name);
   const el=document.getElementById('slotTxt');
   el.classList.add('rolling');
   let tick=0;
@@ -1299,7 +1401,6 @@ function tryPick(key){
   if(!curChar||!curBuild||isRolling)return;
   if(curBuild.slots.length>=12)return;
 
-  // ── HAMON SLOT SELECTION (must check before row guard — stand slots are group:'na') ──
   if(hamonPending){
     const standKeys=['standStr','standSpd','standRange','standDur','standPrec','standPot','ability'];
     if(standKeys.includes(key)&&!curBuild.slots.some(s=>s.key===key)){
@@ -1322,7 +1423,6 @@ function tryPick(key){
       setTimeout(()=>{if(curBuild&&curBuild.slots.length<12)doRoll();},650);
       return;
     }
-    // Clicked something non-stand — cancel hamon pending
     hamonPending=null;
     renderCard(curChar);
     return;
@@ -1333,7 +1433,6 @@ function tryPick(key){
   const row=rows.find(r=>r.key===key);
   if(!row||row.group==='na'||row.group==='taken-sacrifice'||row.group==='companion-blocked'||row.group==='item-blocked')return;
 
-  // ── HAMON TWO-STEP: clicking hamon enters slot-selection mode ──
   if(key==='hamon'){
     hamonPending={grade:row.grade,charName:curChar.name,label:row.label};
     renderCard(curChar);
@@ -1376,7 +1475,6 @@ function confirmPick(){
 // ═══════════════════════════════════════════
 function doReveal(key){
   if(isRolling)return;
-  // If hamon slot-selection is active, any stand key click should place the hamon
   if(hamonPending){tryPick(key);return;}
   if(revealedKeys.has(key)){tryPick(key);return;}
   if(revealsLeft<=0){tryPick(key);return;}
@@ -1401,12 +1499,11 @@ function renderCard(ch){
   const hamonRow=rows.find(r=>r.key==='hamon');
   const hasStand=!!(ch.stand&&ch.standStats);
   const isSoftlocked=sacrificeRows.length>0;
-  const isHamonSelecting=!!hamonPending; // two-step: user clicked hamon, now picking a slot
+  const isHamonSelecting=!!hamonPending;
 
   const isTaken=(key)=>curBuild.slots.some(s=>s.key===key);
   const isRevealed=(key)=>revealedKeys.has(key);
 
-  // Reveal pip bar (hide in softlock/hamon-selecting — not relevant)
   const pips=[0,1].map(i=>`<div class="reveal-pip${i>=revealsLeft?' spent':''}"></div>`).join('');
   const revealBarHtml=`<div class="reveal-bar">
     <div style="display:flex;align-items:center;gap:8px;">
@@ -1416,8 +1513,6 @@ function renderCard(ch){
     <div class="reveal-hint">${revealsLeft>0?revealsLeft+' left — tap any row to uncover':'No reveals left — pick blind or revealed'}</div>
   </div>`;
 
-  // Stat row builder (grid cells)
-  // In hamon-selecting mode, stand stat cells light up as targets
   const standKeys=['standStr','standSpd','standRange','standDur','standPrec','standPot'];
   const standLabelsMap={standStr:'Stand Str',standSpd:'Stand Spd',standRange:'Stand Range',
     standDur:'Stand Dur',standPrec:'Stand Prec',standPot:'Stand Pot'};
@@ -1428,7 +1523,6 @@ function renderCard(ch){
         <span class="sl">${r.label}</span>${gradeEl(r.grade)}</div>`;
     }
     if(r.group==='na'){
-      // In hamon-selecting mode, NA stand slots become targets
       if(isHamonSelecting&&standKeys.includes(r.key)){
         return `<div class="sr pick hamon-target" data-key="${r.key}" data-action="pick"
           style="border:1px solid rgba(245,197,24,.55);background:rgba(245,197,24,.07);cursor:pointer;">
@@ -1452,14 +1546,12 @@ function renderCard(ch){
     }
   }
 
-  // Sacrifice row builder — grade is always F, always visible, red accent
   function sacrificeRow(r){
     const t=isTaken(r.key)||r.group==='taken-sacrifice';
     if(t){
       return `<div class="sr taken sacrifice-taken" data-key="${r.key}">
         <span class="sl" style="color:var(--red);opacity:.6">${r.label}</span>${gradeEl('F')}</div>`;
     }
-    // In hamon-selecting mode, sacrifice slots also become hamon targets
     if(isHamonSelecting){
       return `<div class="sr pick hamon-target" data-key="${r.key}" data-action="pick"
         style="border:1px solid rgba(245,197,24,.55);background:rgba(245,197,24,.07);cursor:pointer;">
@@ -1474,7 +1566,6 @@ function renderCard(ch){
       ${gradeEl('F')}</div>`;
   }
 
-  // Full-width row builder (ability / item / companion)
   function fullRow(key,labelText,isPickable,desc,grade,extraClass=''){
     const t=isTaken(key);
     const baseStyle='padding:9px 15px;border-bottom:none;';
@@ -1503,7 +1594,6 @@ function renderCard(ch){
     }
   }
 
-  // Banners
   const softlockBanner=isSoftlocked&&!isHamonSelecting?`<div style="
     padding:9px 15px;background:rgba(255,68,68,.09);border-bottom:1px solid rgba(255,68,68,.22);
     font-family:'Bebas Neue',sans-serif;font-size:.82rem;letter-spacing:.13em;color:var(--red);
@@ -1534,28 +1624,23 @@ function renderCard(ch){
     ${(isSoftlocked||isHamonSelecting)?'':'<div class="hintbar">▼ TAP A HIDDEN ROW TO REVEAL · OR PICK BLIND</div>'}
     <div class="sg">`;
 
-  // Physical stats
   for(const r of physRows) html+=statRow(r);
 
-  // Stand stats or sacrifice slots
   if(hasStand){
     for(const r of standRows) html+=statRow(r);
   } else if(isSoftlocked){
     for(const r of sacrificeRows) html+=sacrificeRow(r);
   } else {
-    // Normal non-stand: NA rows, but in hamon-selecting mode they become targets
     const naRows=rows.filter(r=>r.group==='na'&&standKeys.includes(r.key));
     for(const r of naRows) html+=statRow(r);
   }
   html+=`</div>`;
 
-  // Ability row
   if(hasStand&&abilityRow){
     html+=fullRow('ability','STAND ABILITY',true,abilityRow.value,abilityRow.grade);
   } else if(isSoftlocked&&abilityRow){
     const t=isTaken('ability');
     if(isHamonSelecting){
-      // In hamon-selecting mode even the ability sacrifice slot is a target
       html+=`<div class="sr sr-full pick hamon-target" data-key="ability" data-action="pick"
         style="padding:9px 15px;border-bottom:none;border:1px solid rgba(245,197,24,.55);background:rgba(245,197,24,.07);cursor:pointer;">
         <div style="flex:1"><div class="abl" style="color:var(--gold)">◆ STAND ABILITY</div>
@@ -1572,7 +1657,6 @@ function renderCard(ch){
     html+=fullRow('ability','STAND ABILITY',false,'No Stand — ability not available',null);
   }
 
-  // Hamon row — shown whenever available (not just softlock), hidden while in slot-selection mode
   if(hamonRow&&!isHamonSelecting){
     html+=`<div class="sr sr-full pick hamon-row" data-key="hamon" data-action="pick"
       style="padding:9px 15px;border-bottom:none;border-left:2px solid rgba(245,197,24,.5);background:rgba(245,197,24,.04);cursor:pointer;">
@@ -1583,7 +1667,6 @@ function renderCard(ch){
       ${gradeEl(hamonRow.grade)}</div>`;
   }
 
-  // Item row (stand users) OR Companion row (non-stand, non-softlocked)
   if(hasStand&&itemRow){
     if(itemRow.group==='item-blocked'){
       html+=fullRow('item','BATTLE ITEM',false,itemRow.value,null,'');
@@ -1735,6 +1818,31 @@ function deleteBuild(btnEl){
 // INIT
 // ═══════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
+  // Part filter tag clicks
+  document.getElementById('partsRow').addEventListener('click', e => {
+    const tag = e.target.closest('.ptag');
+    if (!tag) return;
+    const p = parseInt(tag.getAttribute('data-part'));
+    togglePart(p);
+  });
+
+  document.getElementById('btnSelectAll').addEventListener('click', () => {
+    ALL_PARTS.forEach(p => enabledParts.add(p));
+    updatePartFilter();
+  });
+
+  document.getElementById('btnSelectNone').addEventListener('click', () => {
+    // Keep at least parts with characters
+    const partsWithChars = ALL_PARTS.filter(p => countCharsInPart(p) > 0);
+    // Disable all except the first part that has characters
+    enabledParts.clear();
+    if (partsWithChars.length > 0) enabledParts.add(partsWithChars[0]);
+    updatePartFilter();
+  });
+
+  // Initial render
+  updatePartFilter();
+
   document.getElementById('btnNewBuild').addEventListener('click',startNewBuild);
   document.getElementById('btnCmp').addEventListener('click',goCompare);
   document.getElementById('btnSaveTop').addEventListener('click',saveBuild);
@@ -1756,6 +1864,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(action==='delete')deleteBuild(target);
     if(action==='cancel-hamon'){hamonPending=null;renderCard(curChar);}
   });
+
+  // Add shake keyframe dynamically
+  const style = document.createElement('style');
+  style.textContent = `@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}`;
+  document.head.appendChild(style);
+
   goStart();
 });
 </script>
